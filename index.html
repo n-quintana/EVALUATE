@@ -8,149 +8,154 @@
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap');
 :root{
-  --az:#2B7FC4;
-  --az-light:#E8F3FB;
-  --az-mid:#A8CDE8;
-  --az-dark:#1A5F96;
+  --rojo:#C8102E;
+  --rojo-light:#FDECEA;
+  --rojo-mid:#F5A3AE;
+  --rojo-dark:#A00D24;
+  --azul:#003087;
+  --azul-light:#E8EDF5;
+  --azul-mid:#7A9CC4;
   --gris:#6B7280;
   --gris-claro:#F5F6F7;
   --gris-borde:#E4E6E8;
   --gris-texto:#374151;
   --blanco:#FFFFFF;
-  --warn:#D97706;
-  --warn-light:#FEF3C7;
-  --ok:#059669;
-  --ok-light:#D1FAE5;
 }
 *{box-sizing:border-box;margin:0;padding:0;}
 body{background:var(--gris-claro);font-family:'Inter',sans-serif;color:var(--gris-texto);min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:20px 16px;}
 .app{width:100%;max-width:620px;display:flex;flex-direction:column;gap:12px;}
 
 /* HEADER */
-.header{background:var(--blanco);border:0.5px solid var(--gris-borde);border-radius:16px;padding:16px 20px;display:flex;align-items:center;gap:14px;}
-.logo{width:42px;height:42px;border-radius:12px;background:var(--az);display:flex;align-items:center;justify-content:center;flex-shrink:0;}
-.logo svg{width:22px;height:22px;fill:none;stroke:#fff;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;}
-.brand-name{font-size:20px;font-weight:600;color:var(--az);letter-spacing:-0.5px;line-height:1;}
+.header{background:var(--blanco);border:0.5px solid var(--gris-borde);border-radius:16px;overflow:hidden;}
+.header-top{height:4px;background:var(--rojo);}
+.header-body{padding:16px 20px;display:flex;align-items:center;gap:14px;}
+.logo{width:42px;height:42px;border-radius:12px;background:var(--rojo);display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.logo svg{width:22px;height:22px;fill:none;stroke:#fff;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round;}
+.brand-name{font-size:22px;font-weight:600;color:var(--azul);letter-spacing:-0.5px;line-height:1;}
+.brand-name span{color:var(--rojo);}
 .brand-full{font-size:11px;color:var(--gris);margin-top:3px;line-height:1.4;}
-.badge{margin-left:auto;background:var(--az-light);color:var(--az);font-size:10px;padding:4px 10px;border-radius:99px;font-weight:500;white-space:nowrap;border:0.5px solid var(--az-mid);}
+.badge{margin-left:auto;background:var(--rojo-light);color:var(--rojo);font-size:10px;padding:4px 10px;border-radius:99px;font-weight:600;white-space:nowrap;border:0.5px solid var(--rojo-mid);}
 
 /* NOTICE */
-.notice{background:var(--az-light);border:0.5px solid var(--az-mid);border-left:3px solid var(--az);border-radius:12px;padding:10px 16px;font-size:12px;color:var(--gris);line-height:1.6;display:flex;gap:8px;align-items:flex-start;}
-.notice svg{width:15px;height:15px;stroke:var(--az);flex-shrink:0;margin-top:1px;}
+.notice{background:var(--azul-light);border:0.5px solid var(--azul-mid);border-left:3px solid var(--azul);border-radius:12px;padding:10px 16px;font-size:12px;color:var(--gris);line-height:1.6;display:flex;gap:8px;align-items:flex-start;}
+.notice svg{width:15px;height:15px;stroke:var(--azul);flex-shrink:0;margin-top:1px;}
 .notice strong{color:var(--gris-texto);font-weight:500;}
 
 /* PROGRESS */
 .prog{background:var(--blanco);border:0.5px solid var(--gris-borde);border-radius:16px;padding:16px 20px;display:flex;flex-direction:column;gap:10px;}
 .prog-top{display:flex;justify-content:space-between;align-items:center;}
 .prog-label{font-size:12px;color:var(--gris);font-weight:500;}
-.prog-pct{font-size:13px;font-weight:600;color:var(--az);}
+.prog-pct{font-size:13px;font-weight:600;color:var(--rojo);}
 .steps{display:flex;gap:3px;}
 .st{flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;}
 .dot{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:600;transition:all 0.3s;}
-.dot.done{background:var(--az);color:var(--blanco);}
-.dot.active{background:var(--az);color:var(--blanco);box-shadow:0 0 0 3px var(--az-light);}
+.dot.done{background:var(--rojo);color:var(--blanco);}
+.dot.active{background:var(--rojo);color:var(--blanco);box-shadow:0 0 0 3px var(--rojo-light);}
 .dot.pend{background:var(--gris-claro);color:var(--gris);border:0.5px solid var(--gris-borde);}
 .lbl{font-size:8px;color:var(--gris);text-align:center;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;width:100%;}
-.lbl.active{color:var(--az);font-weight:600;}
+.lbl.active{color:var(--rojo);font-weight:600;}
 .pbar{background:var(--gris-claro);border-radius:99px;height:4px;}
-.pfill{height:4px;border-radius:99px;background:var(--az);transition:width 0.5s ease;}
+.pfill{height:4px;border-radius:99px;background:var(--rojo);transition:width 0.5s ease;}
 
 /* CHAT */
 .chat{background:var(--blanco);border:0.5px solid var(--gris-borde);border-radius:16px;overflow:hidden;display:flex;flex-direction:column;}
 .msgs{flex:1;overflow-y:auto;padding:20px;display:flex;flex-direction:column;gap:14px;height:420px;}
 .msgs::-webkit-scrollbar{width:3px;}
-.msgs::-webkit-scrollbar-thumb{background:var(--az-mid);border-radius:3px;}
+.msgs::-webkit-scrollbar-thumb{background:var(--rojo-mid);border-radius:3px;}
 
 /* BOT MSG */
 .mb{display:flex;gap:10px;align-items:flex-start;}
-.av{width:28px;height:28px;border-radius:50%;background:var(--az);display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:2px;}
+.av{width:28px;height:28px;border-radius:50%;background:var(--rojo);display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:2px;}
 .av svg{width:14px;height:14px;stroke:#fff;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;}
 .bb{background:var(--gris-claro);border:0.5px solid var(--gris-borde);border-radius:3px 14px 14px 14px;padding:12px 16px;font-size:13px;color:var(--gris-texto);line-height:1.65;max-width:85%;white-space:pre-line;}
 
 /* USER MSG */
 .mu{display:flex;justify-content:flex-end;}
-.bu{background:var(--az);border-radius:14px 14px 3px 14px;padding:12px 16px;font-size:13px;color:var(--blanco);line-height:1.65;max-width:75%;}
+.bu{background:var(--azul);border-radius:14px 14px 3px 14px;padding:12px 16px;font-size:13px;color:var(--blanco);line-height:1.65;max-width:75%;}
 
-/* DIAG CARD */
+/* DIAG */
 .dc{background:var(--gris-claro);border:0.5px solid var(--gris-borde);border-radius:14px;padding:14px 16px;max-width:88%;}
-.dlbl{font-size:10px;font-weight:600;color:var(--az);text-transform:uppercase;letter-spacing:.7px;margin-bottom:10px;}
+.dlbl{font-size:10px;font-weight:600;color:var(--azul);text-transform:uppercase;letter-spacing:.7px;margin-bottom:10px;}
 .dg{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-bottom:10px;}
 .di{background:var(--blanco);border:0.5px solid var(--gris-borde);border-radius:8px;padding:6px 10px;display:flex;flex-direction:column;gap:2px;}
 .dk{font-size:9px;color:var(--gris);text-transform:uppercase;letter-spacing:.4px;}
-.dv-ok{font-size:11px;font-weight:600;color:var(--ok);}
-.dv-warn{font-size:11px;font-weight:600;color:var(--warn);}
-.dv-err{font-size:11px;font-weight:600;color:#DC2626;}
-
-/* ALERTS tienen más peso que tips */
-.alr{display:flex;gap:8px;align-items:flex-start;font-size:12px;color:var(--gris-texto);margin-bottom:5px;line-height:1.5;background:var(--warn-light);border:0.5px solid #FDE68A;border-radius:8px;padding:8px 10px;}
-.alr svg{width:14px;height:14px;stroke:var(--warn);flex-shrink:0;margin-top:1px;fill:none;stroke-width:2;}
+.dv-ok{font-size:11px;font-weight:600;color:var(--azul);}
+.dv-warn{font-size:11px;font-weight:600;color:var(--rojo);}
+.dv-err{font-size:11px;font-weight:600;color:var(--rojo);}
+.dv-na{font-size:11px;font-weight:600;color:var(--gris);}
+.alr{display:flex;gap:8px;align-items:flex-start;font-size:12px;color:var(--gris-texto);margin-bottom:5px;line-height:1.5;background:var(--rojo-light);border:0.5px solid var(--rojo-mid);border-radius:8px;padding:8px 10px;}
+.alr svg{width:14px;height:14px;stroke:var(--rojo);flex-shrink:0;margin-top:1px;fill:none;stroke-width:2;}
 .tip{display:flex;gap:8px;align-items:flex-start;font-size:12px;color:var(--gris);margin-bottom:4px;line-height:1.5;padding:4px 0;}
-.tip svg{width:14px;height:14px;stroke:var(--ok);flex-shrink:0;margin-top:1px;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;}
+.tip svg{width:14px;height:14px;stroke:var(--azul);flex-shrink:0;margin-top:1px;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;}
 
 /* INPUT */
 .ibar{padding:12px 20px;border-top:0.5px solid var(--gris-borde);display:flex;gap:8px;align-items:flex-end;background:var(--blanco);}
 .ibar textarea{flex:1;border-radius:10px;font-size:13px;min-height:38px;max-height:100px;resize:none;border:0.5px solid var(--gris-borde);background:var(--gris-claro);color:var(--gris-texto);padding:9px 13px;font-family:'Inter',sans-serif;outline:none;line-height:1.5;}
-.ibar textarea:focus{border-color:var(--az-mid);}
+.ibar textarea:focus{border-color:var(--rojo-mid);}
 .ibar textarea::placeholder{color:var(--gris);}
-.sbtn{height:38px;width:38px;border-radius:10px;background:var(--az);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:background 0.2s;}
-.sbtn:hover{background:var(--az-dark);}
+.sbtn{height:38px;width:38px;border-radius:10px;background:var(--rojo);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:background 0.2s;}
+.sbtn:hover{background:var(--rojo-dark);}
 .sbtn svg{width:16px;height:16px;stroke:#fff;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;}
-.abtn{padding:9px 16px;border-radius:10px;background:var(--az);border:none;color:#fff;font-size:13px;font-family:'Inter',sans-serif;font-weight:500;cursor:pointer;flex-shrink:0;align-self:flex-end;transition:background 0.2s;}
-.abtn:hover{background:var(--az-dark);}
+.abtn{padding:9px 16px;border-radius:10px;background:var(--rojo);border:none;color:#fff;font-size:13px;font-family:'Inter',sans-serif;font-weight:500;cursor:pointer;flex-shrink:0;align-self:flex-end;transition:background 0.2s;}
+.abtn:hover{background:var(--rojo-dark);}
 
-/* MULTI INPUT */
+/* MULTI */
 .mw{display:flex;flex-direction:column;gap:5px;width:100%;}
-.mlbl{font-size:10px;font-weight:600;color:var(--az);text-transform:uppercase;letter-spacing:.5px;margin-bottom:2px;}
+.mlbl{font-size:10px;font-weight:600;color:var(--azul);text-transform:uppercase;letter-spacing:.5px;margin-bottom:2px;}
 .mrow{display:flex;gap:6px;align-items:center;}
-.mnum{font-size:10px;color:var(--az);width:14px;flex-shrink:0;font-weight:600;}
+.mnum{font-size:10px;color:var(--rojo);width:14px;flex-shrink:0;font-weight:600;}
 .minp{flex:1;background:var(--gris-claro);border:0.5px solid var(--gris-borde);border-radius:8px;padding:7px 10px;color:var(--gris-texto);font-size:12px;font-family:'Inter',sans-serif;outline:none;}
-.minp:focus{border-color:var(--az-mid);}
+.minp:focus{border-color:var(--rojo-mid);}
 .minp::placeholder{color:var(--gris);}
 .mfoot{display:flex;justify-content:space-between;align-items:center;margin-top:4px;}
-.madd{padding:4px 10px;border-radius:6px;background:var(--az-light);border:0.5px solid var(--az-mid);color:var(--az);font-size:11px;cursor:pointer;font-family:'Inter',sans-serif;}
-.msend{padding:8px 16px;border-radius:8px;background:var(--az);border:none;color:#fff;font-size:12px;font-family:'Inter',sans-serif;font-weight:500;cursor:pointer;}
+.madd{padding:4px 10px;border-radius:6px;background:var(--azul-light);border:0.5px solid var(--azul-mid);color:var(--azul);font-size:11px;cursor:pointer;font-family:'Inter',sans-serif;}
+.msend{padding:8px 16px;border-radius:8px;background:var(--rojo);border:none;color:#fff;font-size:12px;font-family:'Inter',sans-serif;font-weight:500;cursor:pointer;}
+.msend:hover{background:var(--rojo-dark);}
 
-/* REPORTE FINAL */
-.rep{background:var(--blanco);border:0.5px solid var(--gris-borde);border-radius:16px;padding:24px;display:flex;flex-direction:column;gap:12px;}
+/* REPORTE */
+.rep{background:var(--blanco);border:0.5px solid var(--gris-borde);border-radius:16px;overflow:hidden;}
+.rep-top{height:4px;background:var(--rojo);}
+.rep-body{padding:24px;display:flex;flex-direction:column;gap:12px;}
 .rep-score{display:flex;align-items:baseline;gap:6px;}
-.rep-num{font-size:48px;font-weight:600;line-height:1;}
+.rep-num{font-size:52px;font-weight:600;line-height:1;}
 .rep-of{font-size:18px;color:var(--gris);font-weight:400;}
 .sem{display:flex;align-items:center;gap:10px;padding:12px 16px;border-radius:10px;font-size:13px;font-weight:500;}
-.sem-v{background:var(--ok-light);color:var(--ok);border:0.5px solid #6EE7B7;}
-.sem-a{background:var(--warn-light);color:var(--warn);border:0.5px solid #FDE68A;}
-.sem-r{background:#FEE2E2;color:#DC2626;border:0.5px solid #FCA5A5;}
+.sem-v{background:var(--azul-light);color:var(--azul);border:0.5px solid var(--azul-mid);}
+.sem-a{background:#FFF8E1;color:#B45309;border:0.5px solid #FDE68A;}
+.sem-r{background:var(--rojo-light);color:var(--rojo);border:0.5px solid var(--rojo-mid);}
 .sem-dot{width:10px;height:10px;border-radius:50%;background:currentColor;flex-shrink:0;}
 .rep-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;}
 .ri{background:var(--gris-claro);border:0.5px solid var(--gris-borde);border-radius:8px;padding:7px 10px;display:flex;flex-direction:column;gap:2px;}
 .rk{font-size:9px;color:var(--gris);text-transform:uppercase;letter-spacing:.4px;}
-.rv-ok{font-size:11px;font-weight:600;color:var(--ok);}
-.rv-warn{font-size:11px;font-weight:600;color:var(--warn);}
-.rv-err{font-size:11px;font-weight:600;color:#DC2626;}
-.rv-na{font-size:11px;font-weight:600;color:var(--az);}
-.nota{background:var(--az-light);border:0.5px solid var(--az-mid);border-radius:8px;padding:10px 14px;font-size:12px;color:var(--gris);line-height:1.5;}
+.rv-ok{font-size:11px;font-weight:600;color:var(--azul);}
+.rv-warn{font-size:11px;font-weight:600;color:#B45309;}
+.rv-err{font-size:11px;font-weight:600;color:var(--rojo);}
+.rv-na{font-size:11px;font-weight:600;color:var(--gris);}
+.nota{background:var(--azul-light);border:0.5px solid var(--azul-mid);border-radius:8px;padding:10px 14px;font-size:12px;color:var(--gris);line-height:1.5;}
 .nota strong{color:var(--gris-texto);font-weight:500;}
-.btn-xl{width:100%;padding:12px;border-radius:10px;background:var(--az);border:none;color:#fff;font-size:13px;font-family:'Inter',sans-serif;font-weight:500;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;transition:background 0.2s;}
-.btn-xl:hover{background:var(--az-dark);}
+.btn-xl{width:100%;padding:12px;border-radius:10px;background:var(--rojo);border:none;color:#fff;font-size:13px;font-family:'Inter',sans-serif;font-weight:500;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;transition:background 0.2s;}
+.btn-xl:hover{background:var(--rojo-dark);}
 .btn-xl svg{width:16px;height:16px;stroke:#fff;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;}
-.btn-xl.ok{background:var(--ok);}
+.btn-xl.ok{background:var(--azul);}
 .btn-sec{width:100%;padding:10px;border-radius:10px;background:var(--gris-claro);border:0.5px solid var(--gris-borde);color:var(--gris);font-size:13px;font-family:'Inter',sans-serif;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;}
 .btn-sec svg{width:14px;height:14px;stroke:var(--gris);fill:none;stroke-width:2;stroke-linecap:round;}
-
 .ft{font-size:10px;color:var(--gris);text-align:center;}
 </style>
 </head>
 <body>
 <div class="app">
-
   <div class="header">
-    <div class="logo">
-      <svg viewBox="0 0 24 24"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>
+    <div class="header-top"></div>
+    <div class="header-body">
+      <div class="logo">
+        <svg viewBox="0 0 24 24"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>
+      </div>
+      <div>
+        <div class="brand-name">Evalú<span>aT</span></div>
+        <div class="brand-full">Herramienta de autoevaluación para el Capítulo I de Proyecto de tesis<br>Basada en la guía UCV 2026 · Universidad César Vallejo</div>
+      </div>
+      <div class="badge">9 criterios</div>
     </div>
-    <div>
-      <div class="brand-name">EvalúaT</div>
-      <div class="brand-full">Herramienta de autoevaluación para el Capítulo I de Proyecto de tesis<br>Basada en la guía UCV 2026 · Universidad César Vallejo</div>
-    </div>
-    <div class="badge">9 criterios</div>
   </div>
 
   <div class="notice">
@@ -158,7 +163,7 @@ body{background:var(--gris-claro);font-family:'Inter',sans-serif;color:var(--gri
     <span><strong>¿Qué es EvalúaT?</strong> Autoevaluación formativa de tu Capítulo I según la guía UCV 2026, antes de tu sesión con tu asesor. No reemplazo la revisión docente.</span>
   </div>
 
-  <div class="prog" id="progCard">
+  <div class="prog">
     <div class="prog-top">
       <span class="prog-label">Tu progreso</span>
       <span class="prog-pct" id="pct">0%</span>
@@ -173,14 +178,14 @@ body{background:var(--gris-claro);font-family:'Inter',sans-serif;color:var(--gri
   </div>
 
   <div class="ft">EvalúaT · Guía UCV 2026 · Van Dijk (1980) · Hernández-Sampieri (2018)</div>
-
 </div>
+
 <script>
 var S={f:"n",nom:"",tit:"",p:0,e:{},pg:"",q:false,oe:["","",""],pe:["","",""],fin:false};
 var REP=null,TOT=9;
 var LBL=["Título","R.Prob.","P.Gral","P.Esp.","Justif.","O.Gral","O.Esp.","M.Teór.","Hipótesis"];
 var ICO_CHK='<svg viewBox="0 0 24 24" width="11" height="11"><polyline points="20 6 9 17 4 12" stroke="#fff" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>';
-var ICO_SEND='<svg viewBox="0 0 24 24"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>';
+var ICO_SEND='<svg viewBox="0 0 24 24"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2" stroke="#fff" fill="#fff"/></svg>';
 var ICO_DL='<svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>';
 var ICO_NEW='<svg viewBox="0 0 24 24"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 102.13-9.36L1 10"/></svg>';
 var ICO_AV='<svg viewBox="0 0 24 24"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>';
@@ -199,19 +204,19 @@ function hasUA(t){return ua(t)!==null;}
 
 function vTit(t){
   var w=t.trim().split(/\s+/).length,a=[],ti=[];
-  if(w>20)a.push("Tu título tiene "+w+" palabras. El máximo permitido es 20 (Criterio 1).");else ti.push("Extensión correcta: "+w+" palabras.");
+  if(w>20)a.push("Tu título tiene "+w+" palabras. El máximo es 20 (Criterio 1).");else ti.push("Extensión correcta: "+w+" palabras.");
   var L=t.toLowerCase();
-  var hasV=["relación","influencia","efecto","impacto","percepción","uso","nivel","representación","análisis","comunicación","consumo","identidad","discurso","narrativa","semiótic","semiosis","significado","construcción","producción","recepción","mediación","visibilidad","posicionamiento","encuadre","framing","estereotipo","género","violencia","poder","ideología","memoria","emoción","actitud","satisfacción","participación","interacción","engagement","código","signo","símbolo","mito","arquetipo","intertextualidad","transmedia","storytelling","estrategia","imagen","recurso","recursos","función"].some(v=>L.includes(v));
+  var hasV=["relación","influencia","efecto","impacto","percepción","uso","nivel","representación","análisis","comunicación","consumo","identidad","discurso","narrativa","semiótic","semiosis","significado","construcción","construye","construyen","producción","recepción","mediación","visibilidad","posicionamiento","encuadre","framing","estereotipo","género","violencia","poder","ideología","memoria","emoción","sentimiento","miedo","terror","afecto","comparativ","diferencia","similitud","característica","estrategia","técnica","mecanismo","proceso","modo","manera","forma","lenguaje audiovisual","recurso audiovisual","código","signo","símbolo","mito","arquetipo","intertextualidad","transmedia","storytelling","imagen","recurso","recursos","función"].some(v=>L.includes(v));
   if(!hasV)a.push("Tu título aún no muestra claramente qué estudias. Incluye la variable o categoría central.");else ti.push("Variables o categorías identificables.");
   var u=ua(t);
-  if(!u)a.push("No queda claro quién o qué se estudia. Puede ser una población, un objeto cultural (películas, textos) o una institución.");else ti.push("Unidad de análisis identificable: "+u+".");
-  if(["semiótic","discurs","narrativ","identidad","representación","webcómic","meme","experiencia","significado","análisis semiótico","análisis narrativo","estudio de caso"].some(v=>L.includes(v))){ti.push("Enfoque cualitativo/análisis textual detectado.");S.q=true;}
+  if(!u)a.push("No queda claro quién o qué se estudia. Puede ser una población, un objeto cultural (películas, textos, series) o una institución.");else ti.push("Unidad de análisis identificable: "+u+".");
+  if(["semiótic","discurs","narrativ","identidad","representación","webcómic","meme","experiencia","significado","análisis semiótico","análisis narrativo","análisis comparativo","estudio de caso","lenguaje audiovisual","terror","miedo"].some(v=>L.includes(v))){ti.push("Enfoque cualitativo/análisis textual detectado.");S.q=true;}
   S.tit=t;return{a,ti,e:a.length===0?"ok":a.length===1?"parcial":"ausente"};
 }
 function vReal(t){
   var a=[],ti=[],pa=seg(t),L=t.toLowerCase();
   var sb=t.split("\n").filter(l=>l.trim().length>3&&l.trim().length<60&&/^[A-ZÁÉÍÓÚ\s]{5,}$/.test(l.trim()));
-  if(sb.length>0)a.push("Hay subtítulos detectados. Todo debe ir en prosa continua, sin subtítulos (Criterio 2).");else ti.push("Sin subtítulos — prosa continua.");
+  if(sb.length>0)a.push("Hay subtítulos. Todo debe ir en prosa continua, sin subtítulos (Criterio 2).");else ti.push("Sin subtítulos — prosa continua.");
   if(/^[•\-\*–►▪]\s/m.test(t))a.push("Hay viñetas o listas. La introducción debe ir en prosa (Criterio 2).");
   if(/(^|\s)(yo |mi |mis |me )/i.test(t))a.push("Hay primera persona. Usa tercera persona: 'se observó', 'se evidenció' (Criterio 2).");else ti.push("Redacción en tercera persona.");
   var ps=["se observó","se evidenció","se identificó","encontró","señaló","demostró","reportó","indicó","mostró"].filter(v=>L.includes(v));
@@ -219,18 +224,18 @@ function vReal(t){
   var hM=pa.some(p=>["mundial","global","internacional","latinoamérica","latinoamerica"].some(w=>p.toLowerCase().includes(w)));
   var hN=pa.some(p=>["perú","peru","nacional","lima"].some(w=>p.toLowerCase().includes(w)));
   var hL=pa.some(p=>["estudiantes","jóvenes","usuarios","fandom","comunidad","población","empresa","película","serie","medio","texto","corpus","institución"].some(w=>p.toLowerCase().includes(w)));
-  if(!hM)a.push("Falta contexto internacional. Incluye cifras o fuentes globales (Criterio 3).");else ti.push("Contexto internacional presente.");
-  if(!hN)a.push("Falta contexto nacional. Incluye datos peruanos: INEI, MINEDU u otras fuentes (Criterio 3).");else ti.push("Contexto nacional presente.");
-  if(!hL)a.push("Falta contexto local o del objeto de estudio específico (Criterio 3).");else ti.push("Contexto local/específico presente.");
-  if(!ods(t))a.push("Falta el ODS (Objetivo de Desarrollo Sostenible). Indícalo con su número y nombre (Criterio 3).");else ti.push("ODS identificado.");
+  if(!hM)a.push("Falta contexto internacional. Incluye cifras o fuentes globales (Criterio 3).");else ti.push("Contexto internacional.");
+  if(!hN)a.push("Falta contexto nacional. Incluye datos peruanos: INEI, MINEDU u otras fuentes (Criterio 3).");else ti.push("Contexto nacional.");
+  if(!hL)a.push("Falta contexto local o del objeto de estudio (Criterio 3).");else ti.push("Contexto local/específico.");
+  if(!ods(t))a.push("Falta el ODS (Objetivo de Desarrollo Sostenible) con su número y nombre (Criterio 3).");else ti.push("ODS identificado.");
   var hE=/\d/.test(t)||["según","informe","estadística","estudio","encuesta","datos","cifra"].some(v=>L.includes(v));
-  if(!hE)a.push("No hay datos ni fuentes concretas. Sin cifras o referencias, es descripción, no argumentación.");else ti.push("Datos o fuentes presentes.");
+  if(!hE)a.push("Sin datos ni fuentes. Sin cifras o referencias, es descripción, no argumentación.");else ti.push("Datos o fuentes presentes.");
   var n=nc(t);
-  if(n<3)a.push("Pocos conectores discursivos ("+n+"). Articula mejor las ideas con 'además', 'sin embargo', 'por ello' (Van Dijk, 1980).");else ti.push("Articulación discursiva adecuada.");
+  if(n<3)a.push("Pocos conectores ("+n+"). Usa 'además', 'sin embargo', 'por ello' para articular mejor (Van Dijk, 1980).");else ti.push("Articulación discursiva adecuada.");
   var w2=t.trim().split(/\s+/).length,pg=(w2/275).toFixed(1);
-  if(w2<500)a.push("El texto es corto ("+w2+" palabras). Recuerda: solo hasta antes de la pregunta de investigación.");
+  if(w2<500)a.push("Texto corto ("+w2+" palabras). Recuerda: solo hasta antes de la pregunta de investigación.");
   else if(w2<=1300)ti.push("Extensión adecuada: "+w2+" palabras (~"+pg+" páginas).");
-  else a.push("El texto es extenso ("+w2+" palabras). Solo pega hasta antes de la pregunta de investigación.");
+  else a.push("Texto extenso ("+w2+" palabras). Solo hasta antes de la pregunta de investigación.");
   var el={prosa:sb.length===0?"ok":"ausente",tercera_persona:/(^|\s)(yo |mi |mis |me )/i.test(t)?"ausente":"ok",tiempo_pasado:ps.length>0?"ok":"mejorar",ctx_internacional:hM?"ok":"ausente",ctx_nacional:hN?"ok":"ausente",ctx_local:hL?"ok":"ausente",ODS:ods(t)?"ok":"ausente",evidencia:hE?"ok":"ausente",conectores:n>=3?"ok":"mejorar"};
   Object.assign(S.e,{realidad:Object.values(el).filter(v=>v==="ok").length>=6?"ok":"parcial"});
   return{a,ti,el,w:w2};
@@ -238,17 +243,17 @@ function vReal(t){
 function vPG(t){
   var L=t.toLowerCase(),a=[],ti=[];
   var esP=t.includes("?")||t.startsWith("¿");
-  if(!esP)a.push("Tu pregunta no tiene signos de interrogación. Debe formularse como pregunta (Criterio 4).");else ti.push("Formulada en modo interrogativo.");
-  if(!["cómo","cuál","cuáles","en qué medida","qué relación","de qué manera","qué efecto","qué elementos","qué recursos","qué función","qué papel"].some(v=>L.includes(v)))a.push("Usa verbos interrogativos: '¿En qué medida...?', '¿Cómo...?', '¿Qué elementos...?'");else ti.push("Verbo interrogativo adecuado.");
-  if(!["relación","influencia","efecto","impacto","percepción","uso","nivel","representación","comunicación","identidad","semiótic","discurs","narrativ","significado","construcción","construye","construyen","producción","produce","recepción","recurso","elemento","función","papel","rol","lenguaje audiovisual","lenguaje visual","recursos audiovisuales","miedo","terror","emoción","sentimiento","afecto","comparativ","diferencia","similitud","análisis","característica","estrategia","técnica","mecanismo","proceso","modo","manera","forma"].some(v=>L.includes(v)))a.push("No se identifican claramente las variables o categorías en la pregunta (Criterio 4).");else ti.push("Variables o categorías presentes.");
-  if(!hasUA(t))a.push("Falta el objeto de estudio. ¿A quiénes o qué se estudia? (Criterio 4).");else ti.push("Objeto de estudio delimitado.");
+  if(!esP)a.push("Tu pregunta no tiene signos de interrogación (Criterio 4).");else ti.push("Formulada en modo interrogativo.");
+  if(!["cómo","cuál","cuáles","en qué medida","qué relación","de qué manera","qué efecto","qué elementos","qué recursos","qué función","qué papel","qué diferencias","qué similitudes","qué características"].some(v=>L.includes(v)))a.push("Usa verbos interrogativos: '¿De qué manera...?', '¿Cómo...?', '¿Qué elementos...?'");else ti.push("Verbo interrogativo adecuado.");
+  if(!["relación","influencia","efecto","impacto","percepción","uso","nivel","representación","comunicación","identidad","semiótic","discurs","narrativ","significado","construcción","construye","construyen","producción","recepción","recurso","elemento","función","papel","rol","lenguaje audiovisual","lenguaje visual","recursos audiovisuales","miedo","terror","emoción","sentimiento","afecto","comparativ","diferencia","similitud","análisis","característica","estrategia","técnica","mecanismo","proceso","modo","manera","forma"].some(v=>L.includes(v)))a.push("No se identifican claramente las variables o categorías en la pregunta (Criterio 4).");else ti.push("Variables o categorías presentes.");
+  if(!hasUA(t))a.push("Falta el objeto de estudio en la pregunta (Criterio 4).");else ti.push("Objeto de estudio delimitado.");
   S.pg=t;return{a,ti,e:esP?"ok":"ausente"};
 }
 function vPE(ls){
   var a=[],ti=[],v=ls.filter(l=>l.trim().length>10);
   if(v.length<3)a.push("Solo tienes "+v.length+" pregunta(s). Se esperan 3 preguntas específicas.");else ti.push(v.length+" preguntas específicas.");
   var si=v.filter(l=>!l.includes("?")&&!l.startsWith("¿"));
-  if(si.length>0)a.push(si.length+" pregunta(s) sin signos de interrogación. Todas deben ser interrogativas.");else if(v.length>0)ti.push("Todas en modo interrogativo.");
+  if(si.length>0)a.push(si.length+" pregunta(s) sin signos de interrogación.");else if(v.length>0)ti.push("Todas en modo interrogativo.");
   if(S.pg&&v.length>0){if(sim(tok(S.pg),tok(v.join(" ")))<0.1)a.push("Las preguntas específicas no parecen derivarse de la pregunta general.");else ti.push("Vinculadas a la pregunta general.");}
   return{a,ti,e:v.length===3&&si.length===0?"ok":v.length>=3?"parcial":"ausente"};
 }
@@ -265,7 +270,7 @@ function vOG(t){
   var L=t.toLowerCase(),a=[],ti=[];
   var ok=["analizar","describir","identificar","comprender","interpretar","examinar","explorar","determinar","establecer","evaluar","comparar","explicar","caracterizar","conocer","develar","visibilizar","sistematizar","reconstruir","contrastar","definir","clasificar"];
   var p=L.trim().split(" ")[0];
-  if(ok.includes(p))ti.push("Buen verbo de acción: '"+p+"'.");else a.push("Inicia con un verbo en infinitivo: Analizar, Interpretar, Identificar, Describir...");
+  if(ok.includes(p))ti.push("Buen verbo de acción: '"+p+"'.");else a.push("Inicia con verbo en infinitivo: Analizar, Interpretar, Comparar, Identificar...");
   if(S.pg){if(sim(tok(S.pg),tok(t))<0.15)a.push("Tu objetivo no refleja la pregunta general. Deben referirse al mismo fenómeno (Criterio 6).");else ti.push("Vinculado a la pregunta general.");}
   if(t.trim().split(/\s+/).length<8)a.push("Muy breve. Incluye: verbo + fenómeno + objeto de estudio + contexto.");
   return{a,ti,e:ok.includes(p)?"ok":"mejorar"};
@@ -284,22 +289,22 @@ function vOE(ls){
 }
 function vMT(t){
   var L=t.toLowerCase(),a=[],ti=[];
-  if(!["se define","se entiende","es definido","según","concepto","definición","se refiere","se concibe"].some(v=>L.includes(v)))a.push("No se detectan definiciones conceptuales. Incluye definiciones de tus variables con autores (Criterio 8).");else ti.push("Definiciones conceptuales presentes.");
-  if(!["dimensión","dimensiones","componente","componentes","aspecto","aspectos","indicador","categoría","categorías","tipo","tipos","nivel","niveles"].some(v=>L.includes(v)))a.push("No se detectan dimensiones o categorías de análisis. Cada variable debe tenerlas (Criterio 8).");else ti.push("Dimensiones presentes.");
-  if(!["teoría","modelo teórico","enfoque teórico","paradigma","postulado","teoría de","modelo de","enfoque de","perspectiva teórica"].some(v=>L.includes(v)))a.push("No se identifican teorías. Incluye las teorías relacionadas con tu objeto de estudio (Criterio 9).");else ti.push("Teorías identificadas.");
-  if(!["objeto de estudio","fenómeno","problema","variable","categoría","investigación","presente estudio","el análisis"].some(v=>L.includes(v)))a.push("No se evidencia cómo las teorías se relacionan con tu objeto de estudio (Criterio 9).");else ti.push("Relación teoría-objeto de estudio evidenciada.");
-  if(!(/\(\d{4}\)|\d{4}\)/.test(t)||/[A-Z][a-záéíóú]+,?\s+(20|19)\d{2}/.test(t)))a.push("No hay referencias de autores. Cita correctamente en APA 7.");else ti.push("Referencias de autores presentes.");
+  if(!["se define","se entiende","es definido","según","concepto","definición","se refiere","se concibe"].some(v=>L.includes(v)))a.push("Sin definiciones conceptuales. Incluye definiciones de tus variables con autores (Criterio 8).");else ti.push("Definiciones conceptuales presentes.");
+  if(!["dimensión","dimensiones","componente","componentes","aspecto","aspectos","indicador","categoría","categorías","tipo","tipos","nivel","niveles"].some(v=>L.includes(v)))a.push("Sin dimensiones o categorías. Cada variable debe tenerlas (Criterio 8).");else ti.push("Dimensiones presentes.");
+  if(!["teoría","modelo teórico","enfoque teórico","paradigma","postulado","teoría de","modelo de","enfoque de","perspectiva teórica"].some(v=>L.includes(v)))a.push("Sin teorías. Incluye las teorías relacionadas con tu objeto de estudio (Criterio 9).");else ti.push("Teorías identificadas.");
+  if(!["objeto de estudio","fenómeno","problema","variable","categoría","investigación","presente estudio","el análisis"].some(v=>L.includes(v)))a.push("No se evidencia cómo las teorías se relacionan con tu objeto de estudio (Criterio 9).");else ti.push("Relación teoría-objeto evidenciada.");
+  if(!(/\(\d{4}\)|\d{4}\)/.test(t)||/[A-Z][a-záéíóú]+,?\s+(20|19)\d{2}/.test(t)))a.push("Sin referencias de autores. Cita correctamente en APA 7.");else ti.push("Referencias de autores presentes.");
   var r=(t.match(/(20[1-2][0-9])/g)||[]).filter(y=>parseInt(y)>=2019&&parseInt(y)<=2026);
-  if(r.length===0)a.push("No se detectan referencias del período 2019-2026 (Guía UCV 2026).");else ti.push(r.length+" referencia(s) recientes 2019-2026.");
+  if(r.length===0)a.push("Sin referencias 2019-2026 (Guía UCV 2026).");else ti.push(r.length+" referencia(s) recientes 2019-2026.");
   return{a,ti,e:a.length===0?"ok":a.length<=2?"parcial":"ausente"};
 }
 function vH(t){
   var L=t.toLowerCase(),a=[],ti=[];
-  var sinH=["no aplica","no tengo","no hay","no corresponde","cualitativo","estudio cualitativo","enfoque cualitativo","análisis textual"].some(v=>L.includes(v));
+  var sinH=["no aplica","no tengo","no hay","no corresponde","cualitativo","estudio cualitativo","enfoque cualitativo","análisis textual","análisis comparativo","estudio comparativo"].some(v=>L.includes(v));
   if(sinH&&S.q){ti.push("Correcto. En estudios cualitativos y análisis textual se usa supuesto, no hipótesis (Creswell, 2014).");return{a,ti,e:"noaplica"};}
   if(sinH){a.push("Si tu estudio es cuantitativo o correlacional, la hipótesis es obligatoria (Criterio 10).");return{a,ti,e:"ausente"};}
   if(!["relación","influye","afecta","impacta","incide","se relaciona","asociación","efecto","función","papel","permite","posibilita","genera","construye"].some(v=>L.includes(v)))a.push("Tu hipótesis debe expresar una relación o función entre variables (Criterio 10).");else ti.push("Expresa relación o función.");
-  if(!(/\(\d{4}\)|\d{4}\)/.test(t)||["según","basado","de acuerdo","teoría","antecedente","postula","propone","sostiene"].some(v=>L.includes(v))))a.push("Debe sustentarse en teorías o antecedentes (Criterio 10).");else ti.push("Con sustento teórico o en antecedentes.");
+  if(!(/\(\d{4}\)|\d{4}\)/.test(t)||["según","basado","de acuerdo","teoría","antecedente","postula","propone","sostiene"].some(v=>L.includes(v))))a.push("Debe sustentarse en teorías o antecedentes (Criterio 10).");else ti.push("Con sustento teórico.");
   return{a,ti,e:a.length===0?"ok":"parcial"};
 }
 
@@ -309,7 +314,7 @@ var FL=[
   {t:"m",p:"Escribe tu pregunta de investigación general.\n\nEn modo interrogativo, con variables/categorías y objeto de estudio (Criterio 4)."},
   {t:"p3",p:"Escribe tus 3 preguntas específicas.\n\nDeben derivarse de la pregunta general y formularse en modo interrogativo (Criterio 4)."},
   {t:"l",p:"Escribe tu justificación de la investigación.\n\n¿Por qué es importante ejecutar este estudio? Considera dimensión teórica, práctica y social (Criterio 5)."},
-  {t:"m",p:"Escribe tu objetivo general.\n\nVinculado a tu pregunta general. Inicia con verbo en infinitivo: Analizar, Describir, Interpretar, Identificar... (Criterio 6)."},
+  {t:"m",p:"Escribe tu objetivo general.\n\nVinculado a tu pregunta general. Inicia con verbo en infinitivo: Analizar, Describir, Interpretar, Comparar... (Criterio 6)."},
   {t:"me",p:"Escribe tus objetivos específicos (entre 3 y 5).\n\nVinculados a tus preguntas específicas. Inicia cada uno con verbo en infinitivo (Criterio 6)."},
   {t:"l",p:"Pega tu marco teórico completo.\n\nDebe incluir:\n• Aportes conceptuales: definiciones y dimensiones de tus variables/categorías con autores (Criterio 8)\n• Teorías relacionadas con tu objeto de estudio (Criterio 9)"},
   {t:"m",p:"¿Tu estudio tiene hipótesis o supuesto?\n\nSi es cuantitativo: hipótesis sustentada en teorías o antecedentes.\nSi es cualitativo o análisis textual: escribe tu supuesto.\nSi no aplica, indícalo. (Criterio 10)."}
@@ -326,66 +331,39 @@ function upP(){
     else{d.className="dot pend";d.textContent=(i+1);}
     var lbl=document.createElement("div");
     lbl.className="lbl"+(i===S.p&&S.f==="c"?" active":"");
-    lbl.textContent=l;
-    wrap.appendChild(d);wrap.appendChild(lbl);sr.appendChild(wrap);
+    lbl.textContent=l;wrap.appendChild(d);wrap.appendChild(lbl);sr.appendChild(wrap);
   });
   var pct=S.fin?100:Math.round((S.p/TOT)*100);
-  pf.style.width=pct+"%";
-  pc.textContent=pct+"%";
+  pf.style.width=pct+"%";pc.textContent=pct+"%";
 }
 function aM(h){var m=document.getElementById("MS");m.insertAdjacentHTML("beforeend",h);m.scrollTop=m.scrollHeight;}
 function bM(t){return'<div class="mb"><div class="av">'+ICO_AV+'</div><div class="bb">'+xe(t)+'</div></div>';}
 function uM(t){return'<div class="mu"><div class="bu">'+xe(t)+'</div></div>';}
-
 function dH(lb,al,ti,el,w){
   var h='<div class="mb"><div class="av">'+ICO_AV+'</div><div class="dc"><div class="dlbl">'+lb+(w?" · "+w+" palabras":"")+'</div>';
-  if(el){
-    h+='<div class="dg">';
-    Object.entries(el).forEach(function(e){
-      var cls=e[1]==="ok"?"dv-ok":e[1]==="noaplica"?"dv-na":e[1]==="parcial"?"dv-warn":"dv-err";
-      var ic=e[1]==="ok"?"✓":e[1]==="noaplica"?"n/a":e[1]==="parcial"?"~":"✗";
-      h+='<div class="di"><div class="dk">'+e[0].replace(/_/g," ")+'</div><div class="'+cls+'">'+ic+'</div></div>';
-    });
-    h+='</div>';
-  }
-  // Alertas primero, con más peso visual
+  if(el){h+='<div class="dg">';Object.entries(el).forEach(function(e){var cls=e[1]==="ok"?"dv-ok":e[1]==="noaplica"?"dv-na":e[1]==="parcial"?"dv-warn":"dv-err";var ic=e[1]==="ok"?"✓":e[1]==="noaplica"?"n/a":e[1]==="parcial"?"~":"✗";h+='<div class="di"><div class="dk">'+e[0].replace(/_/g," ")+'</div><div class="'+cls+'">'+ic+'</div></div>';});h+='</div>';}
   al.forEach(function(x){h+='<div class="alr"><svg viewBox="0 0 24 24"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>'+xe(x)+'</div>';});
-  // Tips después, más suaves
   ti.forEach(function(x){h+='<div class="tip"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>'+xe(x)+'</div>';});
   h+='</div></div>';return h;
 }
-
 function smf(p){
-  if(p>=7)return{c:"sem-v",t:"🟢 Listo para la sesión con tu asesor"};
-  if(p>=5)return{c:"sem-a",t:"🟡 Casi listo — revisa las observaciones antes de tu sesión"};
-  return{c:"sem-r",t:"🔴 Necesita trabajo — revisa los elementos faltantes"};
+  if(p>=7)return{c:"sem-v",t:"Listo para la sesión con tu asesor"};
+  if(p>=5)return{c:"sem-a",t:"Casi listo — revisa las observaciones antes de tu sesión"};
+  return{c:"sem-r",t:"Necesita trabajo — revisa los elementos faltantes"};
 }
-
 function rH(r){
   var s=smf(r.pt);
-  var col=r.pt>=7?"var(--ok)":r.pt>=5?"var(--warn)":"#DC2626";
-  var h='<div class="rep">';
-  h+='<div>';
-  h+='<div style="font-size:12px;color:var(--gris);font-weight:500;margin-bottom:8px;text-transform:uppercase;letter-spacing:.6px;">Tu diagnóstico final</div>';
+  var col=r.pt>=7?"var(--azul)":r.pt>=5?"#B45309":"var(--rojo)";
+  var h='<div class="rep"><div class="rep-top"></div><div class="rep-body">';
+  h+='<div style="font-size:11px;color:var(--gris);font-weight:600;text-transform:uppercase;letter-spacing:.7px;margin-bottom:6px;">Tu diagnóstico final</div>';
   h+='<div class="rep-score"><span class="rep-num" style="color:'+col+'">'+r.pt+'</span><span class="rep-of">/10</span></div>';
-  h+='</div>';
   h+='<div class="sem '+s.c+'"><div class="sem-dot"></div>'+s.t+'</div>';
-  if(r.e){
-    h+='<div class="rep-grid">';
-    Object.entries(r.e).forEach(function(e){
-      var cls=e[1]==="ok"?"rv-ok":e[1]==="noaplica"?"rv-na":e[1]==="parcial"?"rv-warn":"rv-err";
-      var ic=e[1]==="ok"?"✓ cumple":e[1]==="noaplica"?"n/a":e[1]==="parcial"?"~ parcial":"✗ ausente";
-      h+='<div class="ri"><div class="rk">'+e[0].replace(/_/g," ")+'</div><div class="'+cls+'">'+ic+'</div></div>';
-    });
-    h+='</div>';
-  }
-  h+='<div class="nota"><strong>Próximo paso:</strong> Descarga tu resultado en Excel y envíaselo a tu asesor antes de la sesión. Esto le ayudará a preparar la revisión.</div>';
+  if(r.e){h+='<div class="rep-grid">';Object.entries(r.e).forEach(function(e){var cls=e[1]==="ok"?"rv-ok":e[1]==="noaplica"?"rv-na":e[1]==="parcial"?"rv-warn":"rv-err";var ic=e[1]==="ok"?"✓ cumple":e[1]==="noaplica"?"n/a":e[1]==="parcial"?"~ parcial":"✗ ausente";h+='<div class="ri"><div class="rk">'+e[0].replace(/_/g," ")+'</div><div class="'+cls+'">'+ic+'</div></div>';});h+='</div>';}
+  h+='<div class="nota"><strong>Próximo paso:</strong> Descarga tu resultado en Excel y envíaselo a tu asesor antes de la sesión.</div>';
   h+='<button class="btn-xl" id="BX" onclick="dXL()">'+ICO_DL+' Descargar resultado en Excel (.xlsx)</button>';
   h+='<button class="btn-sec" onclick="reiniciar()">'+ICO_NEW+' Nueva autoevaluación</button>';
-  h+='</div>';
-  return h;
+  h+='</div></div>';return h;
 }
-
 function dXL(){
   if(!REP)return;
   var r=REP,s=smf(r.pt),wb=XLSX.utils.book_new();
@@ -403,21 +381,16 @@ function dXL(){
   XLSX.writeFile(wb,"EvaluaT_"+r.nom.replace(/\s+/g,"_")+".xlsx");
   var b=document.getElementById("BX");if(b){b.textContent="✓ ¡Descargado! Envíalo a tu asesor";b.className="btn-xl ok";}
 }
-
 function reiniciar(){
   S={f:"n",nom:"",tit:"",p:0,e:{},pg:"",q:false,oe:["","",""],pe:["","",""],fin:false};REP=null;
   document.getElementById("MS").innerHTML="";
   aM(bM("¡Nueva autoevaluación!\n¿Cuál es tu nombre completo?"));
   rI();upP();
 }
-
 function rI(){
   var ia=document.getElementById("IA");
   if(S.fin){ia.innerHTML="";return;}
-  if(S.f==="n"){
-    ia.innerHTML='<div style="display:flex;gap:8px;align-items:center;width:100%"><input type="text" id="IN" placeholder="Escribe tu nombre completo..." style="flex:1;border-radius:10px;font-size:13px;height:38px;border:0.5px solid var(--gris-borde);background:var(--gris-claro);color:var(--gris-texto);padding:0 13px;font-family:Inter,sans-serif;outline:none;" onkeydown="if(event.key===\'Enter\')env()"/><button class="sbtn" onclick="env()" aria-label="Enviar">'+ICO_SEND+'</button></div>';
-    return;
-  }
+  if(S.f==="n"){ia.innerHTML='<div style="display:flex;gap:8px;align-items:center;width:100%"><input type="text" id="IN" placeholder="Escribe tu nombre completo..." style="flex:1;border-radius:10px;font-size:13px;height:38px;border:0.5px solid var(--gris-borde);background:var(--gris-claro);color:var(--gris-texto);padding:0 13px;font-family:Inter,sans-serif;outline:none;" onkeydown="if(event.key===\'Enter\')env()"/><button class="sbtn" onclick="env()" aria-label="Enviar">'+ICO_SEND+'</button></div>';return;}
   var st=FL[S.p];if(!st){ia.innerHTML="";return;}
   if(st.t==="p3"){
     var rw=S.pe.map(function(v,i){return'<div class="mrow"><span class="mnum">'+(i+1)+'.</span><input class="minp" value="'+xe(v)+'" placeholder="Pregunta '+(i+1)+' — ¿...?" oninput="upPE('+i+',this.value)"/></div>';}).join("");
@@ -427,18 +400,13 @@ function rI(){
     var rw2=S.oe.map(function(v,i){return'<div class="mrow"><span class="mnum">'+(i+1)+'.</span><input class="minp" value="'+xe(v)+'" placeholder="Objetivo '+(i+1)+' — verbo en infinitivo" oninput="upOE('+i+',this.value)"/>'+(S.oe.length>3?'<button onclick="rmOE('+i+')" style="background:none;border:none;color:var(--gris);cursor:pointer;font-size:16px;padding:0 4px;">×</button>':'')+'</div>';}).join("");
     ia.innerHTML='<div class="mw"><div class="mlbl">Objetivos específicos — mín. 3, máx. 5</div>'+rw2+'<div class="mfoot"><button class="madd" onclick="adOE()" '+(S.oe.length>=5?"disabled":"")+'>+ objetivo</button><button class="msend" onclick="env()">Validar '+S.oe.filter(o=>o.trim()).length+'/5 →</button></div></div>';return;
   }
-  if(st.t==="l"){
-    ia.innerHTML='<div style="display:flex;gap:8px;align-items:flex-end;width:100%"><textarea id="IN" placeholder="Pega aquí el texto..." style="flex:1;min-height:90px;max-height:180px;resize:none;border-radius:10px;font-size:13px;border:0.5px solid var(--gris-borde);background:var(--gris-claro);color:var(--gris-texto);padding:9px 13px;font-family:Inter,sans-serif;outline:none;line-height:1.5;"></textarea><button class="abtn" onclick="env()">Analizar</button></div>';
-  } else {
-    ia.innerHTML='<div style="display:flex;gap:8px;align-items:flex-end;width:100%"><textarea id="IN" placeholder="Escribe tu respuesta..." style="flex:1;min-height:38px;max-height:80px;resize:none;border-radius:10px;font-size:13px;border:0.5px solid var(--gris-borde);background:var(--gris-claro);color:var(--gris-texto);padding:9px 13px;font-family:Inter,sans-serif;outline:none;line-height:1.5;" onkeydown="if(event.key===\'Enter\'&&!event.shiftKey){event.preventDefault();env()}"></textarea><button class="sbtn" onclick="env()" aria-label="Enviar">'+ICO_SEND+'</button></div>';
-  }
+  if(st.t==="l"){ia.innerHTML='<div style="display:flex;gap:8px;align-items:flex-end;width:100%"><textarea id="IN" placeholder="Pega aquí el texto..." style="flex:1;min-height:90px;max-height:180px;resize:none;border-radius:10px;font-size:13px;border:0.5px solid var(--gris-borde);background:var(--gris-claro);color:var(--gris-texto);padding:9px 13px;font-family:Inter,sans-serif;outline:none;line-height:1.5;"></textarea><button class="abtn" onclick="env()">Analizar</button></div>';}
+  else{ia.innerHTML='<div style="display:flex;gap:8px;align-items:flex-end;width:100%"><textarea id="IN" placeholder="Escribe tu respuesta..." style="flex:1;min-height:38px;max-height:80px;resize:none;border-radius:10px;font-size:13px;border:0.5px solid var(--gris-borde);background:var(--gris-claro);color:var(--gris-texto);padding:9px 13px;font-family:Inter,sans-serif;outline:none;line-height:1.5;" onkeydown="if(event.key===\'Enter\'&&!event.shiftKey){event.preventDefault();env()}"></textarea><button class="sbtn" onclick="env()" aria-label="Enviar">'+ICO_SEND+'</button></div>';}
 }
-
 function upPE(i,v){S.pe[i]=v;}
 function upOE(i,v){S.oe[i]=v;}
 function adOE(){if(S.oe.length<5){S.oe.push("");rI();}}
 function rmOE(i){if(S.oe.length>3){S.oe.splice(i,1);rI();}}
-
 function env(){
   var st=FL[S.p],tx;
   if(S.f==="n"){var i=document.getElementById("IN");tx=(i&&i.value.trim())||"";}
@@ -446,12 +414,7 @@ function env(){
   else if(st&&st.t==="me"){tx=S.oe.filter(o=>o.trim()).join("\n");}
   else{var i=document.getElementById("IN");tx=(i&&(i.value||"").trim())||"";}
   if(!tx||S.fin)return;
-  if(S.f==="n"){
-    S.nom=tx;S.f="c";
-    aM(uM(tx));
-    aM(bM("¡Hola, "+tx+"! 🎓\n\nRevisaré tu Capítulo I según los 9 criterios de la guía UCV 2026, antes de que llegues con tu asesor.\n\nNo reemplazo la revisión docente — soy tu preparación previa.\n\n"+FL[0].p));
-    upP();rI();return;
-  }
+  if(S.f==="n"){S.nom=tx;S.f="c";aM(uM(tx));aM(bM("¡Hola, "+tx+"! 🎓\n\nRevisaré tu Capítulo I según los 9 criterios de la guía UCV 2026, antes de que llegues con tu asesor.\n\nNo reemplazo la revisión docente — soy tu preparación previa.\n\n"+FL[0].p));upP();rI();return;}
   aM(uM(tx.length>200?tx.substring(0,200)+"...":tx));
   var r={a:[],ti:[],e:"ok"},palabras=undefined;
   if(S.p===0){var v=vTit(tx);Object.assign(S.e,{título:v.e});aM(dH("Título · Criterio 1",v.a,v.ti));nP(S.p+1);return;}
@@ -472,18 +435,14 @@ function env(){
     REP=rep;aM(rH(rep));S.fin=true;upP();rI();
   }
 }
-
 function nP(n){
-  S.p=n;
-  if(n===3)S.pe=["","",""];
-  if(n===6)S.oe=["","",""];
+  S.p=n;if(n===3)S.pe=["","",""];if(n===6)S.oe=["","",""];
   var st=FL[n];if(st)aM(bM(st.p));
-  upP();rI();
-  setTimeout(function(){document.getElementById("MS").scrollTop=99999;},120);
+  upP();rI();setTimeout(function(){document.getElementById("MS").scrollTop=99999;},120);
 }
-
 aM(bM("¡Hola! 🎓\n\nSoy EvalúaT — herramienta de autoevaluación para el Capítulo I de Proyecto de tesis, basada en la guía UCV 2026.\n\nReviso los 9 criterios antes de que llegues con tu asesor.\nNo reemplazo la revisión docente — soy tu preparación previa.\n\n¿Cuál es tu nombre completo?"));
 upP();rI();
 </script>
 </body>
 </html>
+
