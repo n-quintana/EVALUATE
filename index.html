@@ -1,51 +1,159 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mi Página Evaluadora</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            padding: 20px;
-        }
-        button {
-            padding: 10px 20px;
-            font-size: 16px;
-            cursor: pointer;
-            background-color: #007bff;
-            color: white;
-            border: none;
-            border-radius: 5px;
-        }
-        button:hover {
-            background-color: #0056b3;
-        }
-    </style>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>EvalúaT · Análisis Integral · UCV 2026</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap');
+:root{
+  --rojo:#C8102E;
+  --rojo-light:#FDECEA;
+  --rojo-mid:#F5A3AE;
+  --rojo-dark:#A00D24;
+  --azul:#003087;
+  --azul-light:#E8EDF5;
+  --azul-mid:#7A9CC4;
+  --gris:#6B7280;
+  --gris-claro:#F5F6F7;
+  --gris-borde:#E4E6E8;
+  --gris-texto:#374151;
+  --blanco:#FFFFFF;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{background:var(--gris-claro);font-family:'Inter',sans-serif;color:var(--gris-texto);min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:20px 16px;}
+.app{width:100%;max-width:700px;display:flex;flex-direction:column;gap:16px;}
+
+/* HEADER */
+.header{background:var(--blanco);border:0.5px solid var(--gris-borde);border-radius:16px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,0.03);}
+.header-top{height:4px;background:var(--rojo);}
+.header-body{padding:16px 20px;display:flex;align-items:center;gap:14px;}
+.logo{width:42px;height:42px;border-radius:12px;background:var(--rojo);display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.logo svg{width:22px;height:22px;fill:none;stroke:#fff;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round;}
+.brand-name{font-size:22px;font-weight:600;color:var(--azul);letter-spacing:-0.5px;line-height:1;}
+.brand-name span{color:var(--rojo);}
+.brand-full{font-size:11px;color:var(--gris);margin-top:3px;line-height:1.4;}
+.badge{margin-left:auto;background:var(--rojo-light);color:var(--rojo);font-size:10px;padding:4px 10px;border-radius:99px;font-weight:600;white-space:nowrap;border:0.5px solid var(--rojo-mid);}
+
+/* NOTICE */
+.notice{background:var(--azul-light);border:0.5px solid var(--azul-mid);border-left:3px solid var(--azul);border-radius:12px;padding:12px 16px;font-size:13px;color:var(--gris-texto);line-height:1.5;display:flex;gap:10px;align-items:flex-start;}
+.notice svg{width:18px;height:18px;stroke:var(--azul);flex-shrink:0;margin-top:2px;}
+.notice strong{color:var(--azul);font-weight:600;}
+
+/* INPUT AREA */
+.input-section{background:var(--blanco);border:0.5px solid var(--gris-borde);border-radius:16px;padding:20px;display:flex;flex-direction:column;gap:12px;box-shadow:0 2px 8px rgba(0,0,0,0.03);}
+.input-label{font-size:14px;font-weight:600;color:var(--azul);display:flex;justify-content:space-between;align-items:baseline;}
+.input-label span{font-size:12px;font-weight:400;color:var(--gris);}
+.ta-wrap{display:flex;flex-direction:column;gap:8px;}
+textarea{width:100%;height:350px;border-radius:10px;border:1px solid var(--gris-borde);background:var(--gris-claro);color:var(--gris-texto);padding:14px;font-family:'Inter',sans-serif;font-size:13px;line-height:1.6;resize:vertical;outline:none;}
+textarea:focus{border-color:var(--rojo-mid);background:var(--blanco);}
+.btn-submit{width:100%;padding:14px;border-radius:10px;background:var(--rojo);border:none;color:#fff;font-size:14px;font-family:'Inter',sans-serif;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;transition:background 0.2s;}
+.btn-submit:hover{background:var(--rojo-dark);}
+.btn-submit svg{width:18px;height:18px;stroke:#fff;fill:none;stroke-width:2;}
+
+/* RESULTS */
+#RESULTS_SEC{display:none;flex-direction:column;gap:14px;}
+.dc{background:var(--blanco);border:0.5px solid var(--gris-borde);border-radius:14px;padding:16px 20px;box-shadow:0 2px 6px rgba(0,0,0,0.02);}
+.dlbl{font-size:11px;font-weight:600;color:var(--azul);text-transform:uppercase;letter-spacing:.7px;margin-bottom:12px;border-bottom:1px solid var(--gris-borde);padding-bottom:8px;}
+.ex-box{background:var(--gris-claro);border:1px dashed var(--gris-borde);border-radius:8px;padding:10px;font-size:12px;color:var(--gris-texto);margin-bottom:12px;font-style:italic;}
+.dg{display:grid;grid-template-columns:repeat(auto-fit, minmax(140px, 1fr));gap:8px;margin-bottom:12px;}
+.di{background:var(--gris-claro);border:0.5px solid var(--gris-borde);border-radius:8px;padding:8px 12px;display:flex;flex-direction:column;gap:4px;}
+.dk{font-size:10px;color:var(--gris);text-transform:uppercase;letter-spacing:.4px;}
+.dv-ok{font-size:12px;font-weight:600;color:var(--azul);}
+.dv-warn{font-size:12px;font-weight:600;color:#B45309;}
+.dv-err{font-size:12px;font-weight:600;color:var(--rojo);}
+.dv-na{font-size:12px;font-weight:600;color:var(--gris);}
+.alr{display:flex;gap:10px;align-items:flex-start;font-size:13px;color:var(--rojo-dark);margin-bottom:8px;line-height:1.5;background:var(--rojo-light);border:0.5px solid var(--rojo-mid);border-radius:8px;padding:10px 12px;}
+.alr svg{width:16px;height:16px;stroke:var(--rojo);flex-shrink:0;margin-top:2px;fill:none;stroke-width:2;}
+.tip{display:flex;gap:10px;align-items:flex-start;font-size:13px;color:var(--gris-texto);margin-bottom:6px;line-height:1.5;padding:6px 0;}
+.tip svg{width:16px;height:16px;stroke:var(--azul);flex-shrink:0;margin-top:2px;fill:none;stroke-width:2;}
+
+/* REPORTE FINAL */
+.rep{background:var(--blanco);border:0.5px solid var(--gris-borde);border-radius:16px;overflow:hidden;box-shadow:0 4px 12px rgba(0,0,0,0.05);}
+.rep-top{height:5px;background:var(--rojo);}
+.rep-body{padding:24px;display:flex;flex-direction:column;gap:16px;}
+.rep-score{display:flex;align-items:baseline;gap:8px;}
+.rep-num{font-size:56px;font-weight:600;line-height:1;}
+.rep-of{font-size:20px;color:var(--gris);font-weight:400;}
+.sem{display:flex;align-items:center;gap:10px;padding:14px 18px;border-radius:10px;font-size:14px;font-weight:600;}
+.sem-v{background:var(--azul-light);color:var(--azul);border:0.5px solid var(--azul-mid);}
+.sem-a{background:#FFF8E1;color:#B45309;border:0.5px solid #FDE68A;}
+.sem-r{background:var(--rojo-light);color:var(--rojo);border:0.5px solid var(--rojo-mid);}
+.sem-dot{width:12px;height:12px;border-radius:50%;background:currentColor;flex-shrink:0;}
+.nota{background:var(--azul-light);border:0.5px solid var(--azul-mid);border-radius:10px;padding:12px 16px;font-size:13px;color:var(--gris-texto);line-height:1.5;}
+.btn-xl{width:100%;padding:14px;border-radius:10px;background:var(--rojo);border:none;color:#fff;font-size:14px;font-family:'Inter',sans-serif;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;transition:background 0.2s;}
+.btn-xl:hover{background:var(--rojo-dark);}
+.btn-xl svg{width:18px;height:18px;stroke:#fff;fill:none;stroke-width:2;}
+.btn-sec{width:100%;padding:12px;border-radius:10px;background:var(--gris-claro);border:0.5px solid var(--gris-borde);color:var(--gris-texto);font-size:14px;font-family:'Inter',sans-serif;font-weight:500;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;}
+.btn-sec svg{width:16px;height:16px;stroke:var(--gris);fill:none;stroke-width:2;}
+.ft{font-size:11px;color:var(--gris);text-align:center;margin-top:10px;}
+</style>
 </head>
 <body>
+<div class="app">
+  <div class="header">
+    <div class="header-top"></div>
+    <div class="header-body">
+      <div class="logo">
+        <svg viewBox="0 0 24 24"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>
+      </div>
+      <div>
+        <div class="brand-name">Evalú<span>aT</span> Integral</div>
+        <div class="brand-full">Escáner automático del Capítulo I de Proyecto de tesis<br>Basada en la guía UCV 2026 · Universidad César Vallejo</div>
+      </div>
+      <div class="badge">9 criterios</div>
+    </div>
+  </div>
 
-    <h1>Sistema de Evaluación</h1>
-    
-    <button onclick="evaluarCompleto()">Evaluar Completo</button>
+  <div class="notice">
+    <svg viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+    <span><strong>Evaluación en 1 clic:</strong> Pega aquí todo el texto de tu Capítulo I. El sistema extraerá automáticamente tu título, preguntas, objetivos y evaluará la realidad problemática, marco teórico e hipótesis.</span>
+  </div>
 
-    <script>
-        // Aquí declaramos la función que el navegador te decía que "not defined" (no definida)
-        function evaluarCompleto() {
-            
-            // ---------------------------------------------------------
-            // 👇 AQUÍ DEBES PEGAR LA LÓGICA DE TU PROGRAMA 👇
-            // ---------------------------------------------------------
-            
-            alert("¡El botón funciona y el error de la consola ha desaparecido!");
-            console.log("Iniciando la evaluación...");
-            
-            // ---------------------------------------------------------
-            // 👆 FIN DE TU CÓDIGO 👆
-            // ---------------------------------------------------------
-            
-        }
-    </script>
+  <div class="input-section" id="INPUT_SEC">
+    <div class="input-label">
+      Contenido de tu Capítulo I <span>(Sin carátula ni índices)</span>
+    </div>
+    <div class="ta-wrap">
+      <input type="text" id="INP_NOM" placeholder="Nombre del estudiante..." style="padding:12px;border-radius:10px;border:1px solid var(--gris-borde);background:var(--gris-claro);font-family:Inter;font-size:13px;outline:none;" />
+      <textarea id="DOC_TEXT" placeholder="Pega todo tu texto aquí (Ctrl+V)... Asegúrate de incluir desde el título hasta la hipótesis/supuesto."></textarea>
+    </div>
+    <button class="btn-submit" onclick="evaluarCompleto()">
+      <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/><line x1="11" y1="8" x2="11" y2="14"/><line x1="8" y1="11" x2="14" y2="11"/></svg>
+      Analizar Documento Completo
+    </button>
+  </div>
 
-</body>
-</html>
+  <div id="RESULTS_SEC"></div>
+
+  <div class="ft">EvalúaT · Guía UCV 2026 · Van Dijk (1980) · Hernández-Sampieri (2018)</div>
+</div>
+
+<script>
+// VARIABLES GLOBALES Y ESTADO
+var S = { e: {}, q: false };
+var REP = null;
+
+// UTILIDADES (Las originales de tu código)
+function seg(t){return t.split(/\n{2,}|\n(?=[A-ZÁÉÍÓÚ])/).map(p=>p.trim()).filter(p=>p.length>30);}
+function tok(p){var sw=new Set("el la los las un una de del al en con por para que se es son esta este y o pero sin más como cuando donde si no lo le su sus hay fue han ha también así esto entre sobre ante bajo hasta desde ya muy todo todos toda cada otro otra mismo misma".split(" "));return p.toLowerCase().replace(/[.,;:!?¡¿()]/g," ").split(/\s+/).filter(w=>w.length>4&&!sw.has(w));}
+function sim(a,b){if(!a.length||!b.length)return 0;var sa=new Set(a);var c=b.filter(x=>sa.has(x)||[...sa].some(y=>y.length>5&&(x.includes(y.slice(0,5))||y.includes(x.slice(0,5)))));return c.length/Math.min(a.length,b.length);}
+function xe(t){return(t||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/\n/g,"<br>");}
+function nc(t){return["porque","debido a","ya que","puesto que","dado que","por ello","por tanto","en consecuencia","por lo tanto","sin embargo","no obstante","aunque","además","asimismo","también","igualmente","por otro lado","en primer lugar","finalmente","por ejemplo","es decir"].filter(x=>t.toLowerCase().includes(x)).length;}
+function ods(t){var L=t.toLowerCase();return /\bods\b/.test(L)||/objetivo[s]?\s+de\s+desarrollo\s+sostenible/.test(L)||/agenda\s+2030/.test(L)||/ods\s*\d/.test(L)||/objetivo\s+\d/.test(L)||/desarrollo\s+sostenible/.test(L)||["educación de calidad","trabajo decente","industria innovación"].some(v=>L.includes(v));}
+
+// DICCIONARIOS DE UNIDADES DE ANÁLISIS
+var UA_P=["estudiantes","jóvenes","jovenes","usuarios","trabajadores","docentes","consumidores","pobladores","comunidad","empresa","institución","personas","adultos","adolescentes","niños","padres","maestros","profesores","funcionarios","periodistas","influencers","seguidores","fans","público","espectadores","lectores","oyentes","ciudadanos","egresados","empleados","clientes","pacientes","directivos"];
+var UA_C=["película","pelicula","películas","filme","film","saga","serie","series","episodio","temporada","novela","relato","cuento","obra","libro","libros","texto","textos","discurso","spot","anuncio","publicidad","campaña","publicación","post","tweet","imagen","fotografía","video","meme","sticker","noticia","reportaje","editorial","artículo","crónica","webcomic","manga","anime","podcast","programa","contenido","mensaje","narrativa","corpus","colección","archivo","caso","escena","fragmento","capítulo","perfil","cuenta","página","portal","plataforma"];
+var UA_I=["institución","organización","marca","partido","gobierno","municipio","ministerio","organismo","asociación","fundación","ong","cooperativa","universidad","escuela","colegio","hospital","agencia","medio","diario","canal","radio","compañía"];
+function ua(t){var L=t.toLowerCase();if(UA_P.some(v=>L.includes(v)))return"personas";if(UA_C.some(v=>L.includes(v)))return"objeto cultural/textual";if(UA_I.some(v=>L.includes(v)))return"institución u organización";return null;}
+function hasUA(t){return ua(t)!==null;}
+
+// FUNCIONES DE VALIDACIÓN ADAPTADAS
+function vTit(t){
+  if(!t) return {a:["No se detectó un título válido."], ti:[], e:"ausente"};
+  var w=t.trim().split(/\s+/).length,a=[],ti=[];
+  if(w>20)a.push("El título extraído tiene "+w+" palabras. El máximo recomendado es 20 (Criterio 1).");else ti.push("Extensión de título correcta: "+w+" palabras.");
+  var L=t.toLowerCase();
+  var hasV=["relación","influencia
