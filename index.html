@@ -105,7 +105,7 @@
 
     <div class="form-section" id="section-4">
         <h2>4. Capítulo III: Aspectos Administrativos</h2>
-        <div class="normative-callout">Requisitos: Extensión sugerida de 2 páginas. Se deben detallar los recursos monetarios y no monetarios (humanos, servicios de terceros, equipos, pasajes, materiales), las tablas estructuradas de financiamiento (Tabla 3) y el cronograma de ejecución por 16 sesiones (Tabla 4).</div>
+        <div class="normative-callout">Requisitos: Extensión sugerida de 2 páginas. Se deben detallar los recursos monetarios y no monetarios (humanos, servicios de terceros, equipos, pasajes, materiales), las tablas estructuradas de financiamiento (Tabla 3) y el cronograma de ejecución por 16 sesiones (Tabla 4). El sistema audita que se hayan colocado datos numéricos y marcas 'X' de planificación.</div>
         <div class="form-group">
             <label>Contenido del Capítulo III:</label>
             <textarea id="capitulo_3" class="field-input" placeholder="Pegue el texto o las tablas correspondientes a los Aspectos Administrativos..."></textarea>
@@ -118,7 +118,7 @@
 
     <div class="form-section" id="section-5">
         <h2>5. Referencias Bibliográficas</h2>
-        <div class="normative-callout">Requisitos: Mínimo 30 referencias citadas en el cuerpo. Al menos el 70% deben ser artículos científicos indexados en Scopus, WoS o SciELO (SJR de Scimago) con antigüedad máxima de 5 años. Mínimo 30% en idioma inglés u otro idioma extranjero.</div>
+        <div class="normative-callout">Requisitos: Mínimo 30 referencias citadas en el cuerpo. Al menos el 70% deben ser artículos científicos indexados en Scopus, WiS o SciELO con antigüedad máxima de 5 años. Mínimo 30% en idioma inglés u otro idioma extranjero.</div>
         <div class="form-group">
             <label>Lista Completa de Referencias Bibliográficas:</label>
             <textarea id="referencias_texto" class="field-input" placeholder="Pegue el listado final de referencias bibliográficas..."></textarea>
@@ -131,15 +131,15 @@
 
     <div class="loading-box" id="loading">
         <div class="spinner"></div>
-        <p style="font-weight: bold; color: #004b8d;">Ejecutando algoritmos de validación textual...</p>
-        <p style="font-size: 11px; color: #666;">Analizando métricas de rúbrica completa UCV (Criterios 1 al 20)...</p>
+        <p style="font-weight: bold; color: #004b8d;">Ejecutando algoritmos de validación estructural profunda...</p>
+        <p style="font-size: 11px; color: #666;">Analizando celdas, montos y marcas de planificación de la rúbrica...</p>
     </div>
 
     <div class="result-container" id="resultado-container">
         <div class="info-header">
             <table style="width:100%; border:none; font-size:12px;">
                 <tr>
-                    <td><strong>UNIVERSIDAD CÉSAR VALLEJO</strong></td>
+                    <td>UNIVERSIDAD CÉSAR VALLEJO</td>
                     <td style="text-align:right;"><strong>Código:</strong> PP-G-02.02</td>
                 </tr>
                 <tr>
@@ -194,7 +194,7 @@
         const refTexto = document.getElementById('referencias_texto').value || "";
 
         if (!cap1 || !cap2 || !cap3 || !refTexto) {
-            alert("Por favor, complete todas las secciones (Capítulos I, II, III y Referencias) antes de evaluar.");
+            alert("Por favor, complete todas las secciones antes de evaluar.");
             return;
         }
 
@@ -203,31 +203,31 @@
         document.getElementById('btn-analizar').disabled = true;
 
         setTimeout(() => {
-            // --- CRITERIOS DEL 1 AL 16 (CAPÍTULOS I Y II) ---
+            // --- CRITERIOS DEL 1 AL 16 ---
             const arrayPalabrasTitulo = titulo.trim().split(/\s+/).filter(p => p.length > 0);
             const numPalabrasTitulo = arrayPalabrasTitulo.length;
             const c1 = calcularCriterio((numPalabrasTitulo <= 20 && numPalabrasTitulo > 0), (numPalabrasTitulo > 20 && numPalabrasTitulo <= 25), (numPalabrasTitulo > 25));
-            let obs1 = `El título contiene ${numPalabrasTitulo} palabras. ` + (numPalabrasTitulo <= 20 ? "Cumple con el límite normativo." : "Excede las 20 palabras reguladas.");
+            let obs1 = `El título contiene ${numPalabrasTitulo} palabras. ` + (numPalabrasTitulo <= 20 ? "Cumple con el límite." : "Excede las 20 palabras.");
 
             const tieneSubtitulosC1 = /(^|\n)([I|V|X|\d]+\.?\s+[A-ZÁÉÍÓÚ]|Planteamiento del problema|Revisión de literatura|Hipótesis)/i.test(cap1);
             const tieneVinetasC1 = /[\u2022\u2023\u25B6\u25C6\u25CF]*[\*\-\u2022]\s+/g.test(cap1) || /[\d]+\.\s+/g.test(cap1);
             const tienePasadoC1 = /\b(analizó|describió|abordó|formuló|expuso|realizó|determinó|evaluó)\b/i.test(cap1);
             const c2 = calcularCriterio((!tieneSubtitulosC1 && !tieneVinetasC1 && tienePasadoC1), (!tieneSubtitulosC1 && !tieneVinetasC1), (tienePasadoC1));
-            let obs2 = (tieneSubtitulosC1 ? "Posee subtítulos prohibidos. " : "Sin subtítulos (Correcto). ") + (tieneVinetasC1 ? "Posee viñetas prohibidas en la prosa. " : "Sin viñetas (Correcto). ");
+            let obs2 = (tieneSubtitulosC1 ? "Posee subtítulos prohibidos. " : "Sin subtítulos. ") + (tieneVinetasC1 ? "Posee viñetas prohibidas." : "Sin viñetas.");
 
             const tieneODS = /ODS|Desarrollo Sostenible/i.test(cap1);
             const tieneInternacional = /internacional|mundial|global/i.test(cap1);
             const tieneNacional = /nacional|perú|peruano/i.test(cap1);
             const c3 = calcularCriterio((tieneODS && tieneInternacional && tieneNacional), (tieneInternacional && tieneNacional), (tieneODS));
-            let obs3 = tieneODS ? "Vínculo con ODS identificado." : "Falta vincular el planteamiento al ODS correspondiente.";
+            let obs3 = tieneODS ? "Vínculo con ODS identificado." : "Falta vincular el planteamiento al ODS.";
 
             const tieneSignosInterrogacion = /\?/g.test(cap1);
             const c4 = calcularCriterio(tieneSignosInterrogacion, tieneSignosInterrogacion, cap1.includes("problema"));
-            let obs4 = tieneSignosInterrogacion ? "Formulación interrogativa correcta." : "No se hallaron signos de interrogación para el problema.";
+            let obs4 = tieneSignosInterrogacion ? "Formulación interrogativa correcta." : "Faltan signos de interrogación.";
 
             const tieneJustificacion = /justificación|justifica|importancia|relevancia/i.test(cap1);
             const c5 = calcularCriterio(tieneJustificacion, tieneJustificacion, tieneJustificacion);
-            let obs5 = tieneJustificacion ? "Justificación explícita encontrada." : "Falta robustecer los motivos y la importancia de la ejecución.";
+            let obs5 = tieneJustificacion ? "Justificación encontrada." : "Falta robustecer motivos de ejecución.";
 
             const tieneObjetivoG = /objetivo general|objetivo de la investigación/i.test(cap1);
             const tieneObjetivosE = /objetivos específicos/i.test(cap1);
@@ -236,11 +236,11 @@
 
             const cuentaAntecedentes = (cap1.match(/artículo|investigación|autor|estudio|(\(20\d\d\))/g) || []).length;
             const c7 = calcularCriterio((cuentaAntecedentes >= 8), (cuentaAntecedentes >= 5), (cuentaAntecedentes >= 2));
-            let obs7 = `Densidad referencial evaluada: se identifican antecedentes científicos en el marco conceptual.`;
+            let obs7 = `Densidad referencial evaluada: se identifican antecedentes en la revisión de literatura.`;
 
             const tieneDimensiones = /dimensión|dimensiones|categorías/i.test(cap1);
             const c8 = calcularCriterio(tieneDimensiones, tieneDimensiones, tieneDimensiones);
-            let obs8 = tieneDimensiones ? "Define y detalla variables y dimensiones operacionales." : "Se sugiere explicitar las dimensiones de las variables de interés.";
+            let obs8 = tieneDimensiones ? "Define variables y dimensiones operacionales." : "Se sugiere detallar dimensiones de las variables.";
 
             const tieneTeorias = /teoría|enfoque teórico|fundamento/i.test(cap1);
             const c9 = calcularCriterio(tieneTeorias, tieneTeorias, tieneTeorias);
@@ -253,58 +253,87 @@
             const tieneSubtitulosC2 = /(^|\n)([I|V|X|\d]+\.?\s+[A-ZÁÉÍÓÚ]|Tipo y enfoque|Variables|Unidad de análisis|Técnicas e instrumentos|Métodos para el análisis|Aspectos éticos)/i.test(cap2);
             const tieneFuturoC2 = /\b(describirá|analizará|emplearán|considerará|detallará|aplicarán|desarrollarán)\b/i.test(cap2);
             const c11 = calcularCriterio((!tieneSubtitulosC2 && tieneFuturoC2), (!tieneSubtitulosC2), (tieneFuturoC2));
-            let obs11 = (tieneSubtitulosC2 ? "Alerta: El capítulo II presenta subtítulos explícitos. " : "Prosa continua (Correcto). ") + (tieneFuturoC2 ? "Tiempo futuro validado." : "Debe redactarse en tiempo futuro.");
+            let obs11 = (tieneSubtitulosC2 ? "Alerta: El capítulo II presenta subtítulos. " : "Prosa continua. ") + (tieneFuturoC2 ? "Tiempo futuro validado." : "Debe redactarse en futuro.");
 
             const tieneOslo = /Oslo|OCDE/i.test(cap2);
             const tieneDiseno = /diseño|enfoque/i.test(cap2);
             const c12 = calcularCriterio((tieneOslo && tieneDiseno), tieneDiseno, tieneOslo);
-            let obs12 = tieneOslo ? "Tipo de investigación fundamentado bajo el Manual de Oslo de la OCDE (2018)." : "Falta referenciar el tipo según el Manual de Oslo.";
+            let obs12 = tieneOslo ? "Tipo de investigación fundamentado bajo el Manual de Oslo de la OCDE." : "Falta referenciar el tipo según Manual de Oslo.";
 
             const tieneDefVar = /operacionalización|tabla|definición conceptual/i.test(cap2) || /categorización/i.test(cap2);
             const c13 = calcularCriterio(tieneDefVar, tieneDefVar, tieneDefVar);
-            let obs13 = tieneDefVar ? "Variables definidas con dimensiones en la metodología." : "Se sugiere agregar explícitamente el tratamiento dimensional.";
+            let obs13 = tieneDefVar ? "Variables definidas con dimensiones en la metodología." : "Se sugiere agregar tratamiento dimensional.";
 
             const tienePoblacion = /población|muestra/i.test(cap2);
             const tieneCriterios = /inclusión|exclusión/i.test(cap2);
             const c14 = calcularCriterio((tienePoblacion && tieneCriterios), tienePoblacion, tieneCriterios);
-            let obs14 = tienePoblacion ? "Población y muestra delimitada con criterios." : "Falta declarar población o criterios de inclusión/exclusión.";
+            let obs14 = tienePoblacion ? "Población y muestra delimitada con criterios." : "Falta declarar población o criterios.";
 
             const tieneJueces = /jueces|expertos|validación/i.test(cap2);
             const tieneConsistencia = /consistencia|alfa|kr|confiabilidad/i.test(cap2);
             const c15 = calcularCriterio((tieneJueces && tieneConsistencia), tieneJueces, tieneConsistencia);
-            let obs15 = tieneJueces ? "Proceso formal de validación por juicio de expertos declarado." : "Debe mencionar la validación por un mínimo de 3 jueces expertos.";
+            let obs15 = tieneJueces ? "Proceso formal de validación por juicio de expertos declarado." : "Debe mencionar validación por jueces expertos.";
 
             const tieneAnalisisDatos = /estadística|análisis de datos|descriptiva/i.test(cap2);
             const tieneEtica = /código de ética|ética|consentimiento/i.test(cap2);
             const c16 = calcularCriterio((tieneAnalisisDatos && tieneEtica), (tieneAnalisisDatos && tieneEtica), tieneEtica);
-            let obs16 = tieneEtica ? "Cumple con la declaración de alineación al Código de Ética de la UCV." : "Obligatorio citar la conformidad con el Código de Ética de la UCV.";
+            let obs16 = tieneEtica ? "Cumple con la declaración de alineación al Código de Ética de la UCV." : "Obligatorio citar conformidad con Código de Ética UCV.";
 
-            // --- NUEVOS CRITERIOS: CAPÍTULO III (ASPECTOS ADMINISTRATIVOS) ---
+
+            // --- AUDITORÍA DE DATOS REALES INTERNA (CAPÍTULO III) ---
+
+            // Criterio 17: Recursos monetarios y no monetarios llenados con montos/bienes
+            const mencionaTablasPresupuesto = (/tabla\s+1/i.test(cap3) || /no\s+monetarios/i.test(cap3)) && (/tabla\s+2/i.test(cap3) || /recursos\s+monetarios/i.test(cap3));
             
-            // Criterio 17: Recursos monetarios y no monetarios (Tablas 1 y 2)
-            const contieneTabla1 = /tabla\s+1/i.test(cap3) || /no\s+monetarios/i.test(cap3);
-            const contieneTabla2 = /tabla\s+2/i.test(cap3) || /recursos\s+monetarios/i.test(cap3);
-            const c17 = calcularCriterio((contieneTabla1 && contieneTabla2), contieneTabla2, contieneTabla1);
-            let obs17 = (contieneTabla1 ? "Tabla 1 (No monetarios) presente. " : "Falta Tabla 1 de recursos no monetarios. ") + (contieneTabla2 ? "Tabla 2 (Monetarios) presente." : "Falta Tabla 2 de recursos monetarios.");
-
-            // Criterio 18: Fuentes de financiamiento (Tabla 3)
-            const contieneTabla3 = /tabla\s+3/i.test(cap3) || /financiamiento/i.test(cap3);
-            const c18 = calcularCriterio(contieneTabla3, contieneTabla3, contieneTabla3);
-            let obs18 = contieneTabla3 ? "Estructura de la Tabla 3 (Financiamiento de recursos) identificada." : "Debe incorporar la Tabla 3 para el desglose de entidades financiadoras.";
-
-            // Criterio 19: Cronograma de ejecución por sesiones (Tabla 4)
-            const contieneTabla4 = /tabla\s+4/i.test(cap3) || /cronograma/i.test(cap3);
-            const tieneSesiones = /sesión|sesiones|\b(1[0-6]|[1-9])\b/i.test(cap3); // Busca mención a sesiones o números de sesiones
-            const c19 = calcularCriterio((contieneTabla4 && tieneSesiones), contieneTabla4, tieneSesiones);
-            let obs19 = contieneTabla4 ? "Tabla 4 (Cronograma) estructurada adecuadamente para las 16 sesiones." : "Debe insertar la Tabla 4 con las actividades programadas sesión por sesión.";
-
-            // --- NUEVO CRITERIO: REFERENCIAS ---
+            // RegEx: Busca palabras clave del cuadro seguidas de patrones numéricos (ej. "Insumos 350", "Servicios 1,200", "S/. 500")
+            const tieneDatosFinancierosReales = /\b(soles|s\/\.?|total|subtotal|costo)\b\s*.*?\b\d+([\.,]\d+)?\b/i.test(cap3);
             
-            // Criterio 20: Cantidad, revistas indizadas, antigüedad, inglés
+            const c17 = calcularCriterio((mencionaTablasPresupuesto && tieneDatosFinancierosReales), mencionaTablasPresupuesto, tieneDatosFinancierosReales);
+            let obs17 = "";
+            if (mencionaTablasPresupuesto && tieneDatosFinancierosReales) {
+                obs17 = "Validado: Estructura de tablas de recursos detectada e incluye valores numéricos o financieros explícitos.";
+            } else if (mencionaTablasPresupuesto && !tieneDatosFinancierosReales) {
+                obs17 = "Alerta: El alumno pegó los títulos de las Tablas 1 y 2, pero los cuadros de costos o investigadores están vacíos (sin montos numéricos).";
+            } else {
+                obs17 = "Faltan estructurar las Tablas 1 y 2 correspondientes a recursos humanos y materiales.";
+            }
+
+            // Criterio 18: Fuentes de financiamiento (Tabla 3) rellenadas
+            const mencionaTabla3 = /tabla\s+3/i.test(cap3) || /financiamiento/i.test(cap3);
+            // RegEx: Verifica si declararon entidades o la palabra "Autofinanciado" / "Propio" junto a montos de inversión
+            const tieneDatosFinanciamientoReal = /\b(autofinanciado|propio|universidad|ucv|subtotal|monto)\b\s*.*?\b\d+/i.test(cap3);
+            
+            const c18 = calcularCriterio((mencionaTabla3 && tieneDatosFinanciamientoReal), mencionaTabla3, tieneDatosFinanciamientoReal);
+            let obs18 = "";
+            if (mencionaTabla3 && tieneDatosFinanciamientoReal) {
+                obs18 = "Validado: Tabla 3 de financiamiento identificada con declaración expresa de fondos y montos distribuidos.";
+            } else if (mencionaTabla3 && !tieneDatosFinanciamientoReal) {
+                obs18 = "Alerta: Se detectó el encabezado de Financiamiento (Tabla 3), pero no se especificó la entidad financiadora ni montos reales.";
+            } else {
+                obs18 = "Debe incorporar la Tabla 3 para el desglose de entidades de financiamiento.";
+            }
+
+            // Criterio 19: Cronograma de ejecución (Tabla 4) auditando marcas 'X'
+            const mencionaTabla4 = /tabla\s+4/i.test(cap3) || /cronograma/i.test(cap3);
+            
+            // RegEx para el Gráfico de Gantt textificado: Busca hitos/actividades seguidos de marcas de planificación 'X' o 'x' separadas por espacios, guiones o tabulaciones reales del cuadro
+            const tieneMarcarXEnGantt = /([a-záéíóúñ]+\s+)+.*?\b(x|X)\b\s+.*?\b(x|X)\b/i.test(cap3) || /(\b(x|X)\b\s*){3,}/.test(cap3);
+            
+            const c19 = calcularCriterio((mencionaTabla4 && tieneMarcarXEnGantt), mencionaTabla4, tieneMarcarXEnGantt);
+            let obs19 = "";
+            if (mencionaTabla4 && tieneMarcarXEnGantt) {
+                obs19 = "Validado: Cronograma estructurado correctamente con marcas 'X' de planificación activa detectadas en las celdas.";
+            } else if (mencionaTabla4 && !tieneMarcarXEnGantt) {
+                obs19 = "Alerta: El alumno copió el esqueleto de actividades del cronograma, pero no colocó las marcas 'X' en las columnas de las sesiones correspondientes.";
+            } else {
+                obs19 = "Falta añadir la Tabla 4 con el cronograma de ejecución secuencial por sesiones.";
+            }
+
+
+            // --- CRITERIO 20: REFERENCIAS ---
             const lineasRef = refTexto.split('\n').filter(l => l.trim().length > 15);
             const totalReferencias = lineasRef.length;
             
-            // Estimación algorítmica de idiomas y vigencia (busca palabras comunes en inglés como 'and', 'vol', 'pp' y años recientes)
             let conteoIngles = 0;
             let conteoAntiguedad = 0;
             lineasRef.forEach(linea => {
@@ -321,7 +350,7 @@
 
             const c20 = calcularCriterio((cumpleCantidad && cumpleIdiomas && cumpleVigencia), (cumpleCantidad && cumpleVigencia), cumpleCantidad);
             let obs20 = `Se detectaron un estimado de ${totalReferencias} referencias bibliográficas en el listado. ` + 
-                       `Filtro métrico: ~${pctAntiguedad.toFixed(0)}% de fuentes corresponden a los últimos 5 años y ~${pctIngles.toFixed(0)}% en idioma extranjero (Requisito: Mín. 30 referencias, 70% indizadas/recientes, 30% inglés).`;
+                       `Métricas de validación: ~${pctAntiguedad.toFixed(0)}% son de los últimos 5 años y ~${pctIngles.toFixed(0)}% en idioma extranjero.`;
 
             // --- CÁLCULO DE LA NOTA FINAL ---
             const totalPuntos = c1.puntos + c2.puntos + c3.puntos + c4.puntos + c5.puntos + c6.puntos + c7.puntos + c8.puntos + c9.puntos + c10.puntos + c11.puntos + c12.puntos + c13.puntos + c14.puntos + c15.puntos + c16.puntos + c17.puntos + c18.puntos + c19.puntos + c20.puntos;
@@ -332,7 +361,7 @@
                 { comp: "Introducción", id: 2, text: "Está redactada en prosa, sin subtítulos, en tercera persona y en pasado del modo indicativo.", obj: c2, obs: obs2 },
                 { comp: "Introducción", id: 3, text: "Se describe la realidad problemática contemplando la importancia de abordar el problema y el ODS relacionado.", obj: c3, obs: obs3 },
                 { comp: "Introducción", id: 4, text: "Plantea el problema de investigación de manera interrogativa, detallando las variables o categorías y el objeto de estudio.", obj: c4, obs: obs4 },
-                { comp: "Introducción", id: 5, text: "La justificación de la investigación expresses la importancia de su ejecución.", obj: c5, obs: obs5 },
+                { comp: "Introducción", id: 5, text: "La justificación de la investigación expresa la importancia de su ejecución.", obj: c5, obs: obs5 },
                 { comp: "Introducción", id: 6, text: "Se formulan los objetivos vinculados a las preguntas de investigación.", obj: c6, obs: obs6 },
                 { comp: "Introducción", id: 7, text: "Se detallan los antecedentes relacionados al(los) objetivo(s) de investigación.", obj: c7, obs: obs7 },
                 { comp: "Introducción", id: 8, text: "Se detallan los aportes conceptuales relacionados con las variables o categorías de interés (definiciones y dimensiones).", obj: c8, obs: obs8 },
