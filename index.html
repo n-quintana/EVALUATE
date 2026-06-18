@@ -3,169 +3,248 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Evaluador Oficial UCV - Tabla 5 Completa</title>
+    <title>EvalúaT AI · Tesis UCV 2026</title>
     <style>
-        * { box-sizing: border-box; font-family: 'Segoe UI', Arial, sans-serif; }
-        body { background-color: #f4f6f9; margin: 0; padding: 20px; color: #333; }
-        .container { max-width: 1100px; margin: 0 auto; background: #ffffff; padding: 30px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
         
+        :root {
+            --rojo: #C8102E; 
+            --rojo-light: #FDECEA; 
+            --rojo-dark: #A00D24;
+            --azul: #003087; 
+            --azul-light: #E8EDF5;
+            --gris: #6B7280; 
+            --gris-claro: #F5F6F7; 
+            --gris-borde: #E4E6E8; 
+            --gris-texto: #374151;
+            --blanco: #FFFFFF; 
+            --ia-grad: linear-gradient(135deg, #003087 0%, #C8102E 100%);
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        
+        body { 
+            background-color: var(--gris-claro); 
+            font-family: 'Inter', sans-serif; 
+            color: var(--gris-texto); 
+            padding: 20px 16px; 
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .container { 
+            width: 100%;
+            max-width: 1100px; 
+            margin: 0 auto; 
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+        
+        /* HEADER RESTAURADO */
+        .header { 
+            background: var(--blanco); 
+            border: 0.5px solid var(--gris-borde); 
+            border-radius: 16px; 
+            overflow: hidden; 
+            box-shadow: 0 4px 12px rgba(0,0,0,0.04);
+        }
+        .header-top { height: 5px; background: var(--ia-grad); }
+        .header-body { padding: 20px 24px; display: flex; align-items: center; gap: 16px; }
+        .logo { 
+            width: 48px; height: 48px; border-radius: 14px; background: var(--ia-grad); 
+            display: flex; align-items: center; justify-content: center; flex-shrink: 0; 
+        }
+        .logo svg { width: 26px; height: 26px; fill: none; stroke: #fff; stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; }
+        .brand-name { font-size: 24px; font-weight: 700; color: var(--azul); letter-spacing: -0.5px; line-height: 1; }
+        .brand-name span { color: var(--rojo); }
+        .brand-full { font-size: 12px; color: var(--gris); margin-top: 4px; line-height: 1.4; }
+
+        /* Tarjeta contenedora de los pasos */
+        .card-body {
+            background: var(--blanco);
+            border: 0.5px solid var(--gris-borde);
+            border-radius: 16px;
+            padding: 24px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+        }
+
         /* Wizard Steps */
         .wizard-steps { display: flex; justify-content: space-between; align-items: center; margin-bottom: 35px; position: relative; padding: 0 30px; }
-        .wizard-steps::before { content: ""; position: absolute; top: 20px; left: 5%; right: 5%; height: 2px; background: #e0e0e0; z-index: 1; }
+        .wizard-steps::before { content: ""; position: absolute; top: 20px; left: 5%; right: 5%; height: 2px; background: var(--gris-borde); z-index: 1; }
         .step { text-align: center; position: relative; z-index: 2; flex: 1; }
-        .step-circle { width: 40px; height: 40px; background: #e0e0e0; color: #666; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 8px auto; font-weight: bold; }
-        .step.active .step-circle { background: #b3002d; color: white; box-shadow: 0 0 10px rgba(179,0,45,0.3); }
-        .step-title { font-size: 10px; font-weight: bold; text-transform: uppercase; color: #888; }
-        .step.active .step-title { color: #b3002d; }
+        .step-circle { width: 40px; height: 40px; background: var(--gris-claro); border: 2px solid var(--gris-borde); color: var(--gris); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 8px auto; font-weight: bold; box-shadow: 0 0 0 4px var(--blanco); }
+        .step.active .step-circle { background: var(--rojo); border-color: var(--rojo); color: white; }
+        .step-title { font-size: 10px; font-weight: bold; text-transform: uppercase; color: var(--gris); }
+        .step.active .step-title { color: var(--rojo); }
 
         .form-section { display: none; }
         .form-section.active { display: block; }
-        h2 { color: #004b8d; font-size: 18px; margin-top: 0; margin-bottom: 25px; border-bottom: 1px solid #eef2f5; padding-bottom: 10px; }
+        h2 { color: var(--azul); font-size: 18px; margin-top: 0; margin-bottom: 25px; border-bottom: 1px solid var(--gris-borde); padding-bottom: 10px; }
         
         .form-group { margin-bottom: 20px; }
-        .form-group label { display: block; font-weight: 600; margin-bottom: 8px; color: #444; font-size: 14px; }
-        .field-input { width: 100%; padding: 12px; border: 1px solid #dcdcdc; border-radius: 6px; background-color: #f9f9f9; font-size: 14px; }
-        .field-input:focus { outline: none; border-color: #004b8d; background-color: #fff; }
+        .form-group label { display: block; font-weight: 600; margin-bottom: 8px; color: var(--gris-texto); font-size: 14px; }
+        .field-input { width: 100%; padding: 12px; border: 1px solid var(--gris-borde); border-radius: 6px; background-color: var(--gris-claro); font-size: 14px; color: var(--gris-texto); transition: all 0.2s; }
+        .field-input:focus { outline: none; border-color: var(--rojo); background-color: var(--blanco); }
         textarea.field-input { resize: vertical; min-height: 200px; font-family: monospace; font-size: 13px; }
 
         .btn-container { display: flex; justify-content: space-between; margin-top: 30px; gap: 15px; }
-        .btn { padding: 13px 25px; font-size: 15px; font-weight: bold; border: none; border-radius: 6px; cursor: pointer; }
-        .btn-primary { background-color: #b3002d; color: white; flex: 2; }
-        .btn-secondary { background-color: #6c757d; color: white; flex: 1; }
+        .btn { padding: 13px 25px; font-size: 15px; font-weight: bold; border: none; border-radius: 6px; cursor: pointer; font-family: inherit; }
+        .btn-primary { background-color: var(--rojo); color: white; flex: 2; }
+        .btn-primary:hover { background-color: var(--rojo-dark); }
+        .btn-secondary { background-color: var(--gris-claro); border: 1px solid var(--gris-borde); color: var(--gris-texto); flex: 1; }
+        .btn-secondary:hover { background-color: #e2e8f0; }
 
         /* Estilos de Tabla de Rúbrica Oficial */
         .rubric-table { width: 100%; border-collapse: collapse; margin-top: 20px; font-size: 12px; }
-        .rubric-table th, .rubric-table td { border: 1px solid #cbd5e1; padding: 10px; text-align: left; vertical-align: top; }
-        .rubric-table th { background-color: #004b8d; color: white; text-transform: uppercase; font-size: 11px; letter-spacing: 0.5px; }
+        .rubric-table th, .rubric-table td { border: 1px solid var(--gris-borde); padding: 10px; text-align: left; vertical-align: top; }
+        .rubric-table th { background-color: var(--azul); color: white; text-transform: uppercase; font-size: 11px; letter-spacing: 0.5px; }
         .score-cell { font-weight: bold; text-align: center; width: 65px; font-size: 13px; }
         .badge-status { padding: 4px 6px; border-radius: 4px; font-weight: bold; font-size: 10px; text-transform: uppercase; display: inline-block; }
         
         .loading-box { display: none; text-align: center; padding: 40px; }
-        .spinner { border: 4px solid rgba(0,0,0,0.1); width: 45px; height: 45px; border-radius: 50%; border-left-color: #b3002d; animation: spin 0.6s linear infinite; margin: 0 auto 15px auto; }
+        .spinner { border: 4px solid var(--azul-light); width: 45px; height: 45px; border-radius: 50%; border-left-color: var(--rojo); animation: spin 0.6s linear infinite; margin: 0 auto 15px auto; }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
         .result-container { display: none; margin-top: 30px; }
 
-        .info-header { background: #f8fafc; border-bottom: 2px solid #cbd5e1; padding: 15px; margin-bottom: 20px; border-radius: 6px; }
-        .normative-callout { font-size: 12px; color: #555; background: #f0f4f8; padding: 10px; border-radius: 5px; margin-bottom: 15px; border-left: 3px solid #004b8d; }
+        .info-header { background: var(--gris-claro); border-bottom: 2px solid var(--gris-borde); padding: 15px; margin-bottom: 20px; border-radius: 6px; }
+        .normative-callout { font-size: 12px; color: #555; background: #f0f4f8; padding: 10px; border-radius: 5px; margin-bottom: 15px; border-left: 3px solid var(--azul); }
     </style>
 </head>
 <body>
 
 <div class="container">
     
-    <div class="wizard-steps">
-        <div class="step active" id="step-1-indicator"><div class="step-circle">1</div><div class="step-title">Datos</div></div>
-        <div class="step" id="step-2-indicator"><div class="step-circle">2</div><div class="step-title">Cap. I</div></div>
-        <div class="step" id="step-3-indicator"><div class="step-circle">3</div><div class="step-title">Cap. II</div></div>
-        <div class="step" id="step-4-indicator"><div class="step-circle">4</div><div class="step-title">Cap. III</div></div>
-        <div class="step" id="step-5-indicator"><div class="step-circle">5</div><div class="step-title">Referencias</div></div>
-    </div>
-
-    <div class="form-section active" id="section-1">
-        <h2>1. Identificación del Proyecto de Investigación</h2>
-        <div class="form-group">
-            <label>Nombre del Estudiante</label>
-            <input type="text" id="nombre_estudiante" class="field-input" placeholder="Ej. Noemi Quispe">
-        </div>
-        <div class="form-group">
-            <label>Título del Proyecto de Investigación</label>
-            <input type="text" id="titulo_tesis" class="field-input" placeholder="Pegue el título completo para validar el límite de 20 palabras">
-        </div>
-        <div class="btn-container">
-            <div></div>
-            <button class="btn btn-primary" onclick="cambiarPaso(2)">Continuar al Capítulo I →</button>
+    <div class="header">
+        <div class="header-top"></div>
+        <div class="header-body">
+            <div class="logo">
+                <svg viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+            </div>
+            <div>
+                <div class="brand-name">Evalú<span>aT</span> AI</div>
+                <div class="brand-full">Escáner de Consistencia Institucional · Tabla 5 (Métricas Locales)</div>
+            </div>
         </div>
     </div>
 
-    <div class="form-section" id="section-2">
-        <h2>2. Capítulo I: Introducción</h2>
-        <div class="normative-callout">Requisitos: Redacción en prosa, sin subtítulos aislados, en tercera persona y en pasado. Debe incluir realidad problemática con ODS, pregunta, justificación, objetivos, antecedentes, aportes conceptuales y teorías.</div>
-        <div class="form-group">
-            <label>Contenido del Capítulo I:</label>
-            <textarea id="capitulo_1" class="field-input" placeholder="Pegue la prosa completa del Capítulo I..."></textarea>
+    <div class="card-body">
+        <div class="wizard-steps">
+            <div class="step active" id="step-1-indicator"><div class="step-circle">1</div><div class="step-title">Datos</div></div>
+            <div class="step" id="step-2-indicator"><div class="step-circle">2</div><div class="step-title">Cap. I</div></div>
+            <div class="step" id="step-3-indicator"><div class="step-circle">3</div><div class="step-title">Cap. II</div></div>
+            <div class="step" id="step-4-indicator"><div class="step-circle">4</div><div class="step-title">Cap. III</div></div>
+            <div class="step" id="step-5-indicator"><div class="step-circle">5</div><div class="step-title">Referencias</div></div>
         </div>
-        <div class="btn-container">
-            <button class="btn btn-secondary" onclick="cambiarPaso(1)">← Volver</button>
-            <button class="btn btn-primary" onclick="cambiarPaso(3)">Continuar al Capítulo II →</button>
-        </div>
-    </div>
 
-    <div class="form-section" id="section-3">
-        <h2>3. Capítulo II: Metodología</h2>
-        <div class="normative-callout">Requisitos: Redacción en prosa, sin subtítulos aislados, en tercera persona y en tiempo futuro. Se evalúa tipo/enfoque/diseño, definición de variables, unidad de análisis, población, muestra, técnicas, instrumentos y aspectos éticos.</div>
-        <div class="form-group">
-            <label>Contenido del Capítulo II:</label>
-            <textarea id="capitulo_2" class="field-input" placeholder="Pegue la prosa completa del Capítulo II..."></textarea>
+        <div class="form-section active" id="section-1">
+            <h2>1. Identificación del Proyecto de Investigación</h2>
+            <div class="form-group">
+                <label>Nombre del Estudiante</label>
+                <input type="text" id="nombre_estudiante" class="field-input" placeholder="Ej. Noemi Quispe">
+            </div>
+            <div class="form-group">
+                <label>Título del Proyecto de Investigación</label>
+                <input type="text" id="titulo_tesis" class="field-input" placeholder="Pegue el título completo para validar el límite de 20 palabras">
+            </div>
+            <div class="btn-container">
+                <div></div>
+                <button class="btn btn-primary" onclick="cambiarPaso(2)">Continuar al Capítulo I →</button>
+            </div>
         </div>
-        <div class="btn-container">
-            <button class="btn btn-secondary" onclick="cambiarPaso(2)">← Volver</button>
-            <button class="btn btn-primary" onclick="cambiarPaso(4)">Continuar al Capítulo III →</button>
-        </div>
-    </div>
 
-    <div class="form-section" id="section-4">
-        <h2>4. Capítulo III: Aspectos Administrativos</h2>
-        <div class="normative-callout">Requisitos: Extensión sugerida de 2 páginas. Se deben detallar los recursos monetarios y no monetarios (Tablas 1 y 2), financiamiento (Tabla 3) y el cronograma de ejecución por 16 sesiones con sus marcas 'X' (Tabla 4).</div>
-        <div class="form-group">
-            <label>Contenido del Capítulo III:</label>
-            <textarea id="capitulo_3" class="field-input" placeholder="Pegue el texto o las tablas correspondientes a los Aspectos Administrativos..."></textarea>
+        <div class="form-section" id="section-2">
+            <h2>2. Capítulo I: Introducción</h2>
+            <div class="normative-callout">Requisitos: Redacción en prosa, sin subtítulos aislados, en tercera persona y en pasado. Debe incluir realidad problemática con ODS, pregunta, justificación, objetivos, antecedentes, aportes conceptuales y teorías.</div>
+            <div class="form-group">
+                <label>Contenido del Capítulo I:</label>
+                <textarea id="capitulo_1" class="field-input" placeholder="Pegue la prosa completa del Capítulo I..."></textarea>
+            </div>
+            <div class="btn-container">
+                <button class="btn btn-secondary" onclick="cambiarPaso(1)">← Volver</button>
+                <button class="btn btn-primary" onclick="cambiarPaso(3)">Continuar al Capítulo II →</button>
+            </div>
         </div>
-        <div class="btn-container">
-            <button class="btn btn-secondary" onclick="cambiarPaso(3)">← Volver</button>
-            <button class="btn btn-primary" onclick="cambiarPaso(5)">Continuar a Referencias →</button>
-        </div>
-    </div>
 
-    <div class="form-section" id="section-5">
-        <h2>5. Referencias Bibliográficas</h2>
-        <div class="normative-callout">Requisitos: Mínimo 30 referencias. Al menos el 70% deben ser artículos científicos indexados en Scopus, WoS o SciELO con antigüedad máxima de 5 años. Mínimo 30% en idioma extranjero.</div>
-        <div class="form-group">
-            <label>Lista Completa de Referencias Bibliográficas:</label>
-            <textarea id="referencias_texto" class="field-input" placeholder="Pegue el listado final de referencias bibliográficas..."></textarea>
+        <div class="form-section" id="section-3">
+            <h2>3. Capítulo II: Metodología</h2>
+            <div class="normative-callout">Requisitos: Redacción en prosa, sin subtítulos aislados, en tercera persona y en tiempo futuro. Se evalúa tipo/enfoque/diseño, definición de variables, unidad de análisis, población, muestra, técnicas, instrumentos y aspectos éticos.</div>
+            <div class="form-group">
+                <label>Contenido del Capítulo II:</label>
+                <textarea id="capitulo_2" class="field-input" placeholder="Pegue la prosa completa del Capítulo II..."></textarea>
+            </div>
+            <div class="btn-container">
+                <button class="btn btn-secondary" onclick="cambiarPaso(2)">← Volver</button>
+                <button class="btn btn-primary" onclick="cambiarPaso(4)">Continuar al Capítulo III →</button>
+            </div>
         </div>
-        <div class="btn-container">
-            <button class="btn btn-secondary" onclick="cambiarPaso(4)">← Volver</button>
-            <button class="btn btn-primary" id="btn-analizar" onclick="procesarRubricaCompletaLocal()">Evaluar Proyecto Completo (Tabla 5) 📋</button>
+
+        <div class="form-section" id="section-4">
+            <h2>4. Capítulo III: Aspectos Administrativos</h2>
+            <div class="normative-callout">Requisitos: Extensión sugerida de 2 páginas. Se deben detallar los recursos monetarios y no monetarios (Tablas 1 y 2), financiamiento (Tabla 3) y el cronograma de ejecución por 16 sesiones con sus marcas 'X' (Tabla 4). Se permite colocar '0' o '0.00' si se indica autofinanciación.</div>
+            <div class="form-group">
+                <label>Contenido del Capítulo III:</label>
+                <textarea id="capitulo_3" class="field-input" placeholder="Pegue el texto o las tablas correspondientes a los Aspectos Administrativos..."></textarea>
+            </div>
+            <div class="btn-container">
+                <button class="btn btn-secondary" onclick="cambiarPaso(3)">← Volver</button>
+                <button class="btn btn-primary" onclick="cambiarPaso(5)">Continuar a Referencias →</button>
+            </div>
         </div>
-    </div>
 
-    <div class="loading-box" id="loading">
-        <div class="spinner"></div>
-        <p style="font-weight: bold; color: #004b8d;">Ejecutando algoritmos de validación estructural profunda...</p>
-        <p style="font-size: 11px; color: #666;">Analizando métricas y depurando falsos positivos de formato...</p>
-    </div>
+        <div class="form-section" id="section-5">
+            <h2>5. Referencias Bibliográficas</h2>
+            <div class="normative-callout">Requisitos: Mínimo 30 referencias. Al menos el 70% deben ser artículos científicos indexados en Scopus, WoS o SciELO con antigüedad máxima de 5 años. Mínimo 30% en idioma extranjero.</div>
+            <div class="form-group">
+                <label>Lista Completa de Referencias Bibliográficas:</label>
+                <textarea id="referencias_texto" class="field-input" placeholder="Pegue el listado final de referencias bibliográficas..."></textarea>
+            </div>
+            <div class="btn-container">
+                <button class="btn btn-secondary" onclick="cambiarPaso(4)">← Volver</button>
+                <button class="btn btn-primary" id="btn-analizar" onclick="procesarRubricaCompletaLocal()">Evaluar Proyecto Completo (Tabla 5) 📋</button>
+            </div>
+        </div>
 
-    <div class="result-container" id="resultado-container">
-        <div class="info-header">
-            <table style="width:100%; border:none; font-size:12px;">
-                <tr>
-                    <td>UNIVERSIDAD CÉSAR VALLEJO</td>
-                    <td style="text-align:right;"><strong>Código:</strong> PP-G-02.02</td>
-                </tr>
-                <tr>
-                    <td><strong>GUÍA DE ELABORACIÓN DE PROYECTO DE INVESTIGACIÓN Y TESIS</strong></td>
-                    <td style="text-align:right;"><strong>Versión:</strong> 06 (30-03-2026)</td>
-                </tr>
+        <div class="loading-box" id="loading">
+            <div class="spinner"></div>
+            <p style="font-weight: bold; color: var(--azul);">Ejecutando algoritmos de validación estructural profunda...</p>
+            <p style="font-size: 11px; color: var(--gris);">Analizando métricas y depurando falsos positivos de formato...</p>
+        </div>
+
+        <div class="result-container" id="resultado-container">
+            <div class="info-header">
+                <table style="width:100%; border:none; font-size:12px;">
+                    <tr>
+                        <td>UNIVERSIDAD CÉSAR VALLEJO</td>
+                        <td style="text-align:right;"><strong>Código:</strong> PP-G-02.02</td>
+                    </tr>
+                    <tr>
+                        <td><strong>GUÍA DE ELABORACIÓN DE PROYECTO DE INVESTIGACIÓN Y TESIS</strong></td>
+                        <td style="text-align:right;"><strong>Versión:</strong> 06 (30-03-2026)</td>
+                    </tr>
+                </table>
+                <hr style="border:0; border-top:1px solid var(--gris-borde); margin:10px 0;">
+                <div style="font-size: 13px;" id="datos-tesista"></div>
+                <div style="margin-top:10px; font-size:18px; font-weight:bold; color:var(--rojo);" id="nota-final-container"></div>
+            </div>
+            
+            <h3 style="color: var(--azul); margin-bottom:10px;">TABLA 5. RÚBRICA DE EVALUACIÓN DEL PROYECTO DE INVESTIGACIÓN (20 CRITERIOS)</h3>
+            <table class="rubric-table">
+                <thead>
+                    <tr>
+                        <th>Componente</th>
+                        <th style="text-align:center; width:30px;">N°</th>
+                        <th style="width:35%;">Criterio de Evaluación</th>
+                        <th style="text-align:center; width:110px;">Nivel de Desempeño</th>
+                        <th style="text-align:center; width:60px;">Puntaje</th>
+                        <th>Observaciones Técnicas Detectadas</th>
+                    </tr>
+                </thead>
+                <tbody id="tabla-rubrica-cuerpo"></tbody>
             </table>
-            <hr style="border:0; border-top:1px solid #cbd5e1; margin:10px 0;">
-            <div style="font-size: 13px;" id="datos-tesista"></div>
-            <div style="margin-top:10px; font-size:18px; font-weight:bold; color:#b3002d;" id="nota-final-container"></div>
         </div>
-        
-        <h3 style="color: #004b8d; margin-bottom:10px;">TABLA 5. RÚBRICA DE EVALUACIÓN DEL PROYECTO DE INVESTIGACIÓN (20 CRITERIOS)</h3>
-        <table class="rubric-table">
-            <thead>
-                <tr>
-                    <th>Componente</th>
-                    <th style="text-align:center; width:30px;">N°</th>
-                    <th style="width:35%;">Criterio de Evaluación</th>
-                    <th style="text-align:center; width:110px;">Nivel de Desempeño</th>
-                    <th style="text-align:center; width:60px;">Puntaje</th>
-                    <th>Observaciones Técnicas Detectadas</th>
-                </tr>
-            </thead>
-            <tbody id="tabla-rubrica-cuerpo"></tbody>
-        </table>
     </div>
 </div>
 
@@ -203,49 +282,44 @@
         document.getElementById('btn-analizar').disabled = true;
 
         setTimeout(() => {
-            // --- CRITERIO 1: PALABRAS TÍTULO ---
             const arrayPalabrasTitulo = titulo.trim().split(/\s+/).filter(p => p.length > 0);
             const numPalabrasTitulo = arrayPalabrasTitulo.length;
             const c1 = calcularCriterio((numPalabrasTitulo <= 20 && numPalabrasTitulo > 0), (numPalabrasTitulo > 20 && numPalabrasTitulo <= 25), (numPalabrasTitulo > 25));
-            let obs1 = `El título contiene ${numPalabrasTitulo} palabras. ` + (numPalabrasTitulo <= 20 ? "Cumple con el límite normativo." : "Excede las 20 palabras reglamentarias.");
+            let obs1 = `El título contiene ${numPalabrasTitulo} palabras. ` + (numPalabrasTitulo <= 20 ? "Cumple con el límite." : "Excede las 20 palabras.");
 
-            // --- FILTRO DE SUBTÍTULOS CORREGIDO (MÉTODO MULTILÍNEA ESTRICTO) ---
-            // Solo penaliza si la palabra clave o el patrón numérico/romano componen la línea ENTERA
             const tieneSubtitulosC1 = /(^\s*(Planteamiento del problema|Revisión de literatura|Hipótesis|Introducción)\s*$)/im.test(cap1) || /(^\s*[I|V|X|\d]+\.?\s+[A-ZÁÉÍÓÚa-záéíóúñ]{3,}\s*$)/m.test(cap1);
             const tieneVinetasC1 = /(^\s*[\*\-\u2022]\s+)|(^\s*\d+\.\s+)/m.test(cap1);
             const tienePasadoC1 = /\b(analizó|describió|abordó|formuló|expuso|realizó|determinó|evaluó)\b/i.test(cap1);
             
             const c2 = calcularCriterio((!tieneSubtitulosC1 && !tieneVinetasC1 && tienePasadoC1), (!tieneSubtitulosC1 && !tieneVinetasC1), (tienePasadoC1));
-            let obs2 = (tieneSubtitulosC1 ? "Se detectó una línea huérfana interpretada como subtítulo formal. " : "Prosa continua sin subtítulos detectados. ") + 
-                       (tieneVinetasC1 ? "Se detectó uso de viñetas en el inicio de alguna línea." : "Ausencia de viñetas (Correcto).");
+            let obs2 = (tieneSubtitulosC1 ? "Se detectó una línea interpretada como subtítulo formal. " : "Prosa continua sin subtítulos. ") + (tieneVinetasC1 ? "Se detectó uso de viñetas al inicio de línea." : "Ausencia de viñetas (Correcto).");
 
-            // --- CRITERIOS DEL 3 AL 10 (INTRODUCCIÓN) ---
             const tieneODS = /ODS|Desarrollo Sostenible/i.test(cap1);
             const tieneInternacional = /internacional|mundial|global/i.test(cap1);
             const tieneNacional = /nacional|perú|peruano/i.test(cap1);
             const c3 = calcularCriterio((tieneODS && tieneInternacional && tieneNacional), (tieneInternacional && tieneNacional), (tieneODS));
-            let obs3 = tieneODS ? "Vínculo institucional con ODS identificado." : "Falta vincular el planteamiento al ODS.";
+            let obs3 = tieneODS ? "Vínculo con ODS identificado." : "Falta vincular el planteamiento al ODS.";
 
             const tieneSignosInterrogacion = /\?/g.test(cap1);
             const c4 = calcularCriterio(tieneSignosInterrogacion, tieneSignosInterrogacion, cap1.includes("problema"));
-            let obs4 = tieneSignosInterrogacion ? "Formulación interrogativa correcta." : "Faltan signos de interrogación para delimitar el problema.";
+            let obs4 = tieneSignosInterrogacion ? "Formulación interrogativa correcta." : "Faltan signos de interrogación.";
 
             const tieneJustificacion = /justificación|justifica|importancia|relevancia/i.test(cap1);
             const c5 = calcularCriterio(tieneJustificacion, tieneJustificacion, tieneJustificacion);
-            let obs5 = tieneJustificacion ? "Justificación encontrada en la prosa." : "Falta robustecer los motivos de ejecución.";
+            let obs5 = tieneJustificacion ? "Justificación encontrada." : "Falta robustecer motivos de ejecución.";
 
             const tieneObjetivoG = /objetivo general|objetivo de la investigación/i.test(cap1);
             const tieneObjetivosE = /objetivos específicos/i.test(cap1);
             const c6 = calcularCriterio((tieneObjetivoG && tieneObjetivosE), tieneObjetivoG, tieneObjetivosE);
-            let obs6 = tieneObjetivoG ? "Objetivos vinculados correctamente." : "Se requiere especificar objetivos generales y específicos.";
+            let obs6 = tieneObjetivoG ? "Objetivos correctamente vinculados." : "Se requiere especificar objetivos generales y específicos.";
 
             const cuentaAntecedentes = (cap1.match(/artículo|investigación|autor|estudio|(\(20\d\d\))/g) || []).length;
             const c7 = calcularCriterio((cuentaAntecedentes >= 8), (cuentaAntecedentes >= 5), (cuentaAntecedentes >= 2));
-            let obs7 = `Se validan antecedentes y referencias cruzadas operacionales en la revisión de literatura.`;
+            let obs7 = `Se validan antecedentes operacionales en la revisión de literatura.`;
 
             const tieneDimensiones = /dimensión|dimensiones|categorías/i.test(cap1);
             const c8 = calcularCriterio(tieneDimensiones, tieneDimensiones, tieneDimensiones);
-            let obs8 = tieneDimensiones ? "Definiciones y dimensiones operacionales identificadas." : "Se sugiere detallar las dimensiones de las variables.";
+            let obs8 = tieneDimensiones ? "Variables y dimensiones operacionales identificadas." : "Se sugiere detallar las dimensiones.";
 
             const tieneTeorias = /teoría|enfoque teórico|fundamento/i.test(cap1);
             const c9 = calcularCriterio(tieneTeorias, tieneTeorias, tieneTeorias);
@@ -253,87 +327,68 @@
 
             const tieneHipotesis = /hipótesis|supuesto/i.test(cap1);
             const c10 = calcularCriterio(tieneHipotesis, tieneHipotesis, true);
-            let obs10 = tieneHipotesis ? "Hipótesis descritas formalmente." : "Criterio condicional según el enfoque de investigación.";
+            let obs10 = tieneHipotesis ? "Hipótesis descritas formalmente." : "Criterio condicional según enfoque de estudio.";
 
-            // --- CRITERIOS DEL 11 AL 16 (METODOLOGÍA) CORREGIDOS ---
             const tieneSubtitulosC2 = /(^\s*(Tipo y enfoque|Variables|Unidad de análisis|Técnicas e instrumentos|Métodos para el análisis|Aspectos éticos|Metodología)\s*$)/im.test(cap2) || /(^\s*[I|V|X|\d]+\.?\s+[A-ZÁÉÍÓÚa-záéíóúñ]{3,}\s*$)/m.test(cap2);
             const tieneFuturoC2 = /\b(describirá|analizará|emplearán|considerará|detallará|aplicarán|desarrollarán)\b/i.test(cap2);
             
             const c11 = calcularCriterio((!tieneSubtitulosC2 && tieneFuturoC2), (!tieneSubtitulosC2), (tieneFuturoC2));
-            let obs11 = (tieneSubtitulosC2 ? "Alerta: El capítulo II presenta subtítulos aislados en su propia línea. " : "Prosa continua y limpia en Metodología (Correcto). ") + (tieneFuturoC2 ? "Tiempo futuro validado." : "Debe redactarse en tiempo futuro.");
+            let obs11 = (tieneSubtitulosC2 ? "Alerta: El capítulo II presenta subtítulos explícitos. " : "Prosa continua (Correcto). ") + (tieneFuturoC2 ? "Tiempo futuro validado." : "Debe redactarse en futuro.");
 
             const tieneOslo = /Oslo|OCDE/i.test(cap2);
             const tieneDiseno = /diseño|enfoque/i.test(cap2);
             const c12 = calcularCriterio((tieneOslo && tieneDiseno), tieneDiseno, tieneOslo);
-            let obs12 = tieneOslo ? "Tipo de investigación fundamentado bajo el Manual de Oslo de la OCDE." : "Falta referenciar el tipo según el Manual de Oslo.";
+            let obs12 = tieneOslo ? "Tipo de investigación fundamentado bajo el Manual de Oslo (2018)." : "Falta referenciar tipo según Manual de Oslo.";
 
             const tieneDefVar = /operacionalización|tabla|definición conceptual/i.test(cap2) || /categorización/i.test(cap2);
             const c13 = calcularCriterio(tieneDefVar, tieneDefVar, tieneDefVar);
-            let obs13 = tieneDefVar ? "Variables definidas con dimensiones en la metodología." : "Se sugiere agregar el tratamiento dimensional.";
+            let obs13 = tieneDefVar ? "Variables definidas operadamente en la metodología." : "Se sugiere agregar tratamiento operacional.";
 
             const tienePoblacion = /población|muestra/i.test(cap2);
             const tieneCriterios = /inclusión|exclusión/i.test(cap2);
             const c14 = calcularCriterio((tienePoblacion && tieneCriterios), tienePoblacion, tieneCriterios);
-            let obs14 = tienePoblacion ? "Población y muestra delimitada con criterios." : "Falta declarar la población o criterios selectivos.";
+            let obs14 = tienePoblacion ? "Población y muestra delimitada con criterios." : "Falta declarar población o criterios.";
 
             const tieneJueces = /jueces|expertos|validación/i.test(cap2);
             const tieneConsistencia = /consistencia|alfa|kr|confiabilidad/i.test(cap2);
             const c15 = calcularCriterio((tieneJueces && tieneConsistencia), tieneJueces, tieneConsistencia);
-            let obs15 = tieneJueces ? "Proceso formal de validación por juicio de expertos declarado." : "Debe mencionar la validación por jueces expertos.";
+            let obs15 = tieneJueces ? "Validación por juicio de expertos declarada de forma explícita." : "Debe mencionar la validación por jueces expertos.";
 
             const tieneAnalisisDatos = /estadística|análisis de datos|descriptiva/i.test(cap2);
             const tieneEtica = /código de ética|ética|consentimiento/i.test(cap2);
             const c16 = calcularCriterio((tieneAnalisisDatos && tieneEtica), (tieneAnalisisDatos && tieneEtica), tieneEtica);
-            let obs16 = tieneEtica ? "Cumple con la declaración de alineación al Código de Ética de la UCV." : "Obligatorio citar conformidad con el Código de Ética de la UCV.";
+            let obs16 = tieneEtica ? "Cumple con la declaración de alineación al Código de Ética de la UCV." : "Obligatorio citar conformidad con Código de Ética UCV.";
 
-
-            // --- AUDITORÍA DE DATOS REALES INTERNA (CAPÍTULO III) ---
             const mencionaTablasPresupuesto = (/tabla\s+1/i.test(cap3) || /no\s+monetarios/i.test(cap3)) && (/tabla\s+2/i.test(cap3) || /recursos\s+monetarios/i.test(cap3));
-            const tieneDatosFinancierosReales = /\b(soles|s\/\.?|total|subtotal|costo)\b\s*.*?\b\d+([\.,]\d+)?\b/i.test(cap3);
-            
+            const tieneDatosFinancierosReales = /(s\/\.?\s*[1-9]\d*)|(\b[1-9]\d{1,}(\.\d{2})?\b)|\b(meses|tiempo|horas)\b/i.test(cap3);
             const c17 = calcularCriterio((mencionaTablasPresupuesto && tieneDatosFinancierosReales), mencionaTablasPresupuesto, tieneDatosFinancierosReales);
-            let obs17 = "";
-            if (mencionaTablasPresupuesto && tieneDatosFinancierosReales) {
-                obs17 = "Validado: Estructura de tablas de recursos detectada con montos numéricos explícitos.";
-            } else if (mencionaTablasPresupuesto && !tieneDatosFinancierosReales) {
-                obs17 = "Alerta: Se detectaron los encabezados de las Tablas 1 y 2, pero las celdas financieras están vacías o sin costos numéricos.";
-            } else {
-                obs17 = "Faltan estructurar las Tablas 1 y 2 correspondientes a recursos del proyecto.";
-            }
+            let obs17 = (mencionaTablasPresupuesto && tieneDatosFinancierosReales) ? "Validado: Estructura de tablas de recursos detectada con datos rellenados." : "Alerta: Verifique el ingreso de datos numéricos en los cuadros de recursos monetarios y no monetarios.";
 
             const mencionaTabla3 = /tabla\s+3/i.test(cap3) || /financiamiento/i.test(cap3);
-            const tieneDatosFinanciamientoReal = /\b(autofinanciado|propio|universidad|ucv|subtotal|monto)\b\s*.*?\b\d+/i.test(cap3);
+            const cap3Limpio = cap3.replace(/tabla\s+3/gi, '');
+            const tieneMontosFinanciamiento = /(s\/\.?\s*[1-9]\d*)|(\b[1-9]\d{2,}\b)/i.test(cap3Limpio);
+            const esAutofinanciadoLlenado = /\b(autofinanciado|propio|investigadores|estudiantes)\b/i.test(cap3Limpio) && /\b0(\.00)?\b/.test(cap3Limpio);
+            const tieneDatosFinanciamientoReal = tieneMontosFinanciamiento || esAutofinanciadoLlenado;
             
             const c18 = calcularCriterio((mencionaTabla3 && tieneDatosFinanciamientoReal), mencionaTabla3, tieneDatosFinanciamientoReal);
             let obs18 = "";
             if (mencionaTabla3 && tieneDatosFinanciamientoReal) {
-                obs18 = "Validado: Tabla 3 de financiamiento identificada con declaración expresa de fondos distribuidos.";
+                obs18 = esAutofinanciadoLlenado ? "Validado: Estructura declarada correctamente como Autofinanciada con montos en S/. 0.00." : "Validado: Tabla 3 de financiamiento identificada con asignación financiera real calculada.";
             } else if (mencionaTabla3 && !tieneDatosFinanciamientoReal) {
-                obs18 = "Alerta: Se halló el encabezado de Financiamiento (Tabla 3), pero los campos de entidades o montos no muestran datos reales.";
+                obs18 = "Alerta: Se detectó la Tabla 3, pero las celdas de monto están vacías. Ingrese los montos de financiamiento o S/. 0 si es autofinanciado.";
             } else {
                 obs18 = "Debe incorporar la Tabla 3 para el desglose de fuentes de financiamiento.";
             }
 
             const mencionaTabla4 = /tabla\s+4/i.test(cap3) || /cronograma/i.test(cap3);
-            const tieneMarcarXEnGantt = /([a-záéíóúñ]+\s+)+.*?\b(x|X)\b\s+.*?\b(x|X)\b/i.test(cap3) || /(\b(x|X)\b\s*){3,}/.test(cap3);
-            
+            const textoLimpioCronograma = cap3.replace(/tabla\s+4/gi, '');
+            const tieneMarcarXEnGantt = /([a-záéíóúñ]+\s+)+.*?\b(x|X)\b\s+.*?\b(x|X)\b/i.test(textoLimpioCronograma) || /(\b(x|X)\b\s*){3,}/.test(textoLimpioCronograma);
             const c19 = calcularCriterio((mencionaTabla4 && tieneMarcarXEnGantt), mencionaTabla4, tieneMarcarXEnGantt);
-            let obs19 = "";
-            if (mencionaTabla4 && tieneMarcarXEnGantt) {
-                obs19 = "Validado: Cronograma estructurado con marcas 'X' de planificación activa detectadas en el diagrama de Gantt.";
-            } else if (mencionaTabla4 && !tieneMarcarXEnGantt) {
-                obs19 = "Alerta: El alumno copió el esqueleto de actividades de la Tabla 4, pero no colocó las marcas 'X' de avance en las sesiones.";
-            } else {
-                obs19 = "Falta añadir la Tabla 4 con el cronograma de ejecución secuencial por sesiones.";
-            }
+            let obs19 = (mencionaTabla4 && tieneMarcarXEnGantt) ? "Validado: Cronograma secuencial estructurado con marcas 'X' de avance." : "Alerta: Se detectó el cuadro del cronograma, pero falta marcar con una 'X' las casillas de las sesiones.";
 
-
-            // --- CRITERIO 20: REFERENCIAS ---
             const lineasRef = refTexto.split('\n').filter(l => l.trim().length > 15);
             const totalReferencias = lineasRef.length;
-            
-            let conteoIngles = 0;
-            let conteoAntiguedad = 0;
+            let conteoIngles = 0; let conteoAntiguedad = 0;
             lineasRef.forEach(linea => {
                 if (/\b(and|the|journal|of|research|vol|pp)\b/i.test(linea)) conteoIngles++;
                 if (/\b(2022|2023|2024|2025|2026)\b/.test(linea)) conteoAntiguedad++;
@@ -341,7 +396,6 @@
 
             const pctIngles = totalReferencias > 0 ? (conteoIngles / totalReferencias) * 100 : 0;
             const pctAntiguedad = totalReferencias > 0 ? (conteoAntiguedad / totalReferencias) * 100 : 0;
-
             const cumpleCantidad = totalReferencias >= 30;
             const cumpleIdiomas = pctIngles >= 30;
             const cumpleVigencia = pctAntiguedad >= 70;
@@ -350,10 +404,8 @@
             let obs20 = `Se detectaron un estimado de ${totalReferencias} referencias bibliográficas en el listado. ` + 
                        `Métricas calculadas: ~${pctAntiguedad.toFixed(0)}% son de los últimos 5 años y ~${pctIngles.toFixed(0)}% en idioma extranjero.`;
 
-            // --- CÁLCULO DE LA NOTA FINAL ---
             const totalPuntos = c1.puntos + c2.puntos + c3.puntos + c4.puntos + c5.puntos + c6.puntos + c7.puntos + c8.puntos + c9.puntos + c10.puntos + c11.puntos + c12.puntos + c13.puntos + c14.puntos + c15.puntos + c16.puntos + c17.puntos + c18.puntos + c19.puntos + c20.puntos;
 
-            // --- MATRIZ FINAL DE DATOS ---
             const matrizCriterios = [
                 { comp: "Título", id: 1, text: "El título presenta la(s) variable(s) o categorías de estudio y la unidad de análisis abordada en un máximo de 20 palabras.", obj: c1, obs: obs1 },
                 { comp: "Introducción", id: 2, text: "Está redactada en prosa, sin subtítulos, en tercera persona y en pasado del modo indicativo.", obj: c2, obs: obs2 },
