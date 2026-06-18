@@ -143,7 +143,6 @@
             <div class="step" id="step-5-indicator"><div class="step-circle">5</div><div class="step-title">Ref.</div></div>
         </div>
 
-        <!-- PASO 1: DATOS -->
         <div class="form-section active" id="section-1">
             <h2>1. Identificación del Proyecto</h2>
             
@@ -188,18 +187,17 @@
             <div class="btn-container">
                 <div></div>
                 <button class="btn btn-action" onclick="procesarRubricaLocal()">Evaluar Avance 📋</button>
-                <button class="btn btn-primary" onclick="cambiarPaso(2)">Siguiente Sección →</button>
+                <button class="btn btn-primary" onclick="cambiarPaso(2)">Siguiente →</button>
             </div>
         </div>
 
-        <!-- PASO 2: CAPÍTULO I -->
         <div class="form-section" id="section-2">
             <h2>2. Capítulo I: Introducción</h2>
             <div class="form-group"><textarea id="capitulo_1" class="field-input" placeholder="Pegue la prosa del Capítulo I..."></textarea></div>
             <div class="btn-container">
                 <button class="btn btn-secondary" onclick="cambiarPaso(1)">← Volver</button>
                 <button class="btn btn-action" onclick="procesarRubricaLocal()">Evaluar Avance 📋</button>
-                <button class="btn btn-primary" onclick="cambiarPaso(3)">Omitir / Siguiente →</button>
+                <button class="btn btn-primary" onclick="cambiarPaso(3)">Siguiente →</button>
             </div>
         </div>
 
@@ -209,7 +207,7 @@
             <div class="btn-container">
                 <button class="btn btn-secondary" onclick="cambiarPaso(2)">← Volver</button>
                 <button class="btn btn-action" onclick="procesarRubricaLocal()">Evaluar Avance 📋</button>
-                <button class="btn btn-primary" onclick="cambiarPaso(4)">Omitir / Siguiente →</button>
+                <button class="btn btn-primary" onclick="cambiarPaso(4)">Siguiente →</button>
             </div>
         </div>
 
@@ -219,7 +217,7 @@
             <div class="btn-container">
                 <button class="btn btn-secondary" onclick="cambiarPaso(3)">← Volver</button>
                 <button class="btn btn-action" onclick="procesarRubricaLocal()">Evaluar Avance 📋</button>
-                <button class="btn btn-primary" onclick="cambiarPaso(5)">Omitir / Siguiente →</button>
+                <button class="btn btn-primary" onclick="cambiarPaso(5)">Siguiente →</button>
             </div>
         </div>
 
@@ -232,14 +230,12 @@
             </div>
         </div>
 
-        <!-- LOADING -->
         <div class="loading-box" id="loading">
             <div class="spinner"></div>
             <p style="font-weight: bold; color: var(--azul);">Ejecutando verificación y estructurando observaciones...</p>
             <p style="font-size: 11px; color: var(--gris);">Calculando índice de cumplimiento de las secciones ingresadas...</p>
         </div>
 
-        <!-- RESULTADOS -->
         <div class="result-container" id="resultado-container">
             
             <div id="resumen-ejecutivo-container"></div>
@@ -283,18 +279,16 @@
         return { nivel: "En inicio", puntos: 0.25 };
     }
 
-    // Variables globales para el resumen ejecutivo
     let obsCriticas = 0;
     let obsImportantes = 0;
     let obsMejoras = 0;
     let accionesPrioritarias = [];
 
-    // FUNCIÓN CREADORA DE CAJAS DE ACCIÓN (UX)
     function generarFeedback(cumple, textoAprobado, prioStatus, queHacerArray) {
         if (cumple) return `<span style="color:#2e7d32; font-weight:600;">✔ ${textoAprobado}</span>`;
         
-        // Prevención de errores si el array está vacío
-        const accionPrincipal = (queHacerArray && queHacerArray.length > 0) ? queHacerArray[0] : "Revisar y corregir este criterio.";
+        const arrFinal = (queHacerArray && queHacerArray.length > 0) ? queHacerArray : ["Corregir alineación normativa."];
+        const accionPrincipal = arrFinal[0];
 
         let prioClase = prioStatus === "Crítico" ? "prio-critico" : prioStatus === "Importante" ? "prio-importante" : "prio-mejora";
         let prioIcon = prioStatus === "Crítico" ? "🔴" : prioStatus === "Importante" ? "🟠" : "🟢";
@@ -309,7 +303,6 @@
             obsMejoras++;
         }
         
-        let arrFinal = queHacerArray || ["Corregir alineación normativa."];
         let listaHTML = arrFinal.map(item => `<li>${item}</li>`).join('');
         
         return `
@@ -330,11 +323,10 @@
         const refTexto = document.getElementById('referencias_texto').value || "";
 
         if (titulo.trim() === "" && cap1.trim() === "" && cap2.trim() === "" && cap3.trim() === "" && refTexto.trim() === "") { 
-            alert("Por favor, ingresa información en al menos uno de los campos o capítulos para generar la verificación."); 
+            alert("Por favor, ingresa información en al menos uno de los campos para generar la verificación."); 
             return; 
         }
 
-        // Reset de contadores
         obsCriticas = 0; obsImportantes = 0; obsMejoras = 0; accionesPrioritarias = [];
         let matrizCriteriosEvaluados = [];
         let totalPuntos = 0;
@@ -343,258 +335,251 @@
         document.getElementById('loading').style.display = 'block';
         document.getElementById('resultado-container').style.display = 'none';
 
+        // Procesamiento limpio (Sin Try..Catch para evitar congelamientos si no hay errores)
         setTimeout(() => {
-            try {
-                // --- EVALUACIÓN MODULAR DE TÍTULO ---
-                if (titulo.trim().length > 0) {
-                    const numPalabrasTitulo = titulo.trim().split(/\s+/).filter(p => p.length > 0).length;
-                    const c1 = calcularCriterio((numPalabrasTitulo <= 20 && numPalabrasTitulo > 0), (numPalabrasTitulo > 20 && numPalabrasTitulo <= 25), (numPalabrasTitulo > 25));
-                    let obs1 = generarFeedback(numPalabrasTitulo <= 20 && numPalabrasTitulo > 0, `Cumple con el límite (${numPalabrasTitulo} palabras).`, "Importante", ["El título excede las 20 palabras máximas exigidas.", "Elimine artículos redundantes o conectores innecesarios."]);
-                    
-                    maxPuntosPosibles += 1; totalPuntos += c1.puntos;
-                    matrizCriteriosEvaluados.push({ comp: "Título", id: 1, c: "Variables y máximo 20 palabras", o: c1, f: obs1 });
-                }
+            
+            // --- EVALUACIÓN MODULAR DE TÍTULO ---
+            if (titulo.trim().length > 0) {
+                const numPalabrasTitulo = titulo.trim().split(/\s+/).filter(p => p.length > 0).length;
+                const c1 = calcularCriterio((numPalabrasTitulo <= 20 && numPalabrasTitulo > 0), (numPalabrasTitulo > 20 && numPalabrasTitulo <= 25), (numPalabrasTitulo > 25));
+                let obs1 = generarFeedback(numPalabrasTitulo <= 20 && numPalabrasTitulo > 0, `Cumple con el límite (${numPalabrasTitulo} palabras).`, "Importante", ["El título excede las 20 palabras máximas exigidas.", "Elimine artículos redundantes o conectores innecesarios."]);
+                
+                maxPuntosPosibles += 1; totalPuntos += c1.puntos;
+                matrizCriteriosEvaluados.push({ comp: "Título", id: 1, c: "Variables y máximo 20 palabras", o: c1, f: obs1 });
+            }
 
-                // --- EVALUACIÓN MODULAR CAP 1 ---
-                if (cap1.trim().length > 0) {
-                    // Lógica blindada anti-cuelgues (Split por línea en vez de Regex multilínea)
-                    const lineasCap1 = cap1.split('\n').map(l => l.trim()).filter(l => l.length > 0);
-                    const tieneSubtitulosC1 = lineasCap1.some(l => /^(Planteamiento del problema|Revisión de literatura|Hipótesis|Introducción)$/i.test(l) || /^[IVX0-9]+\.?\s+[A-Za-zÁÉÍÓÚáéíóúñ]{3,}$/i.test(l));
-                    const tieneVinetasC1 = lineasCap1.some(l => /^[\*\-\u2022]/.test(l) || /^\d+\./.test(l));
-                    const tienePasadoC1 = /\b(analizó|describió|abordó|formuló|expuso|realizó|determinó|evaluó)\b/i.test(cap1);
-                    
-                    const c2 = calcularCriterio((!tieneSubtitulosC1 && !tieneVinetasC1 && tienePasadoC1), (!tieneSubtitulosC1 && !tieneVinetasC1), (tienePasadoC1));
-                    
-                    let arrayFallosC2 = [];
-                    if (tieneSubtitulosC1) arrayFallosC2.push("Elimine subtítulos huérfanos. Redacte de corrido.");
-                    if (tieneVinetasC1) arrayFallosC2.push("Borre viñetas o listas. Use conectores discursivos.");
-                    if (!tienePasadoC1) arrayFallosC2.push("Asegúrese de redactar todo el capítulo en tiempo pasado del modo indicativo.");
-                    let obs2 = generarFeedback((!tieneSubtitulosC1 && !tieneVinetasC1 && tienePasadoC1), "Prosa continua y tiempo verbal validado.", "Mejora", arrayFallosC2);
+            // --- EVALUACIÓN MODULAR CAP 1 ---
+            if (cap1.trim().length > 0) {
+                const lineasCap1 = cap1.split('\n').map(l => l.trim()).filter(l => l.length > 0);
+                const tieneSubtitulosC1 = lineasCap1.some(l => /^(Planteamiento del problema|Revisión de literatura|Hipótesis|Introducción)$/i.test(l) || /^[IVX0-9]+\.?\s+[A-Za-zÁÉÍÓÚáéíóúñ]{3,}$/i.test(l));
+                const tieneVinetasC1 = lineasCap1.some(l => /^[\*\-\u2022]/.test(l) || /^\d+\./.test(l));
+                const tienePasadoC1 = /\b(analizó|describió|abordó|formuló|expuso|realizó|determinó|evaluó)\b/i.test(cap1);
+                
+                const c2 = calcularCriterio((!tieneSubtitulosC1 && !tieneVinetasC1 && tienePasadoC1), (!tieneSubtitulosC1 && !tieneVinetasC1), (tienePasadoC1));
+                
+                let arrayFallosC2 = [];
+                if (tieneSubtitulosC1) arrayFallosC2.push("Elimine subtítulos huérfanos. Redacte de corrido.");
+                if (tieneVinetasC1) arrayFallosC2.push("Borre viñetas o listas. Use conectores discursivos.");
+                if (!tienePasadoC1) arrayFallosC2.push("Asegúrese de redactar todo el capítulo en tiempo pasado del modo indicativo.");
+                let obs2 = generarFeedback((!tieneSubtitulosC1 && !tieneVinetasC1 && tienePasadoC1), "Prosa continua y tiempo verbal validado.", "Mejora", arrayFallosC2);
 
-                    const tieneODS = /ODS|Desarrollo Sostenible/i.test(cap1);
-                    const tieneInternacional = /internacional|mundial|global/i.test(cap1);
-                    const c3 = calcularCriterio(tieneODS && tieneInternacional, tieneInternacional, tieneODS);
-                    let obs3 = generarFeedback(tieneODS, "Vínculo explícito con ODS identificado.", "Importante", [
-                        "Mencione textualmente la sigla 'ODS' o 'Objetivo de Desarrollo Sostenible'.",
-                        "Indique específicamente a qué meta contribuye su investigación."
-                    ]);
+                const tieneODS = /ODS|Desarrollo Sostenible/i.test(cap1);
+                const tieneInternacional = /internacional|mundial|global/i.test(cap1);
+                const c3 = calcularCriterio(tieneODS && tieneInternacional, tieneInternacional, tieneODS);
+                let obs3 = generarFeedback(tieneODS, "Vínculo explícito con ODS identificado.", "Importante", [
+                    "Mencione textualmente la sigla 'ODS' o 'Objetivo de Desarrollo Sostenible'.",
+                    "Indique específicamente a qué meta contribuye su investigación."
+                ]);
 
-                    const tienePregunta = /\?/g.test(cap1);
-                    const c4 = calcularCriterio(tienePregunta, tienePregunta, cap1.includes("problema"));
-                    let obs4 = generarFeedback(tienePregunta, "Formulación interrogativa estructurada.", "Crítico", [
-                        "Falta el problema formulado como pregunta explícita.",
-                        "Enciérrelo directamente entre signos de interrogación (¿?)."
-                    ]);
+                const tienePregunta = /\?/g.test(cap1);
+                const c4 = calcularCriterio(tienePregunta, tienePregunta, cap1.includes("problema"));
+                let obs4 = generarFeedback(tienePregunta, "Formulación interrogativa estructurada.", "Crítico", [
+                    "Falta el problema formulado como pregunta explícita.",
+                    "Enciérrelo directamente entre signos de interrogación (¿?)."
+                ]);
 
-                    const tieneJustificacion = /justificación|justifica|importancia|relevancia/i.test(cap1);
-                    const c5 = calcularCriterio(tieneJustificacion, tieneJustificacion, tieneJustificacion);
-                    let obs5 = generarFeedback(tieneJustificacion, "Sección de justificación declarada.", "Importante", [
-                        "Declare la relevancia teórica, práctica y/o metodológica del estudio."
-                    ]);
+                const tieneJustificacion = /justificación|justifica|importancia|relevancia/i.test(cap1);
+                const c5 = calcularCriterio(tieneJustificacion, tieneJustificacion, tieneJustificacion);
+                let obs5 = generarFeedback(tieneJustificacion, "Sección de justificación declarada.", "Importante", [
+                    "Declare la relevancia teórica, práctica y/o metodológica del estudio."
+                ]);
 
-                    const tieneObjetivoG = /objetivo general/i.test(cap1);
-                    const tieneObjetivosE = /objetivos específicos/i.test(cap1);
-                    const c6 = calcularCriterio(tieneObjetivoG && tieneObjetivosE, tieneObjetivoG, tieneObjetivosE);
-                    let obs6 = generarFeedback(tieneObjetivoG && tieneObjetivosE, "Objetivos general y específicos delineados.", "Crítico", [
-                        "Redacte un (1) Objetivo General y al menos tres (3) Específicos usando verbos en infinitivo."
-                    ]);
+                const tieneObjetivoG = /objetivo general/i.test(cap1);
+                const tieneObjetivosE = /objetivos específicos/i.test(cap1);
+                const c6 = calcularCriterio(tieneObjetivoG && tieneObjetivosE, tieneObjetivoG, tieneObjetivosE);
+                let obs6 = generarFeedback(tieneObjetivoG && tieneObjetivosE, "Objetivos general y específicos delineados.", "Crítico", [
+                    "Redacte un (1) Objetivo General y al menos tres (3) Específicos usando verbos en infinitivo."
+                ]);
 
-                    const cuentaAntecedentes = (cap1.match(/artículo|investigación|autor|estudio|(\(20\d\d\))/g) || []).length;
-                    const c7 = calcularCriterio(cuentaAntecedentes >= 8, cuentaAntecedentes >= 5, cuentaAntecedentes >= 2);
-                    let obs7 = generarFeedback(cuentaAntecedentes >= 8, "Densidad de citas internacionales validada.", "Importante", [
-                        "Incorpore al menos 6 antecedentes internacionales explícitos de revistas indexadas."
-                    ]);
+                const antecedenciasMatch = cap1.match(/artículo|investigación|autor|estudio|(\(20\d\d\))/g);
+                const cuentaAntecedentes = antecedenciasMatch ? antecedenciasMatch.length : 0;
+                const c7 = calcularCriterio(cuentaAntecedentes >= 8, cuentaAntecedentes >= 5, cuentaAntecedentes >= 2);
+                let obs7 = generarFeedback(cuentaAntecedentes >= 8, "Densidad de citas internacionales validada.", "Importante", [
+                    "Incorpore al menos 6 antecedentes internacionales explícitos de revistas indexadas."
+                ]);
 
-                    const tieneDimensiones = /dimensión|dimensiones|categorías/i.test(cap1);
-                    const c8 = calcularCriterio(tieneDimensiones, tieneDimensiones, tieneDimensiones);
-                    let obs8 = generarFeedback(tieneDimensiones, "Desglose dimensional validado.", "Mejora", ["Defina conceptualmente las variables y sus dimensiones operacionales."]);
+                const tieneDimensiones = /dimensión|dimensiones|categorías/i.test(cap1);
+                const c8 = calcularCriterio(tieneDimensiones, tieneDimensiones, tieneDimensiones);
+                let obs8 = generarFeedback(tieneDimensiones, "Desglose dimensional validado.", "Mejora", ["Defina conceptualmente las variables y sus dimensiones operacionales."]);
 
-                    const tieneTeorias = /teoría|enfoque teórico|fundamento/i.test(cap1);
-                    const c9 = calcularCriterio(tieneTeorias, tieneTeorias, tieneTeorias);
-                    let obs9 = generarFeedback(tieneTeorias, "Teorías base mencionadas.", "Mejora", ["Incorpore modelos teóricos fundacionales vinculados a la variable."]);
+                const tieneTeorias = /teoría|enfoque teórico|fundamento/i.test(cap1);
+                const c9 = calcularCriterio(tieneTeorias, tieneTeorias, tieneTeorias);
+                let obs9 = generarFeedback(tieneTeorias, "Teorías base mencionadas.", "Mejora", ["Incorpore modelos teóricos fundacionales vinculados a la variable."]);
 
-                    const tieneHipotesis = /hipótesis|supuesto/i.test(cap1);
-                    const c10 = calcularCriterio(tieneHipotesis, tieneHipotesis, true);
-                    let obs10 = generarFeedback(tieneHipotesis, "Hipótesis detectadas.", "Mejora", ["Criterio condicional: Formule hipótesis solo si el diseño lo amerita."]);
+                const tieneHipotesis = /hipótesis|supuesto/i.test(cap1);
+                const c10 = calcularCriterio(tieneHipotesis, tieneHipotesis, true);
+                let obs10 = generarFeedback(tieneHipotesis, "Hipótesis detectadas.", "Mejora", ["Criterio condicional: Formule hipótesis solo si el diseño lo amerita."]);
 
-                    maxPuntosPosibles += 9;
-                    totalPuntos += (c2.puntos + c3.puntos + c4.puntos + c5.puntos + c6.puntos + c7.puntos + c8.puntos + c9.puntos + c10.puntos);
-                    
-                    matrizCriteriosEvaluados.push(
-                        { comp: "Introd.", id: 2, c: "Prosa, sin subtítulos, pasado", o: c2, f: obs2 },
-                        { comp: "Introd.", id: 3, c: "Problema y mención de ODS", o: c3, f: obs3 },
-                        { comp: "Introd.", id: 4, c: "Problema interrogativo", o: c4, f: obs4 },
-                        { comp: "Introd.", id: 5, c: "Justificación explícita", o: c5, f: obs5 },
-                        { comp: "Introd.", id: 6, c: "Objetivos generales y esp.", o: c6, f: obs6 },
-                        { comp: "Introd.", id: 7, c: "Antecedentes científicos", o: c7, f: obs7 },
-                        { comp: "Introd.", id: 8, c: "Dimensiones y conceptos", o: c8, f: obs8 },
-                        { comp: "Introd.", id: 9, c: "Teorías relacionadas", o: c9, f: obs9 },
-                        { comp: "Introd.", id: 10, c: "Hipótesis (si aplica)", o: c10, f: obs10 }
-                    );
-                }
+                maxPuntosPosibles += 9;
+                totalPuntos += (c2.puntos + c3.puntos + c4.puntos + c5.puntos + c6.puntos + c7.puntos + c8.puntos + c9.puntos + c10.puntos);
+                
+                matrizCriteriosEvaluados.push(
+                    { comp: "Introd.", id: 2, c: "Prosa, sin subtítulos, pasado", o: c2, f: obs2 },
+                    { comp: "Introd.", id: 3, c: "Problema y mención de ODS", o: c3, f: obs3 },
+                    { comp: "Introd.", id: 4, c: "Problema interrogativo", o: c4, f: obs4 },
+                    { comp: "Introd.", id: 5, c: "Justificación explícita", o: c5, f: obs5 },
+                    { comp: "Introd.", id: 6, c: "Objetivos generales y esp.", o: c6, f: obs6 },
+                    { comp: "Introd.", id: 7, c: "Antecedentes científicos", o: c7, f: obs7 },
+                    { comp: "Introd.", id: 8, c: "Dimensiones y conceptos", o: c8, f: obs8 },
+                    { comp: "Introd.", id: 9, c: "Teorías relacionadas", o: c9, f: obs9 },
+                    { comp: "Introd.", id: 10, c: "Hipótesis (si aplica)", o: c10, f: obs10 }
+                );
+            }
 
-                // --- EVALUACIÓN MODULAR CAP 2 ---
-                if (cap2.trim().length > 0) {
-                    const lineasCap2 = cap2.split('\n').map(l => l.trim()).filter(l => l.length > 0);
-                    const tieneSubtitulosC2 = lineasCap2.some(l => /^(Tipo y enfoque|Variables|Unidad de análisis|Técnicas|Aspectos éticos)$/i.test(l));
-                    const tieneFuturoC2 = /\b(describirá|analizará|emplearán|considerará|detallará|aplicarán|desarrollarán)\b/i.test(cap2);
-                    
-                    const c11 = calcularCriterio(!tieneSubtitulosC2 && tieneFuturoC2, !tieneSubtitulosC2, tieneFuturoC2);
-                    
-                    let arrayFallosC11 = [];
-                    if (!tieneFuturoC2) arrayFallosC11.push("Reescriba todo el capítulo metodológico en tiempo FUTURO (ej. 'se aplicará').");
-                    if (tieneSubtitulosC2) arrayFallosC11.push("Elimine subtítulos internos. El texto metodológico debe fluir en prosa.");
-                    let obs11 = generarFeedback(!tieneSubtitulosC2 && tieneFuturoC2, "Prosa continua en tiempo futuro.", "Importante", arrayFallosC11);
+            // --- EVALUACIÓN MODULAR CAP 2 ---
+            if (cap2.trim().length > 0) {
+                const lineasCap2 = cap2.split('\n').map(l => l.trim()).filter(l => l.length > 0);
+                const tieneSubtitulosC2 = lineasCap2.some(l => /^(Tipo y enfoque|Variables|Unidad de análisis|Técnicas|Aspectos éticos)$/i.test(l));
+                const tieneFuturoC2 = /\b(describirá|analizará|emplearán|considerará|detallará|aplicarán|desarrollarán)\b/i.test(cap2);
+                
+                const c11 = calcularCriterio(!tieneSubtitulosC2 && tieneFuturoC2, !tieneSubtitulosC2, tieneFuturoC2);
+                
+                let arrayFallosC11 = [];
+                if (!tieneFuturoC2) arrayFallosC11.push("Reescriba todo el capítulo metodológico en tiempo FUTURO (ej. 'se aplicará').");
+                if (tieneSubtitulosC2) arrayFallosC11.push("Elimine subtítulos internos. El texto metodológico debe fluir en prosa.");
+                let obs11 = generarFeedback(!tieneSubtitulosC2 && tieneFuturoC2, "Prosa continua en tiempo futuro.", "Importante", arrayFallosC11);
 
-                    const tieneOslo = /Oslo|OCDE/i.test(cap2);
-                    const c12 = calcularCriterio(tieneOslo, tieneOslo, cap2.includes('enfoque'));
-                    let obs12 = generarFeedback(tieneOslo, "Alineación a Manual de Oslo detectada.", "Importante", ["Defina si es Básica o Aplicada citando el 'Manual de Oslo (2018)'."]);
+                const tieneOslo = /Oslo|OCDE/i.test(cap2);
+                const c12 = calcularCriterio(tieneOslo, tieneOslo, cap2.includes('enfoque'));
+                let obs12 = generarFeedback(tieneOslo, "Alineación a Manual de Oslo detectada.", "Importante", ["Defina si es Básica o Aplicada citando el 'Manual de Oslo (2018)'."]);
 
-                    const tieneDefVar = /operacionalización|tabla|definición conceptual/i.test(cap2);
-                    const c13 = calcularCriterio(tieneDefVar, tieneDefVar, tieneDefVar);
-                    let obs13 = generarFeedback(tieneDefVar, "Variables metodológicas tratadas.", "Importante", ["Indique detalladamente cómo medirá las variables (matriz)."]);
+                const tieneDefVar = /operacionalización|tabla|definición conceptual/i.test(cap2);
+                const c13 = calcularCriterio(tieneDefVar, tieneDefVar, tieneDefVar);
+                let obs13 = generarFeedback(tieneDefVar, "Variables metodológicas tratadas.", "Importante", ["Indique detalladamente cómo medirá las variables (matriz)."]);
 
-                    const tienePoblacion = /población|muestra/i.test(cap2);
-                    const tieneCriterios = /inclusión|exclusión/i.test(cap2);
-                    const c14 = calcularCriterio(tienePoblacion && tieneCriterios, tienePoblacion, tieneCriterios);
-                    let obs14 = generarFeedback(tienePoblacion && tieneCriterios, "Población y filtros establecidos.", "Importante", ["Defina su muestra y escriba explícitamente los criterios de inclusión/exclusión."]);
+                const tienePoblacion = /población|muestra/i.test(cap2);
+                const tieneCriterios = /inclusión|exclusión/i.test(cap2);
+                const c14 = calcularCriterio(tienePoblacion && tieneCriterios, tienePoblacion, tieneCriterios);
+                let obs14 = generarFeedback(tienePoblacion && tieneCriterios, "Población y filtros establecidos.", "Importante", ["Defina su muestra y escriba explícitamente los criterios de inclusión/exclusión."]);
 
-                    const tieneJueces = /jueces|expertos|validación/i.test(cap2);
-                    const c15 = calcularCriterio(tieneJueces, tieneJueces, cap2.includes('instrumento'));
-                    let obs15 = generarFeedback(tieneJueces, "Validación por expertos programada.", "Importante", ["Declare que el instrumento pasará por validación de tres (3) jueces expertos."]);
+                const tieneJueces = /jueces|expertos|validación/i.test(cap2);
+                const c15 = calcularCriterio(tieneJueces, tieneJueces, cap2.includes('instrumento'));
+                let obs15 = generarFeedback(tieneJueces, "Validación por expertos programada.", "Importante", ["Declare que el instrumento pasará por validación de tres (3) jueces expertos."]);
 
-                    const tieneEtica = /código de ética|ética|consentimiento/i.test(cap2);
-                    const c16 = calcularCriterio(tieneEtica, tieneEtica, cap2.includes('análisis'));
-                    let obs16 = generarFeedback(tieneEtica, "Principios de integridad cubiertos.", "Crítico", ["Mencione el consentimiento informado y el 'Código de Ética de la UCV'."]);
+                const tieneEtica = /código de ética|ética|consentimiento/i.test(cap2);
+                const c16 = calcularCriterio(tieneEtica, tieneEtica, cap2.includes('análisis'));
+                let obs16 = generarFeedback(tieneEtica, "Principios de integridad cubiertos.", "Crítico", ["Mencione el consentimiento informado y el 'Código de Ética de la UCV'."]);
 
-                    maxPuntosPosibles += 6;
-                    totalPuntos += (c11.puntos + c12.puntos + c13.puntos + c14.puntos + c15.puntos + c16.puntos);
-                    
-                    matrizCriteriosEvaluados.push(
-                        { comp: "Metod.", id: 11, c: "Prosa, futuro, indicativo", o: c11, f: obs11 },
-                        { comp: "Metod.", id: 12, c: "Diseño y Manual Oslo", o: c12, f: obs12 },
-                        { comp: "Metod.", id: 13, c: "Operacionalización var.", o: c13, f: obs13 },
-                        { comp: "Metod.", id: 14, c: "Población y Criterios", o: c14, f: obs14 },
-                        { comp: "Metod.", id: 15, c: "Validación por 3 expertos", o: c15, f: obs15 },
-                        { comp: "Metod.", id: 16, c: "Código de Ética UCV", o: c16, f: obs16 }
-                    );
-                }
+                maxPuntosPosibles += 6;
+                totalPuntos += (c11.puntos + c12.puntos + c13.puntos + c14.puntos + c15.puntos + c16.puntos);
+                
+                matrizCriteriosEvaluados.push(
+                    { comp: "Metod.", id: 11, c: "Prosa, futuro, indicativo", o: c11, f: obs11 },
+                    { comp: "Metod.", id: 12, c: "Diseño y Manual Oslo", o: c12, f: obs12 },
+                    { comp: "Metod.", id: 13, c: "Operacionalización var.", o: c13, f: obs13 },
+                    { comp: "Metod.", id: 14, c: "Población y Criterios", o: c14, f: obs14 },
+                    { comp: "Metod.", id: 15, c: "Validación por 3 expertos", o: c15, f: obs15 },
+                    { comp: "Metod.", id: 16, c: "Código de Ética UCV", o: c16, f: obs16 }
+                );
+            }
 
-                // --- EVALUACIÓN MODULAR CAP 3 ---
-                if (cap3.trim().length > 0) {
-                    const tieneMontoRecursos = /(s\/\.?\s*[1-9]\d*)|(\b[1-9]\d{1,}(\.\d{2})?\b)|\b(meses|tiempo|horas)\b/i.test(cap3);
-                    const c17 = calcularCriterio(tieneMontoRecursos, tieneMontoRecursos, cap3.includes('recursos'));
-                    let obs17 = generarFeedback(tieneMontoRecursos, "Tablas 1 y 2 presupuestadas.", "Importante", ["Inserte las Tablas 1 y 2 con estimaciones reales de costos. No las envíe vacías."]);
+            // --- EVALUACIÓN MODULAR CAP 3 ---
+            if (cap3.trim().length > 0) {
+                const tieneMontoRecursos = /(s\/\.?\s*[1-9]\d*)|(\b[1-9]\d{1,}(\.\d{2})?\b)|\b(meses|tiempo|horas)\b/i.test(cap3);
+                const c17 = calcularCriterio(tieneMontoRecursos, tieneMontoRecursos, cap3.includes('recursos'));
+                let obs17 = generarFeedback(tieneMontoRecursos, "Tablas 1 y 2 presupuestadas.", "Importante", ["Inserte las Tablas 1 y 2 con estimaciones reales de costos. No las envíe vacías."]);
 
-                    const cap3Limpio = cap3.replace(/tabla\s+3/gi, '');
-                    const tieneMontoFinanza = /(s\/\.?\s*[1-9]\d*)|(\b[1-9]\d{2,}\b)/i.test(cap3Limpio) || (/\b(autofinanciado|propio)\b/i.test(cap3Limpio) && /\b0(\.00)?\b/.test(cap3Limpio));
-                    const c18 = calcularCriterio(tieneMontoFinanza, tieneMontoFinanza, cap3.includes('tabla 3'));
-                    let obs18 = generarFeedback(tieneMontoFinanza, "Financiamiento respaldado.", "Importante", ["Si es Autofinanciado, coloque S/. 0.00 en la Tabla 3 indicando fondos propios."]);
+                const cap3Limpio = cap3.replace(/tabla\s+3/gi, '');
+                const tieneMontoFinanza = /(s\/\.?\s*[1-9]\d*)|(\b[1-9]\d{2,}\b)/i.test(cap3Limpio) || (/\b(autofinanciado|propio)\b/i.test(cap3Limpio) && /\b0(\.00)?\b/.test(cap3Limpio));
+                const c18 = calcularCriterio(tieneMontoFinanza, tieneMontoFinanza, cap3.includes('tabla 3'));
+                let obs18 = generarFeedback(tieneMontoFinanza, "Financiamiento respaldado.", "Importante", ["Si es Autofinanciado, coloque S/. 0.00 en la Tabla 3 indicando fondos propios."]);
 
-                    const cronogramaLimpio = cap3.replace(/tabla\s+4/gi, '');
-                    const coincidenciasX = cronogramaLimpio.match(/\b[xX]\b/g);
-                    const tieneX = coincidenciasX !== null && coincidenciasX.length >= 3;
-                    const c19 = calcularCriterio(tieneX, tieneX, cap3.includes('tabla 4'));
-                    let obs19 = generarFeedback(tieneX, "Cronograma Gantt planificado.", "Importante", ["Añada la Tabla 4 y marque con una letra 'X' las columnas correspondientes a las sesiones."]);
+                const cronogramaLimpio = cap3.replace(/tabla\s+4/gi, '');
+                const coincidenciasX = cronogramaLimpio.match(/\b[xX]\b/g);
+                const tieneX = coincidenciasX !== null && coincidenciasX.length >= 3;
+                const c19 = calcularCriterio(tieneX, tieneX, cap3.includes('tabla 4'));
+                let obs19 = generarFeedback(tieneX, "Cronograma Gantt planificado.", "Importante", ["Añada la Tabla 4 y marque con una letra 'X' las columnas correspondientes a las sesiones."]);
 
-                    maxPuntosPosibles += 3;
-                    totalPuntos += (c17.puntos + c18.puntos + c19.puntos);
+                maxPuntosPosibles += 3;
+                totalPuntos += (c17.puntos + c18.puntos + c19.puntos);
 
-                    matrizCriteriosEvaluados.push(
-                        { comp: "Admin.", id: 17, c: "Tablas de Recursos 1 y 2", o: c17, f: obs17 },
-                        { comp: "Admin.", id: 18, c: "Financiamiento (Tabla 3)", o: c18, f: obs18 },
-                        { comp: "Admin.", id: 19, c: "Cronograma Gantt (Tabla 4)", o: c19, f: obs19 }
-                    );
-                }
+                matrizCriteriosEvaluados.push(
+                    { comp: "Admin.", id: 17, c: "Tablas de Recursos 1 y 2", o: c17, f: obs17 },
+                    { comp: "Admin.", id: 18, c: "Financiamiento (Tabla 3)", o: c18, f: obs18 },
+                    { comp: "Admin.", id: 19, c: "Cronograma Gantt (Tabla 4)", o: c19, f: obs19 }
+                );
+            }
 
-                // --- EVALUACIÓN MODULAR REFERENCIAS ---
-                if (refTexto.trim().length > 0) {
-                    const lineasRef = refTexto.split('\n').filter(l => l.trim().length > 15);
-                    const c20 = calcularCriterio(lineasRef.length >= 30, lineasRef.length >= 15, lineasRef.length > 0);
-                    let obs20 = generarFeedback(lineasRef.length >= 30, `Contabilizadas ~${lineasRef.length} referencias bibliográficas.`, "Crítico", [
-                        "Incorpore más fuentes a su listado de referencias.",
-                        "Recuerde el requisito normativo: Mínimo 30 referencias totales."
-                    ]);
-                    
-                    maxPuntosPosibles += 1;
-                    totalPuntos += c20.puntos;
+            // --- EVALUACIÓN MODULAR REFERENCIAS ---
+            if (refTexto.trim().length > 0) {
+                const lineasRef = refTexto.split('\n').filter(l => l.trim().length > 15);
+                const c20 = calcularCriterio(lineasRef.length >= 30, lineasRef.length >= 15, lineasRef.length > 0);
+                let obs20 = generarFeedback(lineasRef.length >= 30, `Contabilizadas ~${lineasRef.length} referencias bibliográficas.`, "Crítico", [
+                    "Incorpore más fuentes a su listado de referencias.",
+                    "Recuerde el requisito normativo: Mínimo 30 referencias totales."
+                ]);
+                
+                maxPuntosPosibles += 1;
+                totalPuntos += c20.puntos;
 
-                    matrizCriteriosEvaluados.push({ comp: "Referen.", id: 20, c: "Mínimo 30 citas referenciadas", o: c20, f: obs20 });
-                }
+                matrizCriteriosEvaluados.push({ comp: "Referen.", id: 20, c: "Mínimo 30 citas referenciadas", o: c20, f: obs20 });
+            }
 
-                // --- CÁLCULOS DEL SEMÁFORO Y PORCENTAJES ---
-                const porcentajeAdec = maxPuntosPosibles === 0 ? 0 : ((totalPuntos / maxPuntosPosibles) * 100).toFixed(1);
+            // --- CÁLCULOS DEL SEMÁFORO Y PORCENTAJES ---
+            const porcentajeAdec = maxPuntosPosibles === 0 ? 0 : parseFloat(((totalPuntos / maxPuntosPosibles) * 100).toFixed(1));
 
-                let semaforoColor, semaforoTexto, semaforoIcon;
-                if (porcentajeAdec >= 90) {
-                    semaforoColor = "#2e7d32"; semaforoTexto = "Alto cumplimiento normativo"; semaforoIcon = "🟢";
-                } else if (porcentajeAdec >= 75) {
-                    semaforoColor = "#e65100"; semaforoTexto = "Cumplimiento parcial"; semaforoIcon = "🟡";
-                } else {
-                    semaforoColor = "#b3002d"; semaforoTexto = "Riesgo elevado de observaciones"; semaforoIcon = "🔴";
-                }
+            let semaforoColor, semaforoTexto, semaforoIcon;
+            if (porcentajeAdec >= 90) {
+                semaforoColor = "#2e7d32"; semaforoTexto = "Alto cumplimiento normativo"; semaforoIcon = "🟢";
+            } else if (porcentajeAdec >= 75) {
+                semaforoColor = "#e65100"; semaforoTexto = "Cumplimiento parcial"; semaforoIcon = "🟡";
+            } else {
+                semaforoColor = "#b3002d"; semaforoTexto = "Riesgo elevado de observaciones"; semaforoIcon = "🔴";
+            }
 
-                const listaAcciones = accionesPrioritarias.length > 0 
-                    ? accionesPrioritarias.map(acc => `<li>${acc}</li>`).join('')
-                    : `<li><span style="color:#2e7d32; font-weight:600;">✔ ¡Excelente trabajo estructural! Las secciones analizadas cumplen la normativa.</span></li>`;
+            const listaAcciones = accionesPrioritarias.length > 0 
+                ? accionesPrioritarias.map(acc => `<li>${acc}</li>`).join('')
+                : `<li><span style="color:#2e7d32; font-weight:600;">✔ ¡Excelente trabajo estructural! Las secciones analizadas cumplen la normativa.</span></li>`;
 
-                // Construir el Resumen Ejecutivo
-                const htmlResumen = `
-                    <div class="executive-summary">
-                        <h3>Resumen Ejecutivo del Diagnóstico</h3>
-                        <div class="summary-grid">
-                            <div class="summary-card main-score">
-                                <div class="semaforo-icon">${semaforoIcon}</div>
-                                <div class="semaforo-pct">${porcentajeAdec}%</div>
-                                <div class="semaforo-text" style="color:${semaforoColor}">${semaforoTexto}</div>
-                            </div>
-                            <div class="summary-card">
-                                <h4>Hallazgos Estructurales</h4>
-                                <ul class="obs-list">
-                                    <li>🔴 Riesgo Crítico: <strong>${obsCriticas}</strong></li>
-                                    <li>🟠 Riesgo Importante: <strong>${obsImportantes}</strong></li>
-                                    <li>🟢 Riesgo de Mejora: <strong>${obsMejoras}</strong></li>
-                                </ul>
-                            </div>
-                            <div class="summary-card priority-list">
-                                <h4>Acciones Prioritarias</h4>
-                                <ul>
-                                    ${listaAcciones}
-                                </ul>
-                            </div>
+            const htmlResumen = `
+                <div class="executive-summary">
+                    <h3>Resumen Ejecutivo del Diagnóstico</h3>
+                    <div class="summary-grid">
+                        <div class="summary-card main-score">
+                            <div class="semaforo-icon">${semaforoIcon}</div>
+                            <div class="semaforo-pct">${porcentajeAdec}%</div>
+                            <div class="semaforo-text" style="color:${semaforoColor}">${semaforoTexto}</div>
+                        </div>
+                        <div class="summary-card">
+                            <h4>Hallazgos Estructurales</h4>
+                            <ul class="obs-list">
+                                <li>🔴 Riesgo Crítico: <strong>${obsCriticas}</strong></li>
+                                <li>🟠 Riesgo Importante: <strong>${obsImportantes}</strong></li>
+                                <li>🟢 Riesgo de Mejora: <strong>${obsMejoras}</strong></li>
+                            </ul>
+                        </div>
+                        <div class="summary-card priority-list">
+                            <h4>Acciones Prioritarias</h4>
+                            <ul>
+                                ${listaAcciones}
+                            </ul>
                         </div>
                     </div>
-                `;
+                </div>
+            `;
 
-                document.getElementById('resumen-ejecutivo-container').innerHTML = htmlResumen;
+            document.getElementById('resumen-ejecutivo-container').innerHTML = htmlResumen;
 
-                let htmlFilas = "";
-                matrizCriteriosEvaluados.forEach(r => {
-                    let col = r.o.nivel === "Destacado" ? "#2e7d32" : r.o.nivel === "Logrado" ? "#004b8d" : r.o.nivel === "En proceso" ? "#f57c00" : "#b3002d";
-                    htmlFilas += `<tr>
-                        <td><strong>${r.comp}</strong></td>
-                        <td style="text-align:center; font-weight:bold;">${r.id}</td>
-                        <td>${r.c}</td>
-                        <td style="text-align:center;"><span class="badge-status" style="background:${col}; color:white;">${r.o.nivel}</span></td>
-                        <td>${r.f}</td>
-                    </tr>`;
-                });
+            let htmlFilas = "";
+            matrizCriteriosEvaluados.forEach(r => {
+                let col = r.o.nivel === "Destacado" ? "#2e7d32" : r.o.nivel === "Logrado" ? "#004b8d" : r.o.nivel === "En proceso" ? "#f57c00" : "#b3002d";
+                htmlFilas += `<tr>
+                    <td><strong>${r.comp}</strong></td>
+                    <td style="text-align:center; font-weight:bold;">${r.id}</td>
+                    <td>${r.c}</td>
+                    <td style="text-align:center;"><span class="badge-status" style="background:${col}; color:white;">${r.o.nivel}</span></td>
+                    <td>${r.f}</td>
+                </tr>`;
+            });
 
-                document.getElementById('datos-tesista').innerHTML = `<strong>Tesista Evaluado:</strong> ${nombre} &nbsp; | &nbsp; <strong>Secciones Analizadas:</strong> ${maxPuntosPosibles} de 20 criterios disponibles.`;
-                document.getElementById('nota-final-container').innerHTML = `✅ Índice de Cumplimiento Normativo Estimado: ${totalPuntos.toFixed(2)} / ${maxPuntosPosibles} `;
-                document.getElementById('tabla-rubrica-cuerpo').innerHTML = htmlFilas;
-                
-                document.getElementById('loading').style.display = 'none';
-                document.getElementById('resultado-container').style.display = 'block';
-                document.getElementById('resultado-container').scrollIntoView({ behavior: 'smooth' });
+            document.getElementById('datos-tesista').innerHTML = `<strong>Tesista Evaluado:</strong> ${nombre} &nbsp; | &nbsp; <strong>Criterios Analizados:</strong> ${maxPuntosPosibles} de 20 disponibles.`;
+            document.getElementById('tabla-rubrica-cuerpo').innerHTML = htmlFilas;
+            
+            document.getElementById('loading').style.display = 'none';
+            document.getElementById('resultado-container').style.display = 'block';
+            document.getElementById('resultado-container').scrollIntoView({ behavior: 'smooth' });
 
-            } catch (error) {
-                // Sistema de seguridad: si el alumno pega algo que rompa la página, arroja alerta en vez de colgarse.
-                console.error("Error en la evaluación:", error);
-                alert("Ocurrió un error al procesar el texto. Por favor revisa que no haya caracteres extraños o intenta evaluar un capítulo a la vez.");
-                document.getElementById('loading').style.display = 'none';
-            }
-        }, 800);
+        }, 500);
     }
 </script>
 </body>
