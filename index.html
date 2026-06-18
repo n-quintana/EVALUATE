@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Evaluador de Tesis con IA</title>
+    <title>Evaluador Modular de Tesis</title>
     <style>
         * {
             box-sizing: border-box;
@@ -24,7 +24,7 @@
             box-shadow: 0 4px 15px rgba(0,0,0,0.05);
         }
         
-        /* Barra de Progreso / Pasos */
+        /* Barra de Progreso */
         .wizard-steps {
             display: flex;
             justify-content: space-between;
@@ -92,22 +92,6 @@
             margin-bottom: 25px;
             border-bottom: 1px solid #eef2f5;
             padding-bottom: 10px;
-        }
-
-        /* Alerta API Key */
-        .api-box {
-            border: 1px solid #ffcc80;
-            background-color: #fff8e1;
-            padding: 15px;
-            border-radius: 6px;
-            margin-bottom: 25px;
-        }
-        .api-box label {
-            display: block;
-            font-weight: bold;
-            color: #c67100;
-            margin-bottom: 8px;
-            font-size: 14px;
         }
         
         /* Campos de formulario */
@@ -214,192 +198,3 @@
     <div class="wizard-steps">
         <div class="step active" id="step-1-indicator">
             <div class="step-circle">1</div>
-            <div class="step-title">Inicio & API</div>
-        </div>
-        <div class="step" id="step-2-indicator">
-            <div class="step-circle">2</div>
-            <div class="step-title">Cap. I</div>
-        </div>
-        <div class="step" id="step-3-indicator">
-            <div class="step-circle">3</div>
-            <div class="step-title">Metodología</div>
-        </div>
-    </div>
-
-    <div class="form-section active" id="section-1">
-        <h2>1. Configuración de IA y Datos</h2>
-        
-        <div class="api-box">
-            <label>Llave API de Google Gemini (Gratis e integrada)</label>
-            <input type="password" id="INP_API" class="field-input" value="AQ.Ab8RN6I8CCp_NEpwmiyyZBzvjHLV3POJt_tOUZ7gJH_uspK_Rw" placeholder="Clave API cargada con éxito.">
-            <small style="color: #666; display:block; margin-top:5px;">Tu clave de Google AI Studio se encuentra ingresada de forma segura.</small>
-        </div>
-
-        <div class="form-group">
-            <label>Nombre del Estudiante</label>
-            <input type="text" id="nombre_estudiante" class="field-input" placeholder="Ej. Noemi Quispe...">
-        </div>
-
-        <div class="form-group">
-            <label>Título de la Tesis</label>
-            <input type="text" id="titulo_tesis" class="field-input" placeholder="Pega aquí tu título completo...">
-        </div>
-
-        <div class="btn-container">
-            <div></div> <button class="btn btn-primary" onclick="cambiarPaso(2)">Continuar al Capítulo I →</button>
-        </div>
-    </div>
-
-    <div class="form-section" id="section-2">
-        <h2>2. Capítulo I: Planteamiento del Problema</h2>
-        
-        <div class="form-group">
-            <label>Contenido del Capítulo I (Introducción, realidad problemática, objetivos)</label>
-            <textarea id="capitulo_1" class="field-input" placeholder="Pega aquí el texto completo del avance de tu primer capítulo..."></textarea>
-        </div>
-
-        <div class="btn-container">
-            <button class="btn btn-secondary" onclick="cambiarPaso(1)">← Volver</button>
-            <button class="btn btn-primary" onclick="cambiarPaso(3)">Continuar a Metodología →</button>
-        </div>
-    </div>
-
-    <div class="form-section" id="section-3">
-        <h2>3. Capítulo II: Marco Metodológico</h2>
-        
-        <div class="form-group">
-            <label>Contenido de la Metodología (Enfoque, diseño, población, muestra)</label>
-            <textarea id="capitulo_2" class="field-input" placeholder="Pega aquí el texto referente al diseño metodológico de tu investigación..."></textarea>
-        </div>
-
-        <div class="btn-container">
-            <button class="btn btn-secondary" onclick="cambiarPaso(2)">← Volver</button>
-            <button class="btn btn-primary" id="btn-analizar" onclick="ejecutarAnalisisIA()">Analizar con Inteligencia Artificial ✨</button>
-        </div>
-    </div>
-
-    <div class="loading-box" id="loading">
-        <div class="spinner"></div>
-        <p style="font-weight: bold; color: #555;">La IA está analizando rigurosamente tu tesis...</p>
-        <p style="font-size: 12px; color: #888;">Esto puede demorar entre 10 y 20 segundos según la extensión de tus textos.</p>
-    </div>
-
-    <div class="result-container" id="resultado-container">
-        <h2 style="color: #004b8d; border-bottom: 2px solid #004b8d; padding-bottom: 5px;">📋 Informe de Evaluación Académica</h2>
-        <div class="result-content" id="resultado-contenido"></div>
-    </div>
-
-</div>
-
-<script>
-    // Navegación entre pasos del formulario
-    function cambiarPaso(paso) {
-        // Ocultar todas las secciones
-        document.querySelectorAll('.form-section').forEach(sec => sec.classList.remove('active'));
-        document.querySelectorAll('.step').forEach(st => st.classList.remove('active'));
-        
-        // Mostrar la seleccionada
-        document.getElementById('section-' + paso).classList.add('active');
-        document.getElementById('step-' + paso + '-indicator').classList.add('active');
-        
-        // Desplazar arriba automáticamente
-        window.scrollTo({top: 0, behavior: 'smooth'});
-    }
-
-    // Función principal de Análisis con Gemini
-    async function ejecutarAnalisisIA() {
-        const apiKey = document.getElementById('INP_API').value;
-        const nombre = document.getElementById('nombre_estudiante').value || "Estudiante";
-        const titulo = document.getElementById('titulo_tesis').value || "Sin título definido";
-        const cap1 = document.getElementById('capitulo_1').value;
-        const cap2 = document.getElementById('capitulo_2').value;
-
-        if (!apiKey) {
-            alert("Error crítico: Falta la API Key de Gemini.");
-            return;
-        }
-        if (!cap1 || !cap2) {
-            alert("Por favor, asegúrate de haber pegado contenido tanto en el Capítulo I como en Metodología.");
-            return;
-        }
-
-        // Mostrar zona de carga, ocultar resultados previos
-        document.getElementById('loading').style.display = 'block';
-        document.getElementById('resultado-container').style.display = 'none';
-        document.getElementById('btn-analizar').disabled = true;
-        document.getElementById('btn-analizar').innerText = "Analizando...";
-
-        // Estructura del Prompt estricto para el evaluador científico
-        const promptSystem = `Actúa como un riguroso asesor metodológico y jurado de tesis doctoral. Evalúa detalladamente la consistencia científica del siguiente avance. 
-        Estudiante: ${nombre}
-        Título de Investigación: ${titulo}
-
-        CONTENIDO CAPÍTULO I (Problema):
-        ${cap1}
-
-        CONTENIDO CAPÍTULO II (Metodología):
-        ${cap2}
-
-        Proporciona un dictamen formal en código HTML limpio (usa únicamente etiquetas estructurales como <h3>, <p>, <ul>, <li>, <strong>, <table>, sin bloques de código con triple comilla \`\`\`html). El informe debe estructurarse obligatoriamente de la siguiente manera:
-        1. <h3>Análisis de Coherencia Sistemática</h3> (Determina si el problema responde directamente al título).
-        2. <h3>Evaluación Crítica del Capítulo I</h3> (Fortalezas, vacíos teóricos y observaciones).
-        3. <h3>Evaluación del Marco Metodológico</h3> (Revisión estricta de coherencia entre enfoque, diseño, población y muestra).
-        4. <h3>Plan de Subsanación Recomendado</h3> (Lista numerada o con viñetas con acciones paso a paso para corregir los errores detectados).
-        5. <h3>Dictamen de Madurez</h3> (Indicar claramente si está: Aprobado sin observaciones, Requiere Modificaciones Menores, o Requiere Reestructuración Mayor).`;
-
-        try {
-            // Petición HTTP oficial a la API de Google Gemini (modelo 1.5 Flash)
-            const URL_API = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`;
-            
-            const response = await fetch(URL_API, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    contents: [{
-                        parts: [{ text: promptSystem }]
-                    }]
-                })
-            });
-
-            if (!response.ok) {
-                const errData = await response.json();
-                throw new Error(errData.error?.message || "Error desconocido en el servidor de Google.");
-            }
-
-            const data = await response.json();
-            
-            if (data.candidates && data.candidates[0]?.content?.parts[0]?.text) {
-                let htmlResultado = data.candidates[0].content.parts[0].text;
-                
-                // Limpieza de posibles residuos de Markdown que rompan el diseño
-                htmlResultado = htmlResultado.replace(/```html/g, "").replace(/```/g, "").trim();
-                
-                // Inyectar el resultado y mostrar contenedor
-                document.getElementById('resultado-contenido').innerHTML = htmlResultado;
-                document.getElementById('resultado-container').style.display = 'block';
-                
-                // Desplazar suavemente hacia la sección de resultados
-                document.getElementById('resultado-container').scrollIntoView({ behavior: 'smooth' });
-            } else {
-                throw new Error("La API no retornó una estructura de texto analizable.");
-            }
-
-        } catch (error) {
-            alert("Hubo un percance durante el procesamiento: " + error.message);
-            console.error(error);
-        } finally {
-            // Restaurar estado del botón y ocultar cargador
-            document.getElementById('loading').style.display = 'none';
-            document.getElementById('btn-analizar').disabled = false;
-            document.getElementById('btn-analizar').innerText = "Analizar con Inteligencia Artificial ✨";
-        }
-    }
-
-    // Redirección de respaldo para evitar el error 'evaluarCompleto is not defined'
-    function evaluarCompleto() {
-        ejecutarAnalisisIA();
-    }
-</script>
-
-</body>
-</html>
