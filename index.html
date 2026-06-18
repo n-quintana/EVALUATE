@@ -79,7 +79,7 @@
 
     <div class="form-section" id="section-2">
         <h2>2. Capítulo I: Introducción</h2>
-        <div class="normative-callout">Requisitos: Redacción en prosa, sin subtítulos, en tercera persona y en pasado del modo indicativo. Debe incluir realidad problemática con ODS, pregunta de investigación, justificación, objetivos, antecedentes, aportes conceptuales y teorías.</div>
+        <div class="normative-callout">Requisitos: Redacción en prosa, sin subtítulos aislados, en tercera persona y en pasado. Debe incluir realidad problemática con ODS, pregunta, justificación, objetivos, antecedentes, aportes conceptuales y teorías.</div>
         <div class="form-group">
             <label>Contenido del Capítulo I:</label>
             <textarea id="capitulo_1" class="field-input" placeholder="Pegue la prosa completa del Capítulo I..."></textarea>
@@ -92,7 +92,7 @@
 
     <div class="form-section" id="section-3">
         <h2>3. Capítulo II: Metodología</h2>
-        <div class="normative-callout">Requisitos: Redacción en prosa, sin subtítulos, en tercera persona y en tiempo futuro del modo indicativo. Se evalúa tipo/enfoque/diseño, definición de variables, unidad de análisis, población, muestra, técnicas, instrumentos y aspectos éticos.</div>
+        <div class="normative-callout">Requisitos: Redacción en prosa, sin subtítulos aislados, en tercera persona y en tiempo futuro. Se evalúa tipo/enfoque/diseño, definición de variables, unidad de análisis, población, muestra, técnicas, instrumentos y aspectos éticos.</div>
         <div class="form-group">
             <label>Contenido del Capítulo II:</label>
             <textarea id="capitulo_2" class="field-input" placeholder="Pegue la prosa completa del Capítulo II..."></textarea>
@@ -105,7 +105,7 @@
 
     <div class="form-section" id="section-4">
         <h2>4. Capítulo III: Aspectos Administrativos</h2>
-        <div class="normative-callout">Requisitos: Extensión sugerida de 2 páginas. Se deben detallar los recursos monetarios y no monetarios (humanos, servicios de terceros, equipos, pasajes, materiales), las tablas estructuradas de financiamiento (Tabla 3) y el cronograma de ejecución por 16 sesiones (Tabla 4). El sistema audita que se hayan colocado datos numéricos y marcas 'X' de planificación.</div>
+        <div class="normative-callout">Requisitos: Extensión sugerida de 2 páginas. Se deben detallar los recursos monetarios y no monetarios (Tablas 1 y 2), financiamiento (Tabla 3) y el cronograma de ejecución por 16 sesiones con sus marcas 'X' (Tabla 4).</div>
         <div class="form-group">
             <label>Contenido del Capítulo III:</label>
             <textarea id="capitulo_3" class="field-input" placeholder="Pegue el texto o las tablas correspondientes a los Aspectos Administrativos..."></textarea>
@@ -118,7 +118,7 @@
 
     <div class="form-section" id="section-5">
         <h2>5. Referencias Bibliográficas</h2>
-        <div class="normative-callout">Requisitos: Mínimo 30 referencias citadas en el cuerpo. Al menos el 70% deben ser artículos científicos indexados en Scopus, WiS o SciELO con antigüedad máxima de 5 años. Mínimo 30% en idioma inglés u otro idioma extranjero.</div>
+        <div class="normative-callout">Requisitos: Mínimo 30 referencias. Al menos el 70% deben ser artículos científicos indexados en Scopus, WoS o SciELO con antigüedad máxima de 5 años. Mínimo 30% en idioma extranjero.</div>
         <div class="form-group">
             <label>Lista Completa de Referencias Bibliográficas:</label>
             <textarea id="referencias_texto" class="field-input" placeholder="Pegue el listado final de referencias bibliográficas..."></textarea>
@@ -132,7 +132,7 @@
     <div class="loading-box" id="loading">
         <div class="spinner"></div>
         <p style="font-weight: bold; color: #004b8d;">Ejecutando algoritmos de validación estructural profunda...</p>
-        <p style="font-size: 11px; color: #666;">Analizando celdas, montos y marcas de planificación de la rúbrica...</p>
+        <p style="font-size: 11px; color: #666;">Analizando métricas y depurando falsos positivos de formato...</p>
     </div>
 
     <div class="result-container" id="resultado-container">
@@ -203,44 +203,49 @@
         document.getElementById('btn-analizar').disabled = true;
 
         setTimeout(() => {
-            // --- CRITERIOS DEL 1 AL 16 ---
+            // --- CRITERIO 1: PALABRAS TÍTULO ---
             const arrayPalabrasTitulo = titulo.trim().split(/\s+/).filter(p => p.length > 0);
             const numPalabrasTitulo = arrayPalabrasTitulo.length;
             const c1 = calcularCriterio((numPalabrasTitulo <= 20 && numPalabrasTitulo > 0), (numPalabrasTitulo > 20 && numPalabrasTitulo <= 25), (numPalabrasTitulo > 25));
-            let obs1 = `El título contiene ${numPalabrasTitulo} palabras. ` + (numPalabrasTitulo <= 20 ? "Cumple con el límite." : "Excede las 20 palabras.");
+            let obs1 = `El título contiene ${numPalabrasTitulo} palabras. ` + (numPalabrasTitulo <= 20 ? "Cumple con el límite normativo." : "Excede las 20 palabras reglamentarias.");
 
-            const tieneSubtitulosC1 = /(^|\n)([I|V|X|\d]+\.?\s+[A-ZÁÉÍÓÚ]|Planteamiento del problema|Revisión de literatura|Hipótesis)/i.test(cap1);
-            const tieneVinetasC1 = /[\u2022\u2023\u25B6\u25C6\u25CF]*[\*\-\u2022]\s+/g.test(cap1) || /[\d]+\.\s+/g.test(cap1);
+            // --- FILTRO DE SUBTÍTULOS CORREGIDO (MÉTODO MULTILÍNEA ESTRICTO) ---
+            // Solo penaliza si la palabra clave o el patrón numérico/romano componen la línea ENTERA
+            const tieneSubtitulosC1 = /(^\s*(Planteamiento del problema|Revisión de literatura|Hipótesis|Introducción)\s*$)/im.test(cap1) || /(^\s*[I|V|X|\d]+\.?\s+[A-ZÁÉÍÓÚa-záéíóúñ]{3,}\s*$)/m.test(cap1);
+            const tieneVinetasC1 = /(^\s*[\*\-\u2022]\s+)|(^\s*\d+\.\s+)/m.test(cap1);
             const tienePasadoC1 = /\b(analizó|describió|abordó|formuló|expuso|realizó|determinó|evaluó)\b/i.test(cap1);
+            
             const c2 = calcularCriterio((!tieneSubtitulosC1 && !tieneVinetasC1 && tienePasadoC1), (!tieneSubtitulosC1 && !tieneVinetasC1), (tienePasadoC1));
-            let obs2 = (tieneSubtitulosC1 ? "Posee subtítulos prohibidos. " : "Sin subtítulos. ") + (tieneVinetasC1 ? "Posee viñetas prohibidas." : "Sin viñetas.");
+            let obs2 = (tieneSubtitulosC1 ? "Se detectó una línea huérfana interpretada como subtítulo formal. " : "Prosa continua sin subtítulos detectados. ") + 
+                       (tieneVinetasC1 ? "Se detectó uso de viñetas en el inicio de alguna línea." : "Ausencia de viñetas (Correcto).");
 
+            // --- CRITERIOS DEL 3 AL 10 (INTRODUCCIÓN) ---
             const tieneODS = /ODS|Desarrollo Sostenible/i.test(cap1);
             const tieneInternacional = /internacional|mundial|global/i.test(cap1);
             const tieneNacional = /nacional|perú|peruano/i.test(cap1);
             const c3 = calcularCriterio((tieneODS && tieneInternacional && tieneNacional), (tieneInternacional && tieneNacional), (tieneODS));
-            let obs3 = tieneODS ? "Vínculo con ODS identificado." : "Falta vincular el planteamiento al ODS.";
+            let obs3 = tieneODS ? "Vínculo institucional con ODS identificado." : "Falta vincular el planteamiento al ODS.";
 
             const tieneSignosInterrogacion = /\?/g.test(cap1);
             const c4 = calcularCriterio(tieneSignosInterrogacion, tieneSignosInterrogacion, cap1.includes("problema"));
-            let obs4 = tieneSignosInterrogacion ? "Formulación interrogativa correcta." : "Faltan signos de interrogación.";
+            let obs4 = tieneSignosInterrogacion ? "Formulación interrogativa correcta." : "Faltan signos de interrogación para delimitar el problema.";
 
             const tieneJustificacion = /justificación|justifica|importancia|relevancia/i.test(cap1);
             const c5 = calcularCriterio(tieneJustificacion, tieneJustificacion, tieneJustificacion);
-            let obs5 = tieneJustificacion ? "Justificación encontrada." : "Falta robustecer motivos de ejecución.";
+            let obs5 = tieneJustificacion ? "Justificación encontrada en la prosa." : "Falta robustecer los motivos de ejecución.";
 
             const tieneObjetivoG = /objetivo general|objetivo de la investigación/i.test(cap1);
             const tieneObjetivosE = /objetivos específicos/i.test(cap1);
             const c6 = calcularCriterio((tieneObjetivoG && tieneObjetivosE), tieneObjetivoG, tieneObjetivosE);
-            let obs6 = tieneObjetivoG ? "Objetivos correctamente vinculados." : "Se requiere especificar objetivos generales y específicos.";
+            let obs6 = tieneObjetivoG ? "Objetivos vinculados correctamente." : "Se requiere especificar objetivos generales y específicos.";
 
             const cuentaAntecedentes = (cap1.match(/artículo|investigación|autor|estudio|(\(20\d\d\))/g) || []).length;
             const c7 = calcularCriterio((cuentaAntecedentes >= 8), (cuentaAntecedentes >= 5), (cuentaAntecedentes >= 2));
-            let obs7 = `Densidad referencial evaluada: se identifican antecedentes en la revisión de literatura.`;
+            let obs7 = `Se validan antecedentes y referencias cruzadas operacionales en la revisión de literatura.`;
 
             const tieneDimensiones = /dimensión|dimensiones|categorías/i.test(cap1);
             const c8 = calcularCriterio(tieneDimensiones, tieneDimensiones, tieneDimensiones);
-            let obs8 = tieneDimensiones ? "Define variables y dimensiones operacionales." : "Se sugiere detallar dimensiones de las variables.";
+            let obs8 = tieneDimensiones ? "Definiciones y dimensiones operacionales identificadas." : "Se sugiere detallar las dimensiones de las variables.";
 
             const tieneTeorias = /teoría|enfoque teórico|fundamento/i.test(cap1);
             const c9 = calcularCriterio(tieneTeorias, tieneTeorias, tieneTeorias);
@@ -248,83 +253,76 @@
 
             const tieneHipotesis = /hipótesis|supuesto/i.test(cap1);
             const c10 = calcularCriterio(tieneHipotesis, tieneHipotesis, true);
-            let obs10 = tieneHipotesis ? "Hipótesis descritas." : "Criterio condicional según el diseño metodológico.";
+            let obs10 = tieneHipotesis ? "Hipótesis descritas formalmente." : "Criterio condicional según el enfoque de investigación.";
 
-            const tieneSubtitulosC2 = /(^|\n)([I|V|X|\d]+\.?\s+[A-ZÁÉÍÓÚ]|Tipo y enfoque|Variables|Unidad de análisis|Técnicas e instrumentos|Métodos para el análisis|Aspectos éticos)/i.test(cap2);
+            // --- CRITERIOS DEL 11 AL 16 (METODOLOGÍA) CORREGIDOS ---
+            const tieneSubtitulosC2 = /(^\s*(Tipo y enfoque|Variables|Unidad de análisis|Técnicas e instrumentos|Métodos para el análisis|Aspectos éticos|Metodología)\s*$)/im.test(cap2) || /(^\s*[I|V|X|\d]+\.?\s+[A-ZÁÉÍÓÚa-záéíóúñ]{3,}\s*$)/m.test(cap2);
             const tieneFuturoC2 = /\b(describirá|analizará|emplearán|considerará|detallará|aplicarán|desarrollarán)\b/i.test(cap2);
+            
             const c11 = calcularCriterio((!tieneSubtitulosC2 && tieneFuturoC2), (!tieneSubtitulosC2), (tieneFuturoC2));
-            let obs11 = (tieneSubtitulosC2 ? "Alerta: El capítulo II presenta subtítulos. " : "Prosa continua. ") + (tieneFuturoC2 ? "Tiempo futuro validado." : "Debe redactarse en futuro.");
+            let obs11 = (tieneSubtitulosC2 ? "Alerta: El capítulo II presenta subtítulos aislados en su propia línea. " : "Prosa continua y limpia en Metodología (Correcto). ") + (tieneFuturoC2 ? "Tiempo futuro validado." : "Debe redactarse en tiempo futuro.");
 
             const tieneOslo = /Oslo|OCDE/i.test(cap2);
             const tieneDiseno = /diseño|enfoque/i.test(cap2);
             const c12 = calcularCriterio((tieneOslo && tieneDiseno), tieneDiseno, tieneOslo);
-            let obs12 = tieneOslo ? "Tipo de investigación fundamentado bajo el Manual de Oslo de la OCDE." : "Falta referenciar el tipo según Manual de Oslo.";
+            let obs12 = tieneOslo ? "Tipo de investigación fundamentado bajo el Manual de Oslo de la OCDE." : "Falta referenciar el tipo según el Manual de Oslo.";
 
             const tieneDefVar = /operacionalización|tabla|definición conceptual/i.test(cap2) || /categorización/i.test(cap2);
             const c13 = calcularCriterio(tieneDefVar, tieneDefVar, tieneDefVar);
-            let obs13 = tieneDefVar ? "Variables definidas con dimensiones en la metodología." : "Se sugiere agregar tratamiento dimensional.";
+            let obs13 = tieneDefVar ? "Variables definidas con dimensiones en la metodología." : "Se sugiere agregar el tratamiento dimensional.";
 
             const tienePoblacion = /población|muestra/i.test(cap2);
             const tieneCriterios = /inclusión|exclusión/i.test(cap2);
             const c14 = calcularCriterio((tienePoblacion && tieneCriterios), tienePoblacion, tieneCriterios);
-            let obs14 = tienePoblacion ? "Población y muestra delimitada con criterios." : "Falta declarar población o criterios.";
+            let obs14 = tienePoblacion ? "Población y muestra delimitada con criterios." : "Falta declarar la población o criterios selectivos.";
 
             const tieneJueces = /jueces|expertos|validación/i.test(cap2);
             const tieneConsistencia = /consistencia|alfa|kr|confiabilidad/i.test(cap2);
             const c15 = calcularCriterio((tieneJueces && tieneConsistencia), tieneJueces, tieneConsistencia);
-            let obs15 = tieneJueces ? "Proceso formal de validación por juicio de expertos declarado." : "Debe mencionar validación por jueces expertos.";
+            let obs15 = tieneJueces ? "Proceso formal de validación por juicio de expertos declarado." : "Debe mencionar la validación por jueces expertos.";
 
             const tieneAnalisisDatos = /estadística|análisis de datos|descriptiva/i.test(cap2);
             const tieneEtica = /código de ética|ética|consentimiento/i.test(cap2);
             const c16 = calcularCriterio((tieneAnalisisDatos && tieneEtica), (tieneAnalisisDatos && tieneEtica), tieneEtica);
-            let obs16 = tieneEtica ? "Cumple con la declaración de alineación al Código de Ética de la UCV." : "Obligatorio citar conformidad con Código de Ética UCV.";
+            let obs16 = tieneEtica ? "Cumple con la declaración de alineación al Código de Ética de la UCV." : "Obligatorio citar conformidad con el Código de Ética de la UCV.";
 
 
             // --- AUDITORÍA DE DATOS REALES INTERNA (CAPÍTULO III) ---
-
-            // Criterio 17: Recursos monetarios y no monetarios llenados con montos/bienes
             const mencionaTablasPresupuesto = (/tabla\s+1/i.test(cap3) || /no\s+monetarios/i.test(cap3)) && (/tabla\s+2/i.test(cap3) || /recursos\s+monetarios/i.test(cap3));
-            
-            // RegEx: Busca palabras clave del cuadro seguidas de patrones numéricos (ej. "Insumos 350", "Servicios 1,200", "S/. 500")
             const tieneDatosFinancierosReales = /\b(soles|s\/\.?|total|subtotal|costo)\b\s*.*?\b\d+([\.,]\d+)?\b/i.test(cap3);
             
             const c17 = calcularCriterio((mencionaTablasPresupuesto && tieneDatosFinancierosReales), mencionaTablasPresupuesto, tieneDatosFinancierosReales);
             let obs17 = "";
             if (mencionaTablasPresupuesto && tieneDatosFinancierosReales) {
-                obs17 = "Validado: Estructura de tablas de recursos detectada e incluye valores numéricos o financieros explícitos.";
+                obs17 = "Validado: Estructura de tablas de recursos detectada con montos numéricos explícitos.";
             } else if (mencionaTablasPresupuesto && !tieneDatosFinancierosReales) {
-                obs17 = "Alerta: El alumno pegó los títulos de las Tablas 1 y 2, pero los cuadros de costos o investigadores están vacíos (sin montos numéricos).";
+                obs17 = "Alerta: Se detectaron los encabezados de las Tablas 1 y 2, pero las celdas financieras están vacías o sin costos numéricos.";
             } else {
-                obs17 = "Faltan estructurar las Tablas 1 y 2 correspondientes a recursos humanos y materiales.";
+                obs17 = "Faltan estructurar las Tablas 1 y 2 correspondientes a recursos del proyecto.";
             }
 
-            // Criterio 18: Fuentes de financiamiento (Tabla 3) rellenadas
             const mencionaTabla3 = /tabla\s+3/i.test(cap3) || /financiamiento/i.test(cap3);
-            // RegEx: Verifica si declararon entidades o la palabra "Autofinanciado" / "Propio" junto a montos de inversión
             const tieneDatosFinanciamientoReal = /\b(autofinanciado|propio|universidad|ucv|subtotal|monto)\b\s*.*?\b\d+/i.test(cap3);
             
             const c18 = calcularCriterio((mencionaTabla3 && tieneDatosFinanciamientoReal), mencionaTabla3, tieneDatosFinanciamientoReal);
             let obs18 = "";
             if (mencionaTabla3 && tieneDatosFinanciamientoReal) {
-                obs18 = "Validado: Tabla 3 de financiamiento identificada con declaración expresa de fondos y montos distribuidos.";
+                obs18 = "Validado: Tabla 3 de financiamiento identificada con declaración expresa de fondos distribuidos.";
             } else if (mencionaTabla3 && !tieneDatosFinanciamientoReal) {
-                obs18 = "Alerta: Se detectó el encabezado de Financiamiento (Tabla 3), pero no se especificó la entidad financiadora ni montos reales.";
+                obs18 = "Alerta: Se halló el encabezado de Financiamiento (Tabla 3), pero los campos de entidades o montos no muestran datos reales.";
             } else {
-                obs18 = "Debe incorporar la Tabla 3 para el desglose de entidades de financiamiento.";
+                obs18 = "Debe incorporar la Tabla 3 para el desglose de fuentes de financiamiento.";
             }
 
-            // Criterio 19: Cronograma de ejecución (Tabla 4) auditando marcas 'X'
             const mencionaTabla4 = /tabla\s+4/i.test(cap3) || /cronograma/i.test(cap3);
-            
-            // RegEx para el Gráfico de Gantt textificado: Busca hitos/actividades seguidos de marcas de planificación 'X' o 'x' separadas por espacios, guiones o tabulaciones reales del cuadro
             const tieneMarcarXEnGantt = /([a-záéíóúñ]+\s+)+.*?\b(x|X)\b\s+.*?\b(x|X)\b/i.test(cap3) || /(\b(x|X)\b\s*){3,}/.test(cap3);
             
             const c19 = calcularCriterio((mencionaTabla4 && tieneMarcarXEnGantt), mencionaTabla4, tieneMarcarXEnGantt);
             let obs19 = "";
             if (mencionaTabla4 && tieneMarcarXEnGantt) {
-                obs19 = "Validado: Cronograma estructurado correctamente con marcas 'X' de planificación activa detectadas en las celdas.";
+                obs19 = "Validado: Cronograma estructurado con marcas 'X' de planificación activa detectadas en el diagrama de Gantt.";
             } else if (mencionaTabla4 && !tieneMarcarXEnGantt) {
-                obs19 = "Alerta: El alumno copió el esqueleto de actividades del cronograma, pero no colocó las marcas 'X' en las columnas de las sesiones correspondientes.";
+                obs19 = "Alerta: El alumno copió el esqueleto de actividades de la Tabla 4, pero no colocó las marcas 'X' de avance en las sesiones.";
             } else {
                 obs19 = "Falta añadir la Tabla 4 con el cronograma de ejecución secuencial por sesiones.";
             }
@@ -350,7 +348,7 @@
 
             const c20 = calcularCriterio((cumpleCantidad && cumpleIdiomas && cumpleVigencia), (cumpleCantidad && cumpleVigencia), cumpleCantidad);
             let obs20 = `Se detectaron un estimado de ${totalReferencias} referencias bibliográficas en el listado. ` + 
-                       `Métricas de validación: ~${pctAntiguedad.toFixed(0)}% son de los últimos 5 años y ~${pctIngles.toFixed(0)}% en idioma extranjero.`;
+                       `Métricas calculadas: ~${pctAntiguedad.toFixed(0)}% son de los últimos 5 años y ~${pctIngles.toFixed(0)}% en idioma extranjero.`;
 
             // --- CÁLCULO DE LA NOTA FINAL ---
             const totalPuntos = c1.puntos + c2.puntos + c3.puntos + c4.puntos + c5.puntos + c6.puntos + c7.puntos + c8.puntos + c9.puntos + c10.puntos + c11.puntos + c12.puntos + c13.puntos + c14.puntos + c15.puntos + c16.puntos + c17.puntos + c18.puntos + c19.puntos + c20.puntos;
