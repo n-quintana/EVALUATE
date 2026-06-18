@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>EvalúaT AI · Tesis UCV 2026</title>
+    <title>EVALUATE · Tesis UCV</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
         
@@ -26,24 +26,14 @@
         .logo { width: 48px; height: 48px; border-radius: 14px; background: var(--ia-grad); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
         .logo svg { width: 26px; height: 26px; fill: none; stroke: #fff; stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; }
         .brand-name { font-size: 24px; font-weight: 700; color: var(--azul); letter-spacing: -0.5px; line-height: 1; }
-        .brand-name span { color: var(--rojo); }
-        .brand-full { font-size: 12px; color: var(--gris); margin-top: 4px; line-height: 1.4; }
+        .brand-full { font-size: 13px; color: var(--gris-texto); margin-top: 4px; line-height: 1.4; font-weight: 500; }
 
         .card-body { background: var(--blanco); border: 0.5px solid var(--gris-borde); border-radius: 16px; padding: 24px; box-shadow: 0 2px 8px rgba(0,0,0,0.03); }
-
-        /* MODO SELECTOR */
-        .mode-selector { display: flex; gap: 10px; margin-bottom: 20px; }
-        .mode-option { flex: 1; padding: 15px; border: 2px solid var(--gris-borde); border-radius: 10px; cursor: pointer; display: flex; flex-direction: column; align-items: center; text-align: center; transition: all 0.2s; background: var(--blanco); }
-        .mode-option:hover { border-color: var(--azul-light); background: #f8fafc; }
-        .mode-option.active { border-color: var(--azul); background: var(--azul-light); }
-        .mode-title { font-weight: 700; font-size: 15px; color: var(--azul); margin-bottom: 4px; }
-        .mode-desc { font-size: 12px; color: var(--gris); }
 
         /* WIZARD */
         .wizard-steps { display: flex; justify-content: space-between; align-items: center; margin-bottom: 35px; position: relative; padding: 0 30px; }
         .wizard-steps::before { content: ""; position: absolute; top: 20px; left: 5%; right: 5%; height: 2px; background: var(--gris-borde); z-index: 1; }
         .step { text-align: center; position: relative; z-index: 2; flex: 1; transition: opacity 0.3s; }
-        .step.hidden { display: none; }
         .step-circle { width: 40px; height: 40px; background: var(--gris-claro); border: 2px solid var(--gris-borde); color: var(--gris); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 8px auto; font-weight: bold; box-shadow: 0 0 0 4px var(--blanco); }
         .step.active .step-circle { background: var(--rojo); border-color: var(--rojo); color: white; }
         .step-title { font-size: 10px; font-weight: bold; text-transform: uppercase; color: var(--gris); }
@@ -100,11 +90,11 @@
         <div class="header-top"></div>
         <div class="header-body">
             <div class="logo">
-                <svg viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+                <svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z"/></svg>
             </div>
             <div>
-                <div class="brand-name">Evalú<span>aT</span> AI</div>
-                <div class="brand-full">Auditoría Institucional · UX Optimizada y Modo Ágil</div>
+                <div class="brand-name">EVALUATE</div>
+                <div class="brand-full">Herramienta de autoevaluación previa para reducir observaciones en proyectos académicos</div>
             </div>
         </div>
     </div>
@@ -112,29 +102,17 @@
     <div class="card-body">
         
         <div class="wizard-steps" id="wizard-container">
-            <div class="step active" id="step-1-indicator"><div class="step-circle">1</div><div class="step-title">Inicio</div></div>
+            <div class="step active" id="step-1-indicator"><div class="step-circle">1</div><div class="step-title">Datos</div></div>
             <div class="step" id="step-2-indicator"><div class="step-circle">2</div><div class="step-title">Cap. I</div></div>
             <div class="step" id="step-3-indicator"><div class="step-circle">3</div><div class="step-title">Cap. II</div></div>
             <div class="step" id="step-4-indicator"><div class="step-circle">4</div><div class="step-title">Cap. III</div></div>
             <div class="step" id="step-5-indicator"><div class="step-circle">5</div><div class="step-title">Ref.</div></div>
-            <div class="step hidden" id="step-fast-indicator"><div class="step-circle">2</div><div class="step-title">Borrador</div></div>
         </div>
 
+        <!-- PASO 1: DATOS -->
         <div class="form-section active" id="section-1">
-            <h2>1. Configuración de la Evaluación</h2>
+            <h2>1. Identificación del Proyecto</h2>
             
-            <label style="display:block; font-weight:600; margin-bottom:10px; color:var(--gris-texto); font-size:14px;">Elija el Modo de Evaluación:</label>
-            <div class="mode-selector">
-                <div class="mode-option" id="btn-modo-rapido" onclick="seleccionarModo('rapido')">
-                    <div class="mode-title">⚡ Modo Rápido (Recomendado)</div>
-                    <div class="mode-desc">Pega todo el borrador completo en un solo recuadro.</div>
-                </div>
-                <div class="mode-option active" id="btn-modo-completo" onclick="seleccionarModo('completo')">
-                    <div class="mode-title">📖 Modo Preciso</div>
-                    <div class="mode-desc">Pega la tesis capítulo por capítulo para revisión estricta.</div>
-                </div>
-            </div>
-
             <div class="form-group">
                 <label>Nombre del Estudiante</label>
                 <input type="text" id="nombre_estudiante" class="field-input" placeholder="Ej. Noemi Quispe">
@@ -145,24 +123,11 @@
             </div>
             <div class="btn-container">
                 <div></div>
-                <button class="btn btn-primary" onclick="avanzarDesdeInicio()">Continuar →</button>
+                <button class="btn btn-primary" onclick="cambiarPaso(2)">Continuar al Capítulo I →</button>
             </div>
         </div>
 
-        <div class="form-section" id="section-fast">
-            <h2>2. Borrador Completo (Modo Rápido)</h2>
-            <div style="font-size: 12px; color: var(--gris); margin-bottom: 15px; background: #eef2f5; padding: 10px; border-radius: 5px;">
-                💡 <strong>Tip:</strong> Copia todo el documento de tu tesis (Capítulo I, II, III y Referencias) y pégalo aquí. El algoritmo localizará los elementos automáticamente.
-            </div>
-            <div class="form-group">
-                <textarea id="borrador_completo" class="field-input" style="height:350px;" placeholder="Pega todo el texto de la tesis aquí..."></textarea>
-            </div>
-            <div class="btn-container">
-                <button class="btn btn-secondary" onclick="cambiarPaso(1)">← Volver</button>
-                <button class="btn btn-primary" onclick="procesarRubricaLocal()">Generar Auditoría Automática 📋</button>
-            </div>
-        </div>
-
+        <!-- PASO 2: CAPÍTULO I -->
         <div class="form-section" id="section-2">
             <h2>2. Capítulo I: Introducción</h2>
             <div class="form-group"><textarea id="capitulo_1" class="field-input" placeholder="Pegue la prosa del Capítulo I..."></textarea></div>
@@ -195,16 +160,18 @@
             <div class="form-group"><textarea id="referencias_texto" class="field-input" placeholder="Pegue el listado final de referencias bibliográficas..."></textarea></div>
             <div class="btn-container">
                 <button class="btn btn-secondary" onclick="cambiarPaso(4)">← Volver</button>
-                <button class="btn btn-primary" onclick="procesarRubricaLocal()">Evaluar Proyecto Completo 📋</button>
+                <button class="btn btn-primary" onclick="procesarRubricaLocal()">Generar Autoevaluación 📋</button>
             </div>
         </div>
 
+        <!-- LOADING -->
         <div class="loading-box" id="loading">
             <div class="spinner"></div>
             <p style="font-weight: bold; color: var(--azul);">Ejecutando auditoría y priorizando tareas...</p>
             <p style="font-size: 11px; color: var(--gris);">Generando planes de acción estructurados...</p>
         </div>
 
+        <!-- RESULTADOS -->
         <div class="result-container" id="resultado-container">
             <div class="info-header">
                 <table style="width:100%; border:none; font-size:12px;">
@@ -234,43 +201,15 @@
 </div>
 
 <script>
-    let modoActual = 'completo';
-
-    function seleccionarModo(modo) {
-        modoActual = modo;
-        document.getElementById('btn-modo-rapido').classList.remove('active');
-        document.getElementById('btn-modo-completo').classList.remove('active');
-        document.getElementById('btn-modo-' + modo).classList.add('active');
-        
-        // Ajustar la barra superior visualmente
-        if(modo === 'rapido') {
-            for(let i=2; i<=5; i++) document.getElementById('step-'+i+'-indicator').classList.add('hidden');
-            document.getElementById('step-fast-indicator').classList.remove('hidden');
-        } else {
-            for(let i=2; i<=5; i++) document.getElementById('step-'+i+'-indicator').classList.remove('hidden');
-            document.getElementById('step-fast-indicator').classList.add('hidden');
-        }
-    }
-
-    function avanzarDesdeInicio() {
-        if(modoActual === 'rapido') cambiarPaso('fast');
-        else cambiarPaso(2);
-    }
-
     function cambiarPaso(paso) {
         document.querySelectorAll('.form-section').forEach(sec => sec.classList.remove('active'));
         document.querySelectorAll('.step').forEach(st => st.classList.remove('active'));
         
         document.getElementById('section-' + paso).classList.add('active');
         
-        if(paso === 'fast') {
-            document.getElementById('step-1-indicator').classList.add('active');
-            document.getElementById('step-fast-indicator').classList.add('active');
-        } else {
-            for(let i=1; i<=paso; i++) {
-                if(document.getElementById('step-'+i+'-indicator')) {
-                    document.getElementById('step-'+i+'-indicator').classList.add('active');
-                }
+        for(let i=1; i<=paso; i++) {
+            if(document.getElementById('step-'+i+'-indicator')) {
+                document.getElementById('step-'+i+'-indicator').classList.add('active');
             }
         }
         window.scrollTo({top: 0, behavior: 'smooth'});
@@ -305,18 +244,14 @@
         const nombre = document.getElementById('nombre_estudiante').value || "Estudiante Evaluado";
         const titulo = document.getElementById('titulo_tesis').value || "";
         
-        let cap1, cap2, cap3, refTexto;
+        const cap1 = document.getElementById('capitulo_1').value || "";
+        const cap2 = document.getElementById('capitulo_2').value || "";
+        const cap3 = document.getElementById('capitulo_3').value || "";
+        const refTexto = document.getElementById('referencias_texto').value || "";
 
-        if(modoActual === 'rapido') {
-            const borrador = document.getElementById('borrador_completo').value || "";
-            if(borrador.trim().length < 50) { alert("Pega el texto de tu tesis para evaluar."); return; }
-            cap1 = borrador; cap2 = borrador; cap3 = borrador; refTexto = borrador;
-        } else {
-            cap1 = document.getElementById('capitulo_1').value || "";
-            cap2 = document.getElementById('capitulo_2').value || "";
-            cap3 = document.getElementById('capitulo_3').value || "";
-            refTexto = document.getElementById('referencias_texto').value || "";
-            if (!cap1 || !cap2 || !cap3 || !refTexto) { alert("Completa todas las pestañas antes de evaluar."); return; }
+        if (!cap1 || !cap2 || !cap3 || !refTexto) { 
+            alert("Completa todas las pestañas antes de evaluar."); 
+            return; 
         }
 
         document.getElementById('loading').style.display = 'block';
@@ -329,8 +264,7 @@
             let obs1 = generarFeedback(numPalabrasTitulo <= 20 && numPalabrasTitulo > 0, `Cumple con el límite (${numPalabrasTitulo} palabras).`, "Importante", ["El título excede las 20 palabras máximas exigidas.", "Elimine artículos redundantes o palabras innecesarias."]);
 
             // --- C2: FORMATO CAP I ---
-            let tieneSubtitulosC1 = false; // En modo rápido no penalizamos formato estructural cruzado
-            if(modoActual === 'completo') tieneSubtitulosC1 = /(^\s*(Planteamiento del problema|Revisión de literatura|Hipótesis|Introducción)\s*$)/im.test(cap1) || /(^\s*[I|V|X|\d]+\.?\s+[A-ZÁÉÍÓÚa-záéíóúñ]{3,}\s*$)/m.test(cap1);
+            const tieneSubtitulosC1 = /(^\s*(Planteamiento del problema|Revisión de literatura|Hipótesis|Introducción)\s*$)/im.test(cap1) || /(^\s*[I|V|X|\d]+\.?\s+[A-ZÁÉÍÓÚa-záéíóúñ]{3,}\s*$)/m.test(cap1);
             const tieneVinetasC1 = /(^\s*[\*\-\u2022]\s+)|(^\s*\d+\.\s+)/m.test(cap1);
             const tienePasadoC1 = /\b(analizó|describió|abordó|formuló|expuso|realizó|determinó|evaluó)\b/i.test(cap1);
             const c2 = calcularCriterio((!tieneSubtitulosC1 && !tieneVinetasC1 && tienePasadoC1), (!tieneSubtitulosC1 && !tieneVinetasC1), (tienePasadoC1));
@@ -400,8 +334,7 @@
             let obs10 = generarFeedback(tieneHipotesis, "Hipótesis detectadas.", "Mejora", ["Criterio condicional: Escríbalas solo si el diseño (correlacional/explicativo) lo amerita."]);
 
             // --- C11: FORMATO METODOLOGÍA ---
-            let tieneSubtitulosC2 = false; 
-            if(modoActual === 'completo') tieneSubtitulosC2 = /(^\s*(Tipo y enfoque|Variables|Unidad de análisis|Técnicas|Aspectos éticos)\s*$)/im.test(cap2);
+            const tieneSubtitulosC2 = /(^\s*(Tipo y enfoque|Variables|Unidad de análisis|Técnicas|Aspectos éticos)\s*$)/im.test(cap2);
             const tieneFuturoC2 = /\b(describirá|analizará|emplearán|considerará|detallará|aplicarán|desarrollarán)\b/i.test(cap2);
             const c11 = calcularCriterio(!tieneSubtitulosC2 && tieneFuturoC2, !tieneSubtitulosC2, tieneFuturoC2);
             let obs11 = generarFeedback(!tieneSubtitulosC2 && tieneFuturoC2, "Prosa continua en tiempo futuro.", "Importante", [
@@ -494,7 +427,7 @@
                 </tr>`;
             });
 
-            document.getElementById('datos-tesista').innerHTML = `<strong>Modo:</strong> ${modoActual === 'rapido' ? '⚡ Rápido' : '📖 Preciso'} &nbsp;|&nbsp; <strong>Estudiante:</strong> ${nombre}`;
+            document.getElementById('datos-tesista').innerHTML = `<strong>Estudiante Evaluado:</strong> ${nombre}`;
             document.getElementById('nota-final-container').innerHTML = `PUNTAJE ACUMULADO TOTAL: ${totalPuntos.toFixed(2)} / 20.00`;
             document.getElementById('tabla-rubrica-cuerpo').innerHTML = htmlFilas;
             
