@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>EVALUATE · Tesis UCV</title>
+    <title>VALIDA-UCV · Verificación Normativa</title>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
         
         :root {
             --rojo: #C8102E; --rojo-dark: #A00D24;
@@ -25,8 +25,9 @@
         .header-body { padding: 20px 24px; display: flex; align-items: center; gap: 16px; }
         .logo { width: 48px; height: 48px; border-radius: 14px; background: var(--ia-grad); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
         .logo svg { width: 26px; height: 26px; fill: none; stroke: #fff; stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; }
-        .brand-name { font-size: 24px; font-weight: 700; color: var(--azul); letter-spacing: -0.5px; line-height: 1; }
-        .brand-full { font-size: 13px; color: var(--gris-texto); margin-top: 4px; line-height: 1.4; font-weight: 500; }
+        .brand-name { font-size: 26px; font-weight: 800; color: var(--azul); letter-spacing: -0.5px; line-height: 1; }
+        .brand-name span { color: var(--rojo); }
+        .brand-full { font-size: 13.5px; color: var(--gris-texto); margin-top: 5px; line-height: 1.4; font-weight: 500; }
 
         .card-body { background: var(--blanco); border: 0.5px solid var(--gris-borde); border-radius: 16px; padding: 24px; box-shadow: 0 2px 8px rgba(0,0,0,0.03); }
 
@@ -51,7 +52,7 @@
         textarea.field-input { resize: vertical; min-height: 200px; font-family: monospace; font-size: 13px; }
 
         .btn-container { display: flex; justify-content: space-between; margin-top: 30px; gap: 15px; }
-        .btn { padding: 13px 25px; font-size: 15px; font-weight: bold; border: none; border-radius: 6px; cursor: pointer; font-family: inherit; }
+        .btn { padding: 13px 25px; font-size: 15px; font-weight: bold; border: none; border-radius: 6px; cursor: pointer; font-family: inherit; transition: background 0.2s; }
         .btn-primary { background-color: var(--rojo); color: white; flex: 2; }
         .btn-primary:hover { background-color: var(--rojo-dark); }
         .btn-secondary { background-color: var(--gris-claro); border: 1px solid var(--gris-borde); color: var(--gris-texto); flex: 1; }
@@ -67,29 +68,48 @@
         .disclaimer-col.no ul { color: #b3002d; }
         .disclaimer-col.yes li span, .disclaimer-col.no li span { color: var(--gris-texto); }
 
-        /* TABLA DE RESULTADOS Y UX MEJORADA */
-        .rubric-table { width: 100%; border-collapse: collapse; margin-top: 20px; font-size: 12px; }
+        /* RESUMEN EJECUTIVO (UX MEJORADA) */
+        .executive-summary { background: var(--blanco); border: 1px solid var(--gris-borde); border-radius: 12px; padding: 20px; margin-bottom: 25px; box-shadow: 0 4px 10px rgba(0,0,0,0.03); }
+        .executive-summary h3 { color: var(--azul); margin-top: 0; margin-bottom: 15px; font-size: 16px; border-bottom: 1px solid var(--gris-borde); padding-bottom: 10px; }
+        .summary-grid { display: grid; grid-template-columns: 1fr 1fr 1.5fr; gap: 15px; }
+        .summary-card { background: var(--gris-claro); padding: 15px; border-radius: 8px; border: 1px solid var(--gris-borde); }
+        .summary-card.main-score { text-align: center; display: flex; flex-direction: column; justify-content: center; align-items: center; }
+        .semaforo-icon { font-size: 32px; margin-bottom: 5px; line-height: 1; }
+        .semaforo-pct { font-size: 28px; font-weight: 800; color: var(--gris-texto); line-height: 1; }
+        .semaforo-text { font-size: 12.5px; font-weight: 700; margin-top: 8px; text-transform: uppercase; letter-spacing: 0.5px; }
+        .summary-card h4 { margin-top: 0; font-size: 13px; color: var(--gris-texto); margin-bottom: 10px; font-weight: 700; }
+        .summary-card ul.obs-list { list-style: none; padding: 0; margin: 0; font-size: 13px; }
+        .summary-card ul.obs-list li { margin-bottom: 8px; font-weight: 500; }
+        .priority-list ul { list-style: none; padding: 0; margin: 0; font-size: 12.5px; }
+        .priority-list li { position: relative; padding-left: 18px; margin-bottom: 6px; color: var(--gris-texto); }
+        .priority-list li::before { content: "→"; position: absolute; left: 0; color: var(--rojo); font-weight: bold; }
+
+        /* TABLA DE DETALLES */
+        .rubric-table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 12.5px; }
         .rubric-table th, .rubric-table td { border: 1px solid var(--gris-borde); padding: 12px; text-align: left; vertical-align: top; }
         .rubric-table th { background-color: var(--azul); color: white; text-transform: uppercase; font-size: 11px; letter-spacing: 0.5px; }
-        .score-cell { font-weight: bold; text-align: center; width: 65px; font-size: 14px; }
-        .badge-status { padding: 4px 6px; border-radius: 4px; font-weight: bold; font-size: 10px; text-transform: uppercase; display: inline-block; }
+        .badge-status { padding: 4px 6px; border-radius: 4px; font-weight: bold; font-size: 10px; text-transform: uppercase; display: inline-block; white-space: nowrap; }
         
-        /* PRIORIDADES */
+        /* PRIORIDADES TAGS */
         .prio-critico { display: inline-block; font-size: 11px; font-weight: bold; color: #b3002d; background: #ffebee; padding: 2px 6px; border-radius: 4px; border: 1px solid #ffcdd2; margin-bottom: 6px; }
         .prio-importante { display: inline-block; font-size: 11px; font-weight: bold; color: #e65100; background: #fff3e0; padding: 2px 6px; border-radius: 4px; border: 1px solid #ffe0b2; margin-bottom: 6px; }
         .prio-mejora { display: inline-block; font-size: 11px; font-weight: bold; color: #2e7d32; background: #e8f5e9; padding: 2px 6px; border-radius: 4px; border: 1px solid #c8e6c9; margin-bottom: 6px; }
 
         /* QUÉ HACER (ACCIONABLES) */
-        .action-box { background: #f8fafc; border-left: 3px solid var(--azul); padding: 10px; margin-top: 8px; border-radius: 0 6px 6px 0; font-size: 11.5px; color: #334155; }
-        .action-box strong { color: var(--azul); display: block; margin-bottom: 4px; font-size: 11px; text-transform: uppercase; }
+        .action-box { background: #ffffff; border-left: 3px solid var(--azul); padding: 12px; margin-top: 8px; border-radius: 0 6px 6px 0; font-size: 11.5px; color: #334155; border-top: 1px solid var(--gris-borde); border-right: 1px solid var(--gris-borde); border-bottom: 1px solid var(--gris-borde); }
+        .action-box strong { color: var(--azul); display: block; margin-bottom: 6px; font-size: 11px; text-transform: uppercase; }
         .action-box ul { margin: 0; padding-left: 16px; }
-        .action-box li { margin-bottom: 2px; }
+        .action-box li { margin-bottom: 4px; }
 
         .loading-box { display: none; text-align: center; padding: 40px; }
         .spinner { border: 4px solid var(--azul-light); width: 45px; height: 45px; border-radius: 50%; border-left-color: var(--rojo); animation: spin 0.6s linear infinite; margin: 0 auto 15px auto; }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
         .result-container { display: none; margin-top: 30px; }
-        .info-header { background: var(--gris-claro); border-bottom: 2px solid var(--gris-borde); padding: 15px; margin-bottom: 20px; border-radius: 6px; }
+
+        @media (max-width: 768px) {
+            .summary-grid { grid-template-columns: 1fr; }
+            .disclaimer-columns { flex-direction: column; }
+        }
     </style>
 </head>
 <body>
@@ -103,8 +123,8 @@
                 <svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z"/></svg>
             </div>
             <div>
-                <div class="brand-name">EVALUATE</div>
-                <div class="brand-full">Asistente de verificación de cumplimiento normativo</div>
+                <div class="brand-name">VALIDA<span>-UCV</span></div>
+                <div class="brand-full">Asistente de Verificación de Cumplimiento Normativo</div>
             </div>
         </div>
     </div>
@@ -119,6 +139,7 @@
             <div class="step" id="step-5-indicator"><div class="step-circle">5</div><div class="step-title">Ref.</div></div>
         </div>
 
+        <!-- PASO 1: DATOS -->
         <div class="form-section active" id="section-1">
             <h2>1. Identificación del Proyecto</h2>
             
@@ -135,7 +156,7 @@
                         </ul>
                     </div>
                     <div class="disclaimer-col no">
-                        <strong>La herramienta no evalúa:</strong>
+                        <strong>La herramienta NO evalúa:</strong>
                         <ul>
                             <li><span>Calidad científica del estudio.</span></li>
                             <li><span>Originalidad de los aportes.</span></li>
@@ -162,6 +183,7 @@
             </div>
         </div>
 
+        <!-- PASO 2: CAPÍTULO I -->
         <div class="form-section" id="section-2">
             <h2>2. Capítulo I: Introducción</h2>
             <div class="form-group"><textarea id="capitulo_1" class="field-input" placeholder="Pegue la prosa del Capítulo I..."></textarea></div>
@@ -198,29 +220,25 @@
             </div>
         </div>
 
+        <!-- LOADING -->
         <div class="loading-box" id="loading">
             <div class="spinner"></div>
             <p style="font-weight: bold; color: var(--azul);">Ejecutando verificación y estructurando observaciones...</p>
             <p style="font-size: 11px; color: var(--gris);">Calculando índice de cumplimiento normativo...</p>
         </div>
 
+        <!-- RESULTADOS -->
         <div class="result-container" id="resultado-container">
-            <div class="info-header">
-                <table style="width:100%; border:none; font-size:12px;">
-                    <tr><td>UNIVERSIDAD CÉSAR VALLEJO</td><td style="text-align:right;"><strong>Código:</strong> PP-G-02.02</td></tr>
-                    <tr><td><strong>GUÍA DE ELABORACIÓN DE PROYECTO</strong></td><td style="text-align:right;"><strong>Versión:</strong> 06</td></tr>
-                </table>
-                <hr style="border:0; border-top:1px solid var(--gris-borde); margin:10px 0;">
-                <div style="font-size: 13px;" id="datos-tesista"></div>
-                <div style="margin-top:10px; font-size:18px; font-weight:bold; color:var(--azul);" id="nota-final-container"></div>
-            </div>
             
+            <div id="resumen-ejecutivo-container"></div>
+            
+            <h3 style="color: var(--azul); font-size: 15px; margin-bottom: 10px; border-bottom: 1px solid var(--gris-borde); padding-bottom: 5px;">DETALLE DEL DIAGNÓSTICO INSTITUCIONAL</h3>
             <table class="rubric-table">
                 <thead>
                     <tr>
                         <th>Componente</th>
                         <th style="text-align:center; width:30px;">N°</th>
-                        <th style="width:30%;">Criterio Institucional</th>
+                        <th style="width:25%;">Criterio Institucional</th>
                         <th style="text-align:center; width:90px;">Estado</th>
                         <th>Verificación Estructural y Plan de Acción</th>
                     </tr>
@@ -253,6 +271,12 @@
         return { nivel: "En inicio", puntos: 0.25 };
     }
 
+    // Variables globales para el resumen ejecutivo
+    let obsCriticas = 0;
+    let obsImportantes = 0;
+    let obsMejoras = 0;
+    let accionesPrioritarias = [];
+
     // FUNCIÓN CREADORA DE CAJAS DE ACCIÓN (UX)
     function generarFeedback(cumple, textoAprobado, prioStatus, queHacerArray) {
         if (cumple) return `<span style="color:#2e7d32; font-weight:600;">✔ ${textoAprobado}</span>`;
@@ -260,12 +284,22 @@
         let prioClase = prioStatus === "Crítico" ? "prio-critico" : prioStatus === "Importante" ? "prio-importante" : "prio-mejora";
         let prioIcon = prioStatus === "Crítico" ? "🔴" : prioStatus === "Importante" ? "🟠" : "🟢";
         
+        if (prioStatus === "Crítico") {
+            obsCriticas++;
+            if (accionesPrioritarias.length < 5) accionesPrioritarias.push(queHacerArray[0]);
+        } else if (prioStatus === "Importante") {
+            obsImportantes++;
+            if (accionesPrioritarias.length < 5 && obsCriticas < 3) accionesPrioritarias.push(queHacerArray[0]);
+        } else {
+            obsMejoras++;
+        }
+        
         let listaHTML = queHacerArray.map(item => `<li>${item}</li>`).join('');
         
         return `
-            <div class="${prioClase}">${prioIcon} Observación ${prioStatus}</div>
+            <div class="${prioClase}">${prioIcon} Riesgo ${prioStatus}</div>
             <div class="action-box">
-                <strong>¿Qué corregir?</strong>
+                <strong>Sugerencia de corrección:</strong>
                 <ul>${listaHTML}</ul>
             </div>
         `;
@@ -284,6 +318,9 @@
             return; 
         }
 
+        // Reset de contadores
+        obsCriticas = 0; obsImportantes = 0; obsMejoras = 0; accionesPrioritarias = [];
+
         document.getElementById('loading').style.display = 'block';
         document.getElementById('resultado-container').style.display = 'none';
 
@@ -291,7 +328,7 @@
             // --- C1: TÍTULO ---
             const numPalabrasTitulo = titulo.trim().split(/\s+/).filter(p => p.length > 0).length;
             const c1 = calcularCriterio((numPalabrasTitulo <= 20 && numPalabrasTitulo > 0), (numPalabrasTitulo > 20 && numPalabrasTitulo <= 25), (numPalabrasTitulo > 25));
-            let obs1 = generarFeedback(numPalabrasTitulo <= 20 && numPalabrasTitulo > 0, `Cumple con el límite (${numPalabrasTitulo} palabras).`, "Importante", ["El título excede las 20 palabras máximas exigidas.", "Elimine artículos redundantes o palabras innecesarias."]);
+            let obs1 = generarFeedback(numPalabrasTitulo <= 20 && numPalabrasTitulo > 0, `Cumple con el límite (${numPalabrasTitulo} palabras).`, "Importante", ["El título excede las 20 palabras máximas exigidas.", "Elimine artículos redundantes o conectores innecesarios."]);
 
             // --- C2: FORMATO CAP I ---
             const tieneSubtitulosC1 = /(^\s*(Planteamiento del problema|Revisión de literatura|Hipótesis|Introducción)\s*$)/im.test(cap1) || /(^\s*[I|V|X|\d]+\.?\s+[A-ZÁÉÍÓÚa-záéíóúñ]{3,}\s*$)/m.test(cap1);
@@ -301,7 +338,7 @@
             let obs2 = generarFeedback((!tieneSubtitulosC1 && !tieneVinetasC1 && tienePasadoC1), "Prosa continua y tiempo verbal validado.", "Mejora", [
                 tieneSubtitulosC1 ? "Elimine subtítulos huérfanos. Redacte de corrido." : "",
                 tieneVinetasC1 ? "Borre viñetas o listas. Use conectores discursivos." : "",
-                !tienePasadoC1 ? "Asegúrese de redactar todo el capítulo en tiempo pasado." : ""
+                !tienePasadoC1 ? "Asegúrese de redactar todo el capítulo en tiempo pasado del modo indicativo." : ""
             ].filter(Boolean));
 
             // --- C3: ODS ---
@@ -317,9 +354,9 @@
             const tienePregunta = /\?/g.test(cap1);
             const c4 = calcularCriterio(tienePregunta, tienePregunta, cap1.includes("problema"));
             let obs4 = generarFeedback(tienePregunta, "Formulación interrogativa estructurada.", "Crítico", [
-                "Falta el problema formulado como pregunta.",
-                "Enciérrelo explícitamente entre signos de interrogación (¿?).",
-                "Asegúrese de incluir las variables y la población en la pregunta."
+                "Falta el problema formulado como pregunta explícita.",
+                "Enciérrelo directamente entre signos de interrogación (¿?).",
+                "Asegúrese de incluir las variables en la pregunta central."
             ]);
 
             // --- C5: JUSTIFICACIÓN ---
@@ -336,8 +373,8 @@
             const tieneObjetivosE = /objetivos específicos/i.test(cap1);
             const c6 = calcularCriterio(tieneObjetivoG && tieneObjetivosE, tieneObjetivoG, tieneObjetivosE);
             let obs6 = generarFeedback(tieneObjetivoG && tieneObjetivosE, "Objetivos general y específicos delineados.", "Crítico", [
-                "Redacte un (1) Objetivo General claro.",
-                "Desglose al menos tres (3) Objetivos Específicos.",
+                "Redacte un (1) Objetivo General de forma clara.",
+                "Desglose textualmente al menos tres (3) Objetivos Específicos.",
                 "Inicie todos los objetivos con un verbo en infinitivo (ej. Determinar, Analizar)."
             ]);
 
@@ -345,23 +382,23 @@
             const cuentaAntecedentes = (cap1.match(/artículo|investigación|autor|estudio|(\(20\d\d\))/g) || []).length;
             const c7 = calcularCriterio(cuentaAntecedentes >= 8, cuentaAntecedentes >= 5, cuentaAntecedentes >= 2);
             let obs7 = generarFeedback(cuentaAntecedentes >= 8, "Densidad de citas internacionales validada.", "Importante", [
-                "Debe sumar al menos 6 antecedentes internacionales.",
-                "Asegúrese de que provengan de revistas indexadas (Scopus, WoS, SciELO)."
+                "Incorpore al menos 6 antecedentes internacionales explícitos.",
+                "Asegúrese de referenciar artículos de revistas indexadas (Scopus, WoS, SciELO)."
             ]);
 
             // --- C8 & C9: MARCO TEÓRICO ---
             const tieneDimensiones = /dimensión|dimensiones|categorías/i.test(cap1);
             const c8 = calcularCriterio(tieneDimensiones, tieneDimensiones, tieneDimensiones);
-            let obs8 = generarFeedback(tieneDimensiones, "Desglose dimensional validado.", "Mejora", ["Defina conceptualmente las variables.", "Mencione explícitamente cuáles serán sus dimensiones operacionales."]);
+            let obs8 = generarFeedback(tieneDimensiones, "Desglose dimensional validado.", "Mejora", ["Defina conceptualmente las variables.", "Mencione explícitamente cuáles serán sus dimensiones operacionales o subcategorías."]);
 
             const tieneTeorias = /teoría|enfoque teórico|fundamento/i.test(cap1);
             const c9 = calcularCriterio(tieneTeorias, tieneTeorias, tieneTeorias);
-            let obs9 = generarFeedback(tieneTeorias, "Teorías base mencionadas.", "Mejora", ["Incorpore los modelos o teorías fundacionales que sostienen a sus variables."]);
+            let obs9 = generarFeedback(tieneTeorias, "Teorías base mencionadas.", "Mejora", ["Incorpore los modelos o teorías fundacionales que sostienen a su investigación."]);
 
             // --- C10: HIPÓTESIS ---
             const tieneHipotesis = /hipótesis|supuesto/i.test(cap1);
             const c10 = calcularCriterio(tieneHipotesis, tieneHipotesis, true);
-            let obs10 = generarFeedback(tieneHipotesis, "Hipótesis detectadas.", "Mejora", ["Criterio condicional: Escríbalas solo si el diseño (correlacional/explicativo) lo amerita."]);
+            let obs10 = generarFeedback(tieneHipotesis, "Hipótesis detectadas.", "Mejora", ["Criterio condicional: Formule hipótesis únicamente si el diseño de su estudio lo amerita."]);
 
             // --- C11: FORMATO METODOLOGÍA ---
             const tieneSubtitulosC2 = /(^\s*(Tipo y enfoque|Variables|Unidad de análisis|Técnicas|Aspectos éticos)\s*$)/im.test(cap2);
@@ -369,22 +406,22 @@
             const c11 = calcularCriterio(!tieneSubtitulosC2 && tieneFuturoC2, !tieneSubtitulosC2, tieneFuturoC2);
             let obs11 = generarFeedback(!tieneSubtitulosC2 && tieneFuturoC2, "Prosa continua en tiempo futuro.", "Importante", [
                 !tieneFuturoC2 ? "Reescriba todo el capítulo metodológico en tiempo FUTURO (ej. 'se aplicará')." : "",
-                tieneSubtitulosC2 ? "Elimine subtítulos internos. El texto debe fluir en prosa." : ""
+                tieneSubtitulosC2 ? "Elimine subtítulos internos. El texto metodológico debe fluir en prosa." : ""
             ].filter(Boolean));
 
             // --- C12 - C16: METODOLOGÍA ---
             const tieneOslo = /Oslo|OCDE/i.test(cap2);
             const c12 = calcularCriterio(tieneOslo, tieneOslo, cap2.includes('enfoque'));
-            let obs12 = generarFeedback(tieneOslo, "Alineación a Manual de Oslo detectada.", "Importante", ["Defina si es Básica o Aplicada citando obligatoriamente el 'Manual de Oslo (2018)'."]);
+            let obs12 = generarFeedback(tieneOslo, "Alineación a Manual de Oslo detectada.", "Importante", ["Defina si su investigación es Básica o Aplicada citando el 'Manual de Oslo (2018)'."]);
 
             const tieneDefVar = /operacionalización|tabla|definición conceptual/i.test(cap2);
             const c13 = calcularCriterio(tieneDefVar, tieneDefVar, tieneDefVar);
-            let obs13 = generarFeedback(tieneDefVar, "Variables metodológicas tratadas.", "Importante", ["Indique cómo medirá las variables.", "Mencione la matriz de operacionalización."]);
+            let obs13 = generarFeedback(tieneDefVar, "Variables metodológicas tratadas.", "Importante", ["Indique detalladamente cómo medirá las variables.", "Mencione su matriz de operacionalización o categorización."]);
 
             const tienePoblacion = /población|muestra/i.test(cap2);
             const tieneCriterios = /inclusión|exclusión/i.test(cap2);
             const c14 = calcularCriterio(tienePoblacion && tieneCriterios, tienePoblacion, tieneCriterios);
-            let obs14 = generarFeedback(tienePoblacion && tieneCriterios, "Población y filtros establecidos.", "Importante", ["Defina numéricamente su muestra.", "Escriba explícitamente los criterios de inclusión y exclusión."]);
+            let obs14 = generarFeedback(tienePoblacion && tieneCriterios, "Población y filtros establecidos.", "Importante", ["Defina la delimitación de su muestra.", "Escriba de forma explícita los criterios de inclusión y exclusión."]);
 
             const tieneJueces = /jueces|expertos|validación/i.test(cap2);
             const c15 = calcularCriterio(tieneJueces, tieneJueces, cap2.includes('instrumento'));
@@ -392,35 +429,78 @@
 
             const tieneEtica = /código de ética|ética|consentimiento/i.test(cap2);
             const c16 = calcularCriterio(tieneEtica, tieneEtica, cap2.includes('análisis'));
-            let obs16 = generarFeedback(tieneEtica, "Principios de integridad cubiertos.", "Crítico", ["Mencione el uso del consentimiento informado.", "Declare adhesión al 'Código de Ética en Investigación de la UCV'."]);
+            let obs16 = generarFeedback(tieneEtica, "Principios de integridad cubiertos.", "Crítico", ["Mencione la aplicación del consentimiento informado.", "Declare adhesión formal al 'Código de Ética en Investigación de la UCV'."]);
 
             // --- C17 - C19: ADMINISTRATIVO ---
             const tieneMontoRecursos = /(s\/\.?\s*[1-9]\d*)|(\b[1-9]\d{1,}(\.\d{2})?\b)|\b(meses|tiempo|horas)\b/i.test(cap3);
             const c17 = calcularCriterio(tieneMontoRecursos, tieneMontoRecursos, cap3.includes('recursos'));
-            let obs17 = generarFeedback(tieneMontoRecursos, "Tablas 1 y 2 presupuestadas.", "Importante", ["Inserte las Tablas 1 y 2 con estimaciones de costos o tiempos.", "No deje las tablas vacías."]);
+            let obs17 = generarFeedback(tieneMontoRecursos, "Tablas 1 y 2 presupuestadas.", "Importante", ["Inserte las Tablas 1 y 2 con estimaciones reales de costos o tiempos.", "No envíe las tablas de recursos vacías."]);
 
             const cap3Limpio = cap3.replace(/tabla\s+3/gi, '');
             const tieneMontoFinanza = /(s\/\.?\s*[1-9]\d*)|(\b[1-9]\d{2,}\b)/i.test(cap3Limpio) || (/\b(autofinanciado|propio)\b/i.test(cap3Limpio) && /\b0(\.00)?\b/.test(cap3Limpio));
             const c18 = calcularCriterio(tieneMontoFinanza, tieneMontoFinanza, cap3.includes('tabla 3'));
-            let obs18 = generarFeedback(tieneMontoFinanza, "Financiamiento respaldado.", "Importante", ["Si el proyecto es Autofinanciado, ponga S/. 0.00 en la Tabla 3 e indique fondos propios."]);
+            let obs18 = generarFeedback(tieneMontoFinanza, "Financiamiento respaldado.", "Importante", ["Si el proyecto es Autofinanciado, ponga S/. 0.00 en la Tabla 3 e indique el uso de fondos propios."]);
 
             const cronogramaLimpio = cap3.replace(/tabla\s+4/gi, '');
             const tieneX = /([a-záéíóúñ]+\s+)+.*?\b(x|X)\b\s+.*?\b(x|X)\b/i.test(cronogramaLimpio) || /(\b(x|X)\b\s*){3,}/.test(cronogramaLimpio);
             const c19 = calcularCriterio(tieneX, tieneX, cap3.includes('tabla 4'));
-            let obs19 = generarFeedback(tieneX, "Cronograma Gantt planificado.", "Importante", ["Añada la Tabla 4 y marque con una letra 'X' las columnas de las sesiones correspondientes."]);
+            let obs19 = generarFeedback(tieneX, "Cronograma Gantt planificado.", "Importante", ["Añada la Tabla 4 y marque con una letra 'X' las columnas correspondientes a las sesiones."]);
 
             // --- C20: REFERENCIAS ---
             const lineasRef = refTexto.split('\n').filter(l => l.trim().length > 15);
             const c20 = calcularCriterio(lineasRef.length >= 30, lineasRef.length >= 15, lineasRef.length > 0);
             let obs20 = generarFeedback(lineasRef.length >= 30, `Contabilizadas ~${lineasRef.length} referencias bibliográficas.`, "Crítico", [
-                "Agregue más fuentes a su listado.",
-                "Recuerde el requisito normativo: Mínimo 30 referencias totales.",
-                "70% de ellas deben ser de los últimos 5 años y 30% en inglés."
+                "Incorpore más fuentes a su listado de referencias.",
+                "Recuerde el requisito normativo estricto: Mínimo 30 referencias totales.",
+                "Asegúrese de que el 70% de ellas tengan menos de 5 años de antigüedad."
             ]);
 
-            // --- CÁLCULO FINAL ---
+            // --- CÁLCULOS DEL SEMÁFORO ---
             const totalPuntos = c1.puntos + c2.puntos + c3.puntos + c4.puntos + c5.puntos + c6.puntos + c7.puntos + c8.puntos + c9.puntos + c10.puntos + c11.puntos + c12.puntos + c13.puntos + c14.puntos + c15.puntos + c16.puntos + c17.puntos + c18.puntos + c19.puntos + c20.puntos;
             const porcentajeAdec = ((totalPuntos / 20) * 100).toFixed(1);
+
+            let semaforoColor, semaforoTexto, semaforoIcon;
+            if (porcentajeAdec >= 90) {
+                semaforoColor = "#2e7d32"; semaforoTexto = "Alto cumplimiento normativo"; semaforoIcon = "🟢";
+            } else if (porcentajeAdec >= 75) {
+                semaforoColor = "#e65100"; semaforoTexto = "Cumplimiento parcial"; semaforoIcon = "🟡";
+            } else {
+                semaforoColor = "#b3002d"; semaforoTexto = "Riesgo elevado de observaciones"; semaforoIcon = "🔴";
+            }
+
+            const listaAcciones = accionesPrioritarias.length > 0 
+                ? accionesPrioritarias.map(acc => `<li>${acc}</li>`).join('')
+                : `<li><span style="color:#2e7d32; font-weight:600;">✔ ¡Excelente trabajo estructural! No se detectaron acciones urgentes.</span></li>`;
+
+            // Construir el Resumen Ejecutivo
+            const htmlResumen = `
+                <div class="executive-summary">
+                    <h3>Resumen Ejecutivo del Diagnóstico</h3>
+                    <div class="summary-grid">
+                        <div class="summary-card main-score">
+                            <div class="semaforo-icon">${semaforoIcon}</div>
+                            <div class="semaforo-pct">${porcentajeAdec}%</div>
+                            <div class="semaforo-text" style="color:${semaforoColor}">${semaforoTexto}</div>
+                        </div>
+                        <div class="summary-card">
+                            <h4>Hallazgos Estructurales</h4>
+                            <ul class="obs-list">
+                                <li>🔴 Riesgo Crítico: <strong>${obsCriticas}</strong></li>
+                                <li>🟠 Riesgo Importante: <strong>${obsImportantes}</strong></li>
+                                <li>🟢 Riesgo de Mejora: <strong>${obsMejoras}</strong></li>
+                            </ul>
+                        </div>
+                        <div class="summary-card priority-list">
+                            <h4>Acciones Prioritarias</h4>
+                            <ul>
+                                ${listaAcciones}
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            document.getElementById('resumen-ejecutivo-container').innerHTML = htmlResumen;
 
             const matriz = [
                 { comp: "Título", id: 1, c: "Variables y 20 palabras", o: c1, f: obs1 },
@@ -457,8 +537,8 @@
                 </tr>`;
             });
 
-            document.getElementById('datos-tesista').innerHTML = `<strong>Estudiante:</strong> ${nombre}`;
-            document.getElementById('nota-final-container').innerHTML = `✅ Índice de Cumplimiento Normativo Estimado: ${totalPuntos.toFixed(2)} / 20.00 <span style="font-size:14px; font-weight:normal; color:var(--gris);">(${porcentajeAdec}%)</span>`;
+            document.getElementById('datos-tesista').innerHTML = `<strong>Tesista:</strong> ${nombre} &nbsp; | &nbsp; <strong>Proyecto:</strong> <em>"${titulo || 'Sin título registrado'}"</em>`;
+            document.getElementById('nota-final-container').innerHTML = ``; // Se oculta la nota plana, ahora usamos el resumen
             document.getElementById('tabla-rubrica-cuerpo').innerHTML = htmlFilas;
             
             document.getElementById('loading').style.display = 'none';
