@@ -266,7 +266,7 @@
                     <tr>
                         <th>Componente</th>
                         <th style="text-align:center; width:30px;">N°</th>
-                        <th style="width:25%;">Criterio Institucional</th>
+                        <th style="width:35%;">Criterio Institucional</th>
                         <th style="text-align:center; width:90px;">Estado</th>
                         <th>Verificación y Plan de Acción</th>
                     </tr>
@@ -364,7 +364,7 @@
                 let obs1 = generarFeedback(numPalabrasTitulo <= 20 && numPalabrasTitulo > 0, `Cumple con el límite (${numPalabrasTitulo} palabras).`, "Importante", ["El título excede las 20 palabras máximas exigidas.", "Elimine artículos redundantes o conectores innecesarios."]);
                 
                 maxPuntosPosibles += 1; totalPuntos += c1.puntos;
-                matrizCriteriosEvaluados.push({ comp: "Título", id: 1, c: "Variables y máximo 20 palabras", o: c1, f: obs1 });
+                matrizCriteriosEvaluados.push({ comp: "Título", id: 1, c: "1. El título presenta la(s) variable(s) o categorías de estudio y la unidad de análisis abordada en un máximo de 20 palabras.", o: c1, f: obs1 });
             }
 
             // --- EVALUACIÓN MODULAR CAP 1 ---
@@ -412,9 +412,9 @@
 
                 const antecedenciasMatch = cap1.match(/artículo|investigación|autor|estudio|(\(20\d\d\))/g);
                 const cuentaAntecedentes = antecedenciasMatch ? antecedenciasMatch.length : 0;
-                const c7 = calcularCriterio(cuentaAntecedentes >= 8, cuentaAntecedentes >= 5, cuentaAntecedentes >= 2);
-                let obs7 = generarFeedback(cuentaAntecedentes >= 8, "Densidad de citas internacionales validada.", "Importante", [
-                    "Incorpore al menos 6 antecedentes internacionales explícitos de revistas indexadas."
+                const c7 = calcularCriterio(cuentaAntecedentes >= 6, cuentaAntecedentes >= 4, cuentaAntecedentes >= 2);
+                let obs7 = generarFeedback(cuentaAntecedentes >= 6, "Densidad de citas internacionales validada.", "Importante", [
+                    "Incorpore al menos seis (6) antecedentes internacionales explícitos de revistas indexadas."
                 ]);
 
                 const tieneDimensiones = /dimensión|dimensiones|categorías/i.test(cap1);
@@ -433,15 +433,15 @@
                 totalPuntos += (c2.puntos + c3.puntos + c4.puntos + c5.puntos + c6.puntos + c7.puntos + c8.puntos + c9.puntos + c10.puntos);
                 
                 matrizCriteriosEvaluados.push(
-                    { comp: "Introd.", id: 2, c: "Prosa, sin subtítulos, pasado", o: c2, f: obs2 },
-                    { comp: "Introd.", id: 3, c: "Problema y mención de ODS", o: c3, f: obs3 },
-                    { comp: "Introd.", id: 4, c: "Problema interrogativo", o: c4, f: obs4 },
-                    { comp: "Introd.", id: 5, c: "Justificación explícita", o: c5, f: obs5 },
-                    { comp: "Introd.", id: 6, c: "Objetivos generales y esp.", o: c6, f: obs6 },
-                    { comp: "Introd.", id: 7, c: "Antecedentes científicos", o: c7, f: obs7 },
-                    { comp: "Introd.", id: 8, c: "Dimensiones y conceptos", o: c8, f: obs8 },
-                    { comp: "Introd.", id: 9, c: "Teorías relacionadas", o: c9, f: obs9 },
-                    { comp: "Introd.", id: 10, c: "Hipótesis (si aplica)", o: c10, f: obs10 }
+                    { comp: "Introducción", id: 2, c: "2. Está redactada en prosa, sin subtítulos, en tercera persona y en pasado del modo indicativo.", o: c2, f: obs2 },
+                    { comp: "Introducción", id: 3, c: "3. Se describe la realidad problemática contemplando la importancia de abordar el problema y el ODS relacionado.", o: c3, f: obs3 },
+                    { comp: "Introducción", id: 4, c: "4. Plantea el problema de investigación de manera interrogativa, detallando las variables o categorías y el objeto de estudio.", o: c4, f: obs4 },
+                    { comp: "Introducción", id: 5, c: "5. La justificación de la investigación expresa la importancia de su ejecución.", o: c5, f: obs5 },
+                    { comp: "Introducción", id: 6, c: "6. Se formulan los objetivos vinculados a las preguntas de investigación.", o: c6, f: obs6 },
+                    { comp: "Introducción", id: 7, c: "7. Se detallan los antecedentes relacionados al(los) objetivo(s) de investigación.", o: c7, f: obs7 },
+                    { comp: "Introducción", id: 8, c: "8. Se detallan los aportes conceptuales relacionados con las variables o categorías de interés (definiciones y dimensiones).", o: c8, f: obs8 },
+                    { comp: "Introducción", id: 9, c: "9. Se detallan las teorías relacionadas con el objeto de estudio.", o: c9, f: obs9 },
+                    { comp: "Introducción", id: 10, c: "10. Se describen las hipótesis en base a las teorías o antecedentes (de ser pertinente).", o: c10, f: obs10 }
                 );
             }
 
@@ -483,12 +483,12 @@
                 totalPuntos += (c11.puntos + c12.puntos + c13.puntos + c14.puntos + c15.puntos + c16.puntos);
                 
                 matrizCriteriosEvaluados.push(
-                    { comp: "Metod.", id: 11, c: "Prosa, futuro, indicativo", o: c11, f: obs11 },
-                    { comp: "Metod.", id: 12, c: "Diseño y Manual Oslo", o: c12, f: obs12 },
-                    { comp: "Metod.", id: 13, c: "Operacionalización var.", o: c13, f: obs13 },
-                    { comp: "Metod.", id: 14, c: "Población y Criterios", o: c14, f: obs14 },
-                    { comp: "Metod.", id: 15, c: "Validación por 3 expertos", o: c15, f: obs15 },
-                    { comp: "Metod.", id: 16, c: "Código de Ética UCV", o: c16, f: obs16 }
+                    { comp: "Metodología", id: 11, c: "11. Se redacta en prosa, sin subtítulos, en tercera persona y en tiempo futuro del modo indicativo.", o: c11, f: obs11 },
+                    { comp: "Metodología", id: 12, c: "12. Se detalla el tipo, enfoque, diseño y alcance de la investigación.", o: c12, f: obs12 },
+                    { comp: "Metodología", id: 13, c: "13. Se define(n) la(s) variable(s) o categoría(s) de estudio, así como sus dimensiones o subcategorías.", o: c13, f: obs13 },
+                    { comp: "Metodología", id: 14, c: "14. Se describe la unidad de análisis, población, los criterios de inclusión y exclusión, la muestra y el muestreo aplicado (de ser pertinente).", o: c14, f: obs14 },
+                    { comp: "Metodología", id: 15, c: "15. Se describen las técnicas e instrumentos de recolección de datos, la validación por juicio de expertos y la consistencia interna (de ser pertinente).", o: c15, f: obs15 },
+                    { comp: "Metodología", id: 16, c: "16. Se describen las técnicas de análisis de datos y aspectos éticos de acuerdo al Código de Ética en Investigación de la UCV.", o: c16, f: obs16 }
                 );
             }
 
@@ -513,9 +513,9 @@
                 totalPuntos += (c17.puntos + c18.puntos + c19.puntos);
 
                 matrizCriteriosEvaluados.push(
-                    { comp: "Admin.", id: 17, c: "Tablas de Recursos 1 y 2", o: c17, f: obs17 },
-                    { comp: "Admin.", id: 18, c: "Financiamiento (Tabla 3)", o: c18, f: obs18 },
-                    { comp: "Admin.", id: 19, c: "Cronograma Gantt (Tabla 4)", o: c19, f: obs19 }
+                    { comp: "Aspectos administrativos", id: 17, c: "17. Se detallan los recursos no monetarios y monetarios necesarios para el desarrollo del proyecto de investigación.", o: c17, f: obs17 },
+                    { comp: "Aspectos administrativos", id: 18, c: "18. Se detallan las fuentes de financiamiento para el desarrollo del proyecto de investigación.", o: c18, f: obs18 },
+                    { comp: "Aspectos administrativos", id: 19, c: "19. Se detalla el cronograma de ejecución del proyecto de investigación.", o: c19, f: obs19 }
                 );
             }
 
@@ -556,7 +556,7 @@
                 maxPuntosPosibles += 1;
                 totalPuntos += c20.puntos;
 
-                matrizCriteriosEvaluados.push({ comp: "Referen.", id: 20, c: "30 referencias, 70% vigencia, 30% inglés", o: c20, f: obs20 });
+                matrizCriteriosEvaluados.push({ comp: "Referencias", id: 20, c: "20. Se referencian todas las citas descritas en los capítulos de la investigación utilizando las normas de redacción según especialidad. Se tiene en cuenta la cantidad mínima de referencias sugeridas y uso de un gestor bibliográfico.", o: c20, f: obs20 });
             }
 
             // --- CÁLCULOS DEL SEMÁFORO Y PORCENTAJES ---
