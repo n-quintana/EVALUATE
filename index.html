@@ -70,7 +70,7 @@
         .disclaimer-col.no ul { color: #b3002d; }
         .disclaimer-col.yes li span, .disclaimer-col.no li span { color: var(--gris-texto); }
 
-        /* RESUMEN EJECUTIVO */
+        /* RESUMEN EJECUTIVO (UX MEJORADA) */
         .executive-summary { background: var(--blanco); border: 1px solid var(--gris-borde); border-radius: 12px; padding: 20px; margin-bottom: 25px; box-shadow: 0 4px 10px rgba(0,0,0,0.03); }
         .executive-summary h3 { color: var(--azul); margin-top: 0; margin-bottom: 15px; font-size: 16px; border-bottom: 1px solid var(--gris-borde); padding-bottom: 10px; }
         .summary-grid { display: grid; grid-template-columns: 1fr 1fr 1.5fr; gap: 15px; }
@@ -143,7 +143,6 @@
             <div class="step" id="step-5-indicator"><div class="step-circle">5</div><div class="step-title">Ref.</div></div>
         </div>
 
-        <!-- PASO 1: DATOS -->
         <div class="form-section active" id="section-1">
             <h2>1. Identificación del Proyecto</h2>
             
@@ -192,7 +191,6 @@
             </div>
         </div>
 
-        <!-- PASO 2: CAPÍTULO I -->
         <div class="form-section" id="section-2">
             <h2>2. Capítulo I: Introducción</h2>
             <div class="form-group"><textarea id="capitulo_1" class="field-input" placeholder="Pegue la prosa del Capítulo I..."></textarea></div>
@@ -232,14 +230,12 @@
             </div>
         </div>
 
-        <!-- LOADING -->
         <div class="loading-box" id="loading">
             <div class="spinner"></div>
             <p style="font-weight: bold; color: var(--azul);">Ejecutando verificación y estructurando observaciones...</p>
             <p style="font-size: 11px; color: var(--gris);">Calculando índice de cumplimiento normativo...</p>
         </div>
 
-        <!-- RESULTADOS -->
         <div class="result-container" id="resultado-container">
             
             <div class="info-header" style="background: var(--blanco); border: 1px solid var(--gris-borde); border-radius: 12px; padding: 15px; margin-bottom: 20px;">
@@ -510,16 +506,41 @@
             // --- EVALUACIÓN MODULAR REFERENCIAS ---
             if (refTexto.trim().length > 0) {
                 const lineasRef = refTexto.split('\n').filter(l => l.trim().length > 15);
-                const c20 = calcularCriterio(lineasRef.length >= 30, lineasRef.length >= 15, lineasRef.length > 0);
-                let obs20 = generarFeedback(lineasRef.length >= 30, `Contabilizadas ~${lineasRef.length} referencias bibliográficas.`, "Crítico", [
-                    "Incorpore más fuentes a su listado de referencias.",
-                    "Recuerde el requisito normativo: Mínimo 30 referencias totales."
-                ]);
+                const totalReferencias = lineasRef.length;
+                
+                let conteoIngles = 0;
+                let conteoAntiguedad = 0;
+                lineasRef.forEach(linea => {
+                    if (/\b(and|the|journal|of|research|vol|pp|issue|science|international|university|study)\b/i.test(linea)) conteoIngles++;
+                    if (/\b(2022|2023|2024|2025|2026)\b/.test(linea)) conteoAntiguedad++;
+                });
+
+                const pctIngles = totalReferencias > 0 ? (conteoIngles / totalReferencias) * 100 : 0;
+                const pctAntiguedad = totalReferencias > 0 ? (conteoAntiguedad / totalReferencias) * 100 : 0;
+
+                const cumpleCantidad = totalReferencias >= 30;
+                const cumpleIdiomas = pctIngles >= 30;
+                const cumpleVigencia = pctAntiguedad >= 70;
+
+                const c20 = calcularCriterio((cumpleCantidad && cumpleIdiomas && cumpleVigencia), (cumpleCantidad && cumpleVigencia), cumpleCantidad);
+                
+                let arrayFaltasRef = [];
+                if (!cumpleCantidad) arrayFaltasRef.push(`Falta cantidad mínima: Tienes ${totalReferencias} referencias, se exigen al menos 30.`);
+                if (!cumpleVigencia) arrayFaltasRef.push(`Falta vigencia (5 años): Solo ~${pctAntiguedad.toFixed(0)}% son recientes. Se exige mínimo 70%.`);
+                if (!cumpleIdiomas) arrayFaltasRef.push(`Falta idioma extranjero: Solo ~${pctIngles.toFixed(0)}% están en inglés/extranjero. Se exige mínimo 30%.`);
+                arrayFaltasRef.push("Asegúrese de que el 70% provenga de Scopus, WoS o SciELO (SJR).");
+
+                let obs20 = generarFeedback(
+                    (cumpleCantidad && cumpleIdiomas && cumpleVigencia), 
+                    `Cumple métricas: ${totalReferencias} refs, ~${pctAntiguedad.toFixed(0)}% recientes, ~${pctIngles.toFixed(0)}% en inglés.`, 
+                    "Crítico", 
+                    arrayFaltasRef
+                );
                 
                 maxPuntosPosibles += 1;
                 totalPuntos += c20.puntos;
 
-                matrizCriteriosEvaluados.push({ comp: "Referen.", id: 20, c: "Mínimo 30 citas referenciadas", o: c20, f: obs20 });
+                matrizCriteriosEvaluados.push({ comp: "Referen.", id: 20, c: "30 referencias, 70% vigencia, 30% inglés", o: c20, f: obs20 });
             }
 
             // --- CÁLCULOS DEL SEMÁFORO Y PORCENTAJES ---
@@ -538,7 +559,6 @@
                 ? accionesPrioritarias.map(acc => `<li>${acc}</li>`).join('')
                 : `<li><span style="color:#2e7d32; font-weight:600;">✔ ¡Excelente trabajo estructural! Las secciones analizadas cumplen la normativa.</span></li>`;
 
-            // Construir el Resumen Ejecutivo
             const htmlResumen = `
                 <div class="executive-summary">
                     <h3>Resumen Ejecutivo del Diagnóstico</h3>
