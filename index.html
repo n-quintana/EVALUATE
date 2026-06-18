@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
-<title>EvalúaT · Tesis UCV 2026</title>
+<title>EvalúaT AI · Tesis UCV 2026</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
@@ -11,7 +11,7 @@
   --rojo:#C8102E; --rojo-light:#FDECEA; --rojo-mid:#F5A3AE; --rojo-dark:#A00D24;
   --azul:#003087; --azul-light:#E8EDF5; --azul-mid:#7A9CC4;
   --gris:#6B7280; --gris-claro:#F5F6F7; --gris-borde:#E4E6E8; --gris-texto:#374151;
-  --blanco:#FFFFFF;
+  --blanco:#FFFFFF; --ia-grad: linear-gradient(135deg, #003087 0%, #C8102E 100%);
 }
 *{box-sizing:border-box;margin:0;padding:0;}
 body{background:var(--gris-claro);font-family:'Inter',sans-serif;color:var(--gris-texto);min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:20px 16px;}
@@ -19,20 +19,20 @@ body{background:var(--gris-claro);font-family:'Inter',sans-serif;color:var(--gri
 
 /* HEADER */
 .header{background:var(--blanco);border:0.5px solid var(--gris-borde);border-radius:16px;overflow:hidden;box-shadow:0 4px 12px rgba(0,0,0,0.04);}
-.header-top{height:5px;background:var(--rojo);}
+.header-top{height:5px;background:var(--ia-grad);}
 .header-body{padding:20px 24px;display:flex;align-items:center;gap:16px;}
-.logo{width:48px;height:48px;border-radius:14px;background:var(--rojo);display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.logo{width:48px;height:48px;border-radius:14px;background:var(--ia-grad);display:flex;align-items:center;justify-content:center;flex-shrink:0;}
 .logo svg{width:26px;height:26px;fill:none;stroke:#fff;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round;}
 .brand-name{font-size:24px;font-weight:700;color:var(--azul);letter-spacing:-0.5px;line-height:1;}
 .brand-name span{color:var(--rojo);}
 .brand-full{font-size:12px;color:var(--gris);margin-top:4px;line-height:1.4;}
 
-/* PROGRESS BAR (NUEVO) */
+/* PROGRESS BAR */
 .stepper{display:flex;justify-content:space-between;align-items:center;background:var(--blanco);padding:16px 24px;border-radius:12px;border:0.5px solid var(--gris-borde);box-shadow:0 2px 8px rgba(0,0,0,0.02);position:relative;}
 .stepper::before{content:"";position:absolute;top:50%;left:40px;right:40px;height:2px;background:var(--gris-borde);z-index:1;transform:translateY(-50%);}
 .step-item{position:relative;z-index:2;display:flex;flex-direction:column;align-items:center;gap:6px;}
 .step-circle{width:32px;height:32px;border-radius:50%;background:var(--gris-claro);border:2px solid var(--gris-borde);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;color:var(--gris);transition:all 0.3s;box-shadow:0 0 0 4px var(--blanco);}
-.step-label{font-size:11px;font-weight:600;color:var(--gris);text-transform:uppercase;letter-spacing:0.5px;transition:all 0.3s;}
+.step-label{font-size:11px;font-weight:600;color:var(--gris);text-transform:uppercase;letter-spacing:0.5px;}
 .step-item.active .step-circle{background:var(--rojo);border-color:var(--rojo);color:var(--blanco);}
 .step-item.active .step-label{color:var(--rojo);}
 .step-item.done .step-circle{background:var(--azul);border-color:var(--azul);color:var(--blanco);}
@@ -44,19 +44,24 @@ body{background:var(--gris-claro);font-family:'Inter',sans-serif;color:var(--gri
 
 .card{background:var(--blanco);border:0.5px solid var(--gris-borde);border-radius:16px;padding:24px;display:flex;flex-direction:column;gap:16px;box-shadow:0 2px 8px rgba(0,0,0,0.03);}
 .card-title{font-size:16px;font-weight:600;color:var(--azul);border-bottom:1px solid var(--gris-borde);padding-bottom:10px;margin-bottom:4px;display:flex;align-items:center;gap:8px;}
-.card-title svg{width:18px;height:18px;}
 .input-group{display:flex;flex-direction:column;gap:6px;}
 .input-group label{font-size:13px;font-weight:600;color:var(--gris-texto);}
 .field-input{width:100%;padding:14px;border-radius:10px;border:1px solid var(--gris-borde);background:var(--gris-claro);font-family:'Inter',sans-serif;font-size:13px;outline:none;color:var(--gris-texto);transition:all 0.2s;}
 .field-input:focus{border-color:var(--rojo-mid);background:var(--blanco);box-shadow:0 0 0 3px var(--rojo-light);}
 textarea.field-input{height:300px;resize:vertical;line-height:1.6;}
 
-/* BOTONES DE NAVEGACIÓN */
+/* BOTONES */
 .nav-buttons{display:flex;gap:12px;margin-top:8px;}
-.btn-primary{flex:1;padding:14px;border-radius:12px;background:var(--rojo);border:none;color:#fff;font-size:14px;font-family:'Inter',sans-serif;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;transition:all 0.2s;box-shadow:0 4px 12px rgba(200, 16, 46, 0.2);}
-.btn-primary:hover{background:var(--rojo-dark);transform:translateY(-1px);}
-.btn-secondary{padding:14px 20px;border-radius:12px;background:var(--gris-claro);border:1px solid var(--gris-borde);color:var(--gris-texto);font-size:14px;font-family:'Inter',sans-serif;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;transition:all 0.2s;}
+.btn-primary{flex:1;padding:14px;border-radius:12px;background:var(--rojo);border:none;color:#fff;font-size:14px;font-family:'Inter',sans-serif;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;}
+.btn-primary:hover{background:var(--rojo-dark);}
+.btn-secondary{padding:14px 20px;border-radius:12px;background:var(--gris-claro);border:1px solid var(--gris-borde);color:var(--gris-texto);font-size:14px;font-family:'Inter',sans-serif;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;}
 .btn-secondary:hover{background:#e2e8f0;}
+
+/* LOADER IA */
+.loader-ia {display:none; flex-direction:column; align-items:center; justify-content:center; padding:50px 20px; gap:20px; text-align:center;}
+.spinner {width:50px; height:50px; border:4px solid var(--azul-light); border-top-color:var(--rojo); border-radius:50%; animation:spin 1s linear infinite;}
+@keyframes spin {to {transform: rotate(360deg);}}
+.loader-text {font-size:16px; font-weight:600; color:var(--azul); background: var(--ia-grad); -webkit-background-clip: text; -webkit-text-fill-color: transparent;}
 
 /* RESULTS */
 #RESULTS_SEC{display:none;flex-direction:column;gap:16px;}
@@ -64,33 +69,27 @@ textarea.field-input{height:300px;resize:vertical;line-height:1.6;}
 .ch-title.met{background:var(--rojo);}
 .dc{background:var(--blanco);border:0.5px solid var(--gris-borde);border-radius:14px;padding:20px;box-shadow:0 2px 6px rgba(0,0,0,0.02);}
 .dlbl{font-size:12px;font-weight:700;color:var(--gris-texto);text-transform:uppercase;letter-spacing:.5px;margin-bottom:12px;border-bottom:1px solid var(--gris-borde);padding-bottom:10px;display:flex;align-items:center;gap:8px;}
-.dlbl span.crit{background:var(--gris-claro);padding:2px 8px;border-radius:6px;font-size:10px;color:var(--gris);}
-.ex-box{background:#f8fafc;border:1px dashed #cbd5e1;border-radius:8px;padding:12px;font-size:13px;color:#475569;margin-bottom:14px;font-style:italic;line-height:1.5;}
+.alr{display:flex;gap:10px;align-items:flex-start;font-size:13px;color:var(--rojo-dark);margin-bottom:8px;line-height:1.5;background:var(--rojo-light);border:0.5px solid var(--rojo-mid);border-radius:8px;padding:12px;}
+.tip{display:flex;gap:10px;align-items:flex-start;font-size:13px;color:var(--gris-texto);margin-bottom:6px;line-height:1.5;padding:6px 0;}
 .dg{display:grid;grid-template-columns:repeat(auto-fit, minmax(140px, 1fr));gap:8px;margin-bottom:14px;}
 .di{background:var(--gris-claro);border:0.5px solid var(--gris-borde);border-radius:8px;padding:10px 12px;display:flex;flex-direction:column;gap:4px;}
-.dk{font-size:10px;color:var(--gris);text-transform:uppercase;letter-spacing:.4px;}
+.dk{font-size:10px;color:var(--gris);text-transform:uppercase;}
 .dv-ok{font-size:13px;font-weight:600;color:var(--azul);}
 .dv-warn{font-size:13px;font-weight:600;color:#B45309;}
 .dv-err{font-size:13px;font-weight:600;color:var(--rojo);}
 .dv-na{font-size:13px;font-weight:600;color:var(--gris);}
-.alr{display:flex;gap:10px;align-items:flex-start;font-size:13px;color:var(--rojo-dark);margin-bottom:8px;line-height:1.5;background:var(--rojo-light);border:0.5px solid var(--rojo-mid);border-radius:8px;padding:12px;}
-.alr svg{width:16px;height:16px;stroke:var(--rojo);flex-shrink:0;margin-top:2px;fill:none;stroke-width:2;}
-.tip{display:flex;gap:10px;align-items:flex-start;font-size:13px;color:var(--gris-texto);margin-bottom:6px;line-height:1.5;padding:6px 0;}
-.tip svg{width:16px;height:16px;stroke:var(--azul);flex-shrink:0;margin-top:2px;fill:none;stroke-width:2;}
 
 /* REPORTE */
 .rep{background:var(--blanco);border:0.5px solid var(--gris-borde);border-radius:16px;overflow:hidden;box-shadow:0 6px 16px rgba(0,0,0,0.06);margin-top:20px;}
-.rep-top{height:6px;background:var(--azul);}
+.rep-top{height:6px;background:var(--ia-grad);}
 .rep-body{padding:28px;display:flex;flex-direction:column;gap:16px;}
 .rep-score{display:flex;align-items:baseline;gap:8px;}
 .rep-num{font-size:64px;font-weight:700;line-height:1;letter-spacing:-2px;}
-.rep-of{font-size:20px;color:var(--gris);font-weight:500;}
 .sem{display:flex;align-items:center;gap:10px;padding:16px 20px;border-radius:12px;font-size:15px;font-weight:600;}
 .sem-v{background:var(--azul-light);color:var(--azul);border:0.5px solid var(--azul-mid);}
 .sem-a{background:#FFF8E1;color:#B45309;border:0.5px solid #FDE68A;}
 .sem-r{background:var(--rojo-light);color:var(--rojo);border:0.5px solid var(--rojo-mid);}
-.sem-dot{width:14px;height:14px;border-radius:50%;background:currentColor;flex-shrink:0;}
-.ft{font-size:12px;color:var(--gris);text-align:center;margin-top:20px;}
+.sem-dot{width:14px;height:14px;border-radius:50%;background:currentColor;}
 </style>
 </head>
 <body>
@@ -99,42 +98,39 @@ textarea.field-input{height:300px;resize:vertical;line-height:1.6;}
     <div class="header-top"></div>
     <div class="header-body">
       <div class="logo">
-        <svg viewBox="0 0 24 24"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>
+        <svg viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
       </div>
       <div>
-        <div class="brand-name">Evalú<span>aT</span> PRO</div>
-        <div class="brand-full">Escáner Secuencial · Guía Proyecto de Tesis UCV 2026</div>
+        <div class="brand-name">Evalú<span>aT</span> AI</div>
+        <div class="brand-full">Escáner Potenciado por Inteligencia Artificial (Gemini)</div>
       </div>
-      <div class="badge">16 Criterios</div>
     </div>
   </div>
 
   <div id="UI_CONTAINER" style="width:100%; display:flex; flex-direction:column; gap:16px;">
     
     <div class="stepper" id="STEPPER">
-      <div class="step-item active" id="dot1">
-        <div class="step-circle">1</div>
-        <div class="step-label">Inicio</div>
-      </div>
-      <div class="step-item" id="dot2">
-        <div class="step-circle">2</div>
-        <div class="step-label">Cap. I</div>
-      </div>
-      <div class="step-item" id="dot3">
-        <div class="step-circle">3</div>
-        <div class="step-label">Metodología</div>
-      </div>
+      <div class="step-item active" id="dot1"><div class="step-circle">1</div><div class="step-label">Inicio & API</div></div>
+      <div class="step-item" id="dot2"><div class="step-circle">2</div><div class="step-label">Cap. I</div></div>
+      <div class="step-item" id="dot3"><div class="step-circle">3</div><div class="step-label">Metodología</div></div>
     </div>
 
     <div class="step-content active" id="STEP_1">
       <div class="card">
-        <div class="card-title"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg> Datos del Proyecto</div>
+        <div class="card-title">1. Configuración de IA y Datos</div>
+        
+        <div class="input-group" style="background:#fff7ed; padding:12px; border-radius:8px; border:1px solid #fed7aa;">
+          <label style="color:#c2410c;">Llave API de Google Gemini (Gratis)</label>
+          <input type="password" id="INP_API" class="field-input" placeholder="AQ.Ab8RN6IC7vjjTpqR5gXc3o_m6BFNr0Sp5jBANU6sE0itMkFtWA" style="border-color:#fdba74;" />
+          <span style="font-size:11px;color:#9a3412;">Consíguela gratis en: <a href="https://aistudio.google.com/app/apikey" target="_blank" style="color:#c2410c;font-weight:bold;">Google AI Studio</a></span>
+        </div>
+
         <div class="input-group">
           <label>Nombre del Estudiante</label>
           <input type="text" id="INP_NOM" class="field-input" placeholder="Ej. Juan Pérez..." />
         </div>
         <div class="input-group">
-          <label>Título de la Tesis (Criterio 1)</label>
+          <label>Título de la Tesis</label>
           <input type="text" id="INP_TIT" class="field-input" placeholder="Pega aquí tu título completo..." />
         </div>
         <div class="nav-buttons">
@@ -145,8 +141,7 @@ textarea.field-input{height:300px;resize:vertical;line-height:1.6;}
 
     <div class="step-content" id="STEP_2">
       <div class="card">
-        <div class="card-title"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline></svg> Capítulo I: Introducción</div>
-        <p style="font-size:12px;color:var(--gris);margin-top:-10px;">Pega aquí tu Realidad Problemática, Preguntas, Objetivos, Justificación, Marco Teórico e Hipótesis.</p>
+        <div class="card-title">2. Capítulo I: Introducción</div>
         <textarea id="DOC_TEXT_C1" class="field-input" placeholder="Pega todo el texto de tu Capítulo I aquí (Ctrl+V)..."></textarea>
         <div class="nav-buttons">
           <button class="btn-secondary" onclick="goToStep(1)">← Atrás</button>
@@ -157,42 +152,39 @@ textarea.field-input{height:300px;resize:vertical;line-height:1.6;}
 
     <div class="step-content" id="STEP_3">
       <div class="card">
-        <div class="card-title"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path></svg> Capítulo II: Metodología</div>
-        <p style="font-size:12px;color:var(--gris);margin-top:-10px;">Pega aquí tu Metodología: tipo, enfoque, variables, unidad de análisis, técnicas y aspectos éticos.</p>
+        <div class="card-title">3. Capítulo II: Metodología</div>
         <textarea id="DOC_TEXT_C2" class="field-input" placeholder="Pega todo el texto de tu Metodología aquí (Ctrl+V)..."></textarea>
         <div class="nav-buttons">
           <button class="btn-secondary" onclick="goToStep(2)">← Atrás</button>
-          <button class="btn-primary" onclick="ejecutarAnalisis()">
-            <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/><line x1="11" y1="8" x2="11" y2="14"/><line x1="8" y1="11" x2="14" y2="11"/></svg>
-            Ejecutar Escáner Completo
+          <button class="btn-primary" onclick="ejecutarAnalisisIA()" style="background:var(--ia-grad);">
+            <svg viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+            Analizar con Inteligencia Artificial
           </button>
         </div>
       </div>
     </div>
   </div>
 
+  <div class="loader-ia" id="LOADER">
+    <div class="spinner"></div>
+    <div class="loader-text">Gemini está leyendo tu tesis...<br><span style="font-size:12px; font-weight:400; color:var(--gris);">Esto puede tomar entre 10 y 20 segundos dependiendo del tamaño del texto.</span></div>
+  </div>
+
   <div id="RESULTS_SEC"></div>
 
-  <div class="ft">EvalúaT PRO · Adaptado a la Guía de Proyecto de Tesis UCV 2026</div>
 </div>
 
 <script>
-var S = { e: {}, q: false };
-var REP = null;
-
-// --- LÓGICA DE NAVEGACIÓN (WIZARD) ---
+// Navegación del Wizard
 function goToStep(stepNumber) {
-  // Validaciones básicas antes de avanzar
   if (stepNumber === 2) {
-    var tit = document.getElementById("INP_TIT").value.trim();
-    if (!tit) { alert("⚠️ Por favor, ingresa el título de tu tesis antes de continuar."); return; }
+    if (!document.getElementById("INP_API").value.trim()) { alert("⚠️ Necesitas pegar una clave API de Gemini para usar la IA."); return; }
+    if (!document.getElementById("INP_TIT").value.trim()) { alert("⚠️ Ingresa el título de tu tesis."); return; }
   }
   if (stepNumber === 3) {
-    var c1 = document.getElementById("DOC_TEXT_C1").value.trim();
-    if (c1.length < 50) { alert("⚠️ Pega el texto de tu Capítulo I antes de continuar."); return; }
+    if (document.getElementById("DOC_TEXT_C1").value.trim().length < 50) { alert("⚠️ Pega el texto de tu Capítulo I."); return; }
   }
 
-  // Ocultar todos los pasos y desmarcar dots
   for(let i=1; i<=3; i++){
     document.getElementById("STEP_"+i).classList.remove("active");
     var dot = document.getElementById("dot"+i);
@@ -200,229 +192,150 @@ function goToStep(stepNumber) {
     if(i < stepNumber) dot.classList.add("done");
     else dot.classList.remove("done");
   }
-
-  // Mostrar el paso actual
   document.getElementById("STEP_"+stepNumber).classList.add("active");
   document.getElementById("dot"+stepNumber).classList.add("active");
 }
 
-// --- UTILIDADES ---
 function xe(t){return (t||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/\n/g,"<br>");}
-function ods(t){var L=t.toLowerCase();return /\bods\b/.test(L)||/objetivo[s]?\s+de\s+desarrollo\s+sostenible/.test(L)||/agenda\s+2030/.test(L)||/ods\s*\d/.test(L)||/desarrollo\s+sostenible/.test(L);}
-var UA_P=["estudiantes","jóvenes","usuarios","trabajadores","docentes","comunidad","personas","público","ciudadanos","clientes"];
-var UA_C=["película","serie","libro","texto","discurso","spot","campaña","post","tweet","imagen","video","meme","noticia","artículo","podcast","mensaje","narrativa"];
-var UA_I=["institución","organización","marca","gobierno","ministerio","organismo","universidad","empresa"];
-function ua(t){var L=t.toLowerCase();if(UA_P.some(v=>L.includes(v)))return "personas";if(UA_C.some(v=>L.includes(v)))return "objeto cultural";if(UA_I.some(v=>L.includes(v)))return "institución";return null;}
 
-// --- VALIDADORES CAP 1 ---
-function vTit(t){
-  var w=t.trim().split(/\s+/).length, a=[], ti=[];
-  if(w>20) a.push("Título excede 20 palabras ("+w+")."); else ti.push("Extensión correcta.");
-  if(!["relación","influencia","efecto","impacto","percepción","análisis","comunicación","identidad","representación","narrativa","semiótic","significado"].some(v=>t.toLowerCase().includes(v))) a.push("No hay variable central clara."); else ti.push("Variables detectadas.");
-  if(["semiótic","narrativ","identidad","representación","cualitativo"].some(v=>t.toLowerCase().includes(v))) S.q=true;
-  return {a,ti,e:a.length===0?"ok":a.length===1?"parcial":"ausente"};
-}
-function vReal(t){
-  var a=[], ti=[], L=t.toLowerCase();
-  var hM=["mundial","global","internacional","latinoamérica"].some(w=>L.includes(w));
-  var hN=["perú","nacional","lima","país"].some(w=>L.includes(w));
-  if(!hM) a.push("Falta contexto internacional."); else ti.push("Contexto internacional.");
-  if(!hN) a.push("Falta contexto nacional."); else ti.push("Contexto nacional.");
-  if(!ods(t)) a.push("Falta vincular con ODS."); else ti.push("ODS identificado.");
-  var hE=/\d%/.test(t)||["según","informe","estadística","estudio","datos"].some(v=>L.includes(v));
-  if(!hE) a.push("Faltan datos estadísticos/cifras."); else ti.push("Datos de respaldo detectados.");
-  var el={ctx_internac:hM?"ok":"ausente", ctx_nacional:hN?"ok":"ausente", ODS:ods(t)?"ok":"ausente", evidencia:hE?"ok":"ausente"};
-  return {a,ti,el, e:a.length<=1?"ok":"parcial"};
-}
-function vPreguntas(pg, pe){
-  var a=[], ti=[];
-  if(!pg) { a.push("Sin pregunta general."); return {a,ti,e:"ausente"}; }
-  ti.push("Pregunta general presente.");
-  if(pe.length<3) a.push("Solo "+pe.length+" preguntas específicas (Mínimo 3)."); else ti.push(pe.length+" preguntas específicas.");
-  return {a,ti,e:a.length===0?"ok":"parcial"};
-}
-function vJust(t){
-  var L=t.toLowerCase(), a=[], ti=[];
-  var pr=["teórica","práctica","social","conocimiento","solución","comunidad"].filter(x=>L.includes(x));
-  if(pr.length===0) { a.push("Falta justificación (teórica, práctica, social)."); return {a,ti,e:"ausente"}; }
-  ti.push("Indicios de justificación.");
-  return {a,ti,e:"ok"};
-}
-function vObjetivos(og, oe){
-  var a=[], ti=[];
-  if(!og) { a.push("Sin objetivo general (verbo en infinitivo)."); return {a,ti,e:"ausente"}; }
-  ti.push("Objetivo general extraído.");
-  if(oe.length<3) a.push("Solo "+oe.length+" objetivos específicos (Mín. 3)."); else ti.push(oe.length+" objetivos específicos.");
-  return {a,ti,e:a.length===0?"ok":"parcial"};
-}
-function vMarco(t){
-  var L=t.toLowerCase(), a=[], ti=[];
-  if(!["se define","se entiende","concepto"].some(v=>L.includes(v))) a.push("Faltan definiciones conceptuales claras."); else ti.push("Conceptos hallados.");
-  if(!["teoría","modelo","enfoque"].some(v=>L.includes(v))) a.push("Falta fundamentación teórica (teorías/modelos)."); else ti.push("Teorías detectadas.");
-  return {a,ti,e:a.length===0?"ok":"parcial"};
-}
-function vHip(t){
-  var L=t.toLowerCase(), a=[], ti=[];
-  if(["cualitativo","supuesto"].some(v=>L.includes(v)) || S.q) return {a,ti:["Ausencia justificada (cualitativo)."],e:"noaplica"};
-  if(!["hipótesis","hipotesis"].some(v=>L.includes(v))) { a.push("Falta hipótesis explícita."); return {a,ti,e:"ausente"}; }
-  ti.push("Hipótesis detectada.");
-  return {a,ti,e:"ok"};
-}
-
-// --- VALIDADORES CAP 2 ---
-function vMetFormato(t){
-  var a=[], ti=[], L=t.toLowerCase();
-  var sub = t.split("\n").filter(l=>l.trim().length>3&&l.trim().length<40&&/^[A-Z][a-záéíóú\s]+:?$/.test(l.trim()));
-  if(sub.length>0) a.push("Elimina subtítulos, debe ser prosa continua (Crit. 11)."); else ti.push("Prosa continua.");
-  if(/(^|\s)(yo |mi |mis |me |nosotros)/i.test(t)) a.push("Redacción en 1ra persona. Usa 3ra persona."); else ti.push("Redacción en 3ra persona.");
-  var fut = (t.match(/\b[a-záéíóúñ]+(ará|erá|irá|arán|erán|irán)\b/gi)||[]).length;
-  if(fut<2 && !["se realizará","se aplicará","se procederá"].some(v=>L.includes(v))) a.push("Usa tiempo futuro ('se realizará', 'analizará')."); else ti.push("Uso de tiempo futuro.");
-  return {a,ti, e:a.length<=1?"ok":"parcial"};
-}
-function vMetTipo(t){
-  var a=[], ti=[], L=t.toLowerCase();
-  var tk=["básica","aplicada","cuantitativ","cualitativ","mixt","experimental","fenomenológico","exploratorio","descriptivo","correlacional","explicativo"].filter(x=>L.includes(x));
-  if(tk.length<2) a.push("Falta especificar claramente: Tipo, Enfoque, Diseño o Alcance."); else ti.push("Tipo, diseño y alcance detallados.");
-  return {a,ti,e:tk.length>=2?"ok":"parcial"};
-}
-function vMetVar(t){
-  var a=[], ti=[], L=t.toLowerCase();
-  if(!["variable","categoría"].some(v=>L.includes(v))) a.push("Falta definir variables (cuanti) o categorías (cuali)."); else ti.push("Variables/Categorías presentes.");
-  if(!["dimensión","subcategoría","operacionaliz","categoriz"].some(v=>L.includes(v))) a.push("Menciona dimensiones/subcategorías o la matriz."); else ti.push("Desglose dimensional detectado.");
-  return {a,ti,e:a.length===0?"ok":"parcial"};
-}
-function vMetPob(t){
-  var a=[], ti=[], L=t.toLowerCase();
-  if(!["unidad de análisis","población"].some(v=>L.includes(v))) a.push("Define la unidad de análisis y población."); else ti.push("Población definida.");
-  if(!["inclusión","exclusión"].some(v=>L.includes(v))) a.push("Faltan criterios de inclusión y exclusión explícitos."); else ti.push("Criterios de selección presentes.");
-  if(!["muestra","muestreo"].some(v=>L.includes(v))) a.push("Menciona la muestra y el tipo de muestreo."); else ti.push("Muestra detallada.");
-  return {a,ti,e:a.length<=1?"ok":"parcial"};
-}
-function vMetInst(t){
-  var a=[], ti=[], L=t.toLowerCase();
-  if(!["técnica","instrumento","cuestionario","entrevista","guía"].some(v=>L.includes(v))) a.push("Faltan técnicas e instrumentos."); else ti.push("Instrumentos mencionados.");
-  if(!["validez","validación","jueces","expertos"].some(v=>L.includes(v))) a.push("Menciona la validación por juicio de expertos."); else ti.push("Proceso de validación detectado.");
-  if(!["consistencia","confiabilidad","alfa","cronbach","kr-20"].some(v=>L.includes(v)) && !S.q) a.push("Falta análisis de confiabilidad/consistencia interna."); else ti.push("Confiabilidad abordada.");
-  return {a,ti,e:a.length<=1?"ok":"parcial"};
-}
-function vMetAnalisisEtica(t){
-  var a=[], ti=[], L=t.toLowerCase();
-  if(!["análisis","estadístic","spss","excel","atlas.ti","descriptiv","inferencial"].some(v=>L.includes(v))) a.push("Describe los métodos de análisis de datos."); else ti.push("Métodos de análisis presentes.");
-  if(!["ético","ética","integridad","consentimiento","código"].some(v=>L.includes(v))) a.push("Faltan aspectos éticos (Código UCV)."); else ti.push("Aspectos éticos declarados.");
-  return {a,ti,e:a.length===0?"ok":"parcial"};
-}
-
-// --- RENDERS UI ---
-function dH(lb, cr, al, ti, el, ext){
-  var h='<div class="dc"><div class="dlbl">'+lb+' <span class="crit">'+cr+'</span></div>';
-  if(ext) h+='<div class="ex-box">"'+xe(ext)+'"</div>';
-  if(el){h+='<div class="dg">';Object.entries(el).forEach(function(e){var cls=e[1]==="ok"?"dv-ok":e[1]==="noaplica"?"dv-na":e[1]==="parcial"?"dv-warn":"dv-err";var ic=e[1]==="ok"?"✓":e[1]==="noaplica"?"n/a":e[1]==="parcial"?"~":"✗";h+='<div class="di"><div class="dk">'+e[0].replace(/_/g," ")+'</div><div class="'+cls+'">'+ic+'</div></div>';});h+='</div>';}
-  al.forEach(function(x){h+='<div class="alr"><svg viewBox="0 0 24 24"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>'+xe(x)+'</div>';});
-  ti.forEach(function(x){h+='<div class="tip"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>'+xe(x)+'</div>';});
-  h+='</div>';return h;
-}
-
-function rH(r){
-  var pct = Math.round((r.ok / 13) * 20); 
-  var s=pct>=14?{c:"sem-v",t:"Apto para revisión docente"}:pct>=10?{c:"sem-a",t:"Requiere correcciones"}:{c:"sem-r",t:"Requiere reestructuración"};
-  var col=pct>=14?"var(--azul)":pct>=10?"#B45309":"var(--rojo)";
+// Renderizado de las tarjetas (igual que antes)
+function dH(lb, el, data){
+  if(!data) return '';
+  var h='<div class="dc"><div class="dlbl">'+lb+'</div>';
   
-  var h='<div class="rep"><div class="rep-top"></div><div class="rep-body">';
-  h+='<div class="rep-score"><span class="rep-num" style="color:'+col+'">'+pct+'</span><span class="rep-of">/ 20</span></div>';
-  h+='<div class="sem '+s.c+'"><div class="sem-dot"></div>'+s.t+'</div>';
-  h+='<button class="btn-primary" onclick="dXL()"><svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg> Descargar Reporte (.xlsx)</button>';
-  h+='<button class="btn-secondary" onclick="location.reload()">Otra evaluación</button>';
-  h+='</div></div>';return h;
+  var cls = data.e==="ok" ? "dv-ok" : data.e==="noaplica" ? "dv-na" : data.e==="parcial" ? "dv-warn" : "dv-err";
+  var ic = data.e==="ok" ? "✓ CUMPLE" : data.e==="noaplica" ? "N/A" : data.e==="parcial" ? "~ PARCIAL" : "✗ NO CUMPLE";
+  
+  h+='<div class="dg"><div class="di"><div class="dk">Evaluación de IA</div><div class="'+cls+'">'+ic+'</div></div></div>';
+  
+  if(data.a && data.a.length > 0){
+    data.a.forEach(x => { h+='<div class="alr"><svg viewBox="0 0 24 24"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>'+xe(x)+'</div>'; });
+  }
+  if(data.ti && data.ti.length > 0){
+    data.ti.forEach(x => { h+='<div class="tip"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>'+xe(x)+'</div>'; });
+  }
+  h+='</div>'; return h;
 }
 
-// --- EJECUCIÓN DEL ESCÁNER ---
-function ejecutarAnalisis() {
-  var nom = document.getElementById("INP_NOM").value.trim() || "Estudiante";
-  var titInput = document.getElementById("INP_TIT").value.trim();
-  var tC1 = document.getElementById("DOC_TEXT_C1").value.trim();
-  var tC2 = document.getElementById("DOC_TEXT_C2").value.trim();
-  
-  if(!tC2) { alert("⚠️ Pega el texto de tu Metodología antes de ejecutar el escáner."); return; }
+// CONEXIÓN CON LA API DE GEMINI
+async function ejecutarAnalisisIA() {
+  const apiKey = document.getElementById("INP_API").value.trim();
+  const nom = document.getElementById("INP_NOM").value.trim() || "Estudiante";
+  const tit = document.getElementById("INP_TIT").value.trim();
+  const c1 = document.getElementById("DOC_TEXT_C1").value.trim();
+  const c2 = document.getElementById("DOC_TEXT_C2").value.trim();
 
-  // Ocultar formulario, mostrar UI de carga
+  if(c2.length < 50) { alert("⚠️ Pega el texto de tu Metodología."); return; }
+
+  // Cambiar UI a modo carga
   document.getElementById("UI_CONTAINER").style.display = "none";
-  var res = document.getElementById("RESULTS_SEC");
-  res.style.display = "flex";
-  res.innerHTML = "<div style='text-align:center; padding: 40px; color:var(--azul); font-weight:600; font-size:18px;'>Analizando los 16 criterios...</div>";
+  document.getElementById("LOADER").style.display = "flex";
 
-  // Extracciones
-  var linesC1 = tC1.split('\n').map(x=>x.trim()).filter(x=>x.length>5);
-  var pregsMatches = tC1.match(/¿[^?]+\?/g) || [];
-  var pg = pregsMatches[0] || ""; var pe = pregsMatches.slice(1);
-  
-  var objVerbs = ["analizar","describir","identificar","determinar","establecer","evaluar","comparar","examinar","interpretar","explorar","caracterizar","conocer","medir","relacionar","develar","visibilizar","sistematizar","reconstruir","contrastar","definir","clasificar","explicar","proponer","demostrar","diseñar","formular","aplicar","comprobar"];
-  var objRegex = new RegExp(`^(?:[-•*\\d.a-zA-Z]+\\)?\\s*)*(?:objetivos?\\s*(?:general|espec[ií]ficos?)?\\s*:?\\s*)?(${objVerbs.join('|')})\\b`, 'i');
-  var objs = linesC1.filter(l => objRegex.test(l));
-  var cleanObjs = objs.map(o => o.replace(/^(?:[-•*\d.a-zA-Z]+\)?\s*)*(?:objetivos?\s*(?:general|espec[ií]ficos?)?\s*:?\s*)?/i, '').trim());
-  var og = cleanObjs[0] || ""; var oe = cleanObjs.slice(1);
+  // El super-prompt para Gemini
+  const prompt = `
+Eres un estricto metodólogo de tesis de la Universidad César Vallejo (UCV 2026).
+Tu trabajo es evaluar el siguiente proyecto de tesis. COMPRENDE el texto y evalúa si cumple con los criterios.
 
-  // Evals C1
-  var r1 = vTit(titInput);
-  var r2 = vReal(tC1);
-  var r3 = vPreguntas(pg, pe);
-  var r4 = vJust(tC1);
-  var r5 = vObjetivos(og, oe);
-  var r6 = vMarco(tC1);
-  var r7 = vHip(tC1);
+TÍTULO: ${tit}
+CAPÍTULO 1: ${c1.substring(0, 5000)} 
+CAPÍTULO 2: ${c2.substring(0, 5000)}
 
-  // Evals C2
-  var r11 = vMetFormato(tC2);
-  var r12 = vMetTipo(tC2);
-  var r13 = vMetVar(tC2);
-  var r14 = vMetPob(tC2);
-  var r15 = vMetInst(tC2);
-  var r16 = vMetAnalisisEtica(tC2);
+CRITERIOS:
+- C1_Titulo: Máx 20 palabras. Debe tener variables claras y unidad de análisis.
+- C1_Realidad: ¿Tiene datos estadísticos? ¿Contexto global y nacional (Perú)? ¿Menciona algún ODS?
+- C1_Preguntas: ¿Hay 1 general y mínimo 3 específicas con signos de interrogación?
+- C1_Justificacion: ¿Menciona impacto teórico, práctico o social?
+- C1_Objetivos: ¿Hay 1 general y mínimo 3 específicos iniciando con verbos en infinitivo?
+- C1_MarcoTeorico: ¿Hay definiciones conceptuales y mención a teorías/modelos? ¿Hay citas recientes (2019+)?
+- C1_Hipotesis: ¿Hay una hipótesis que relacione variables? Si es cualitativo, busca un "supuesto".
+- C2_Formato: ¿Está en tercera persona, sin subtítulos y en tiempo futuro (se realizará, se medirá)?
+- C2_TipoDiseño: ¿Se define tipo, enfoque y alcance?
+- C2_Variables: ¿Están definidas las variables y sus dimensiones o categorías?
+- C2_Poblacion: ¿Se define población, criterios de inclusión/exclusión y muestra?
+- C2_Instrumentos: ¿Se mencionan técnicas/instrumentos, validación por juicio de expertos y confiabilidad?
+- C2_AnalisisEtica: ¿Se mencionan métodos de análisis (SPSS, etc.) y principios éticos (consentimiento, código UCV)?
 
-  S.e = { 
-    "C1_Título": r1.e, "C1_Realidad": r2.e, "C1_Preguntas": r3.e, "C1_Justificación": r4.e, "C1_Objetivos": r5.e, "C1_Marco_Teórico": r6.e, "C1_Hipótesis": r7.e,
-    "C2_Formato_y_Tiempo": r11.e, "C2_Diseño_y_Alcance": r12.e, "C2_Variables_Categorías": r13.e, "C2_Población_Muestra": r14.e, "C2_Técnicas_Instrumentos": r15.e, "C2_Análisis_y_Ética": r16.e
-  };
+INSTRUCCIÓN VITAL:
+Debes responder ÚNICA Y EXCLUSIVAMENTE con un objeto JSON válido. No uses formato Markdown, no pongas \`\`\`json ni texto antes ni después. Solo las llaves {}. 
+Para cada criterio, el "e" debe ser "ok", "parcial", "ausente" o "noaplica". "a" es un array de strings con observaciones (errores/mejoras). "ti" es un array de strings con aciertos.
 
-  var vs = Object.values(S.e);
-  var ok = vs.filter(v => v === "ok" || v === "noaplica").length;
+ESTRUCTURA EXACTA A DEVOLVER:
+{
+  "C1_Titulo": {"e": "ok", "a": [], "ti": []},
+  "C1_Realidad": {"e": "ok", "a": [], "ti": []},
+  "C1_Preguntas": {"e": "ok", "a": [], "ti": []},
+  "C1_Justificacion": {"e": "ok", "a": [], "ti": []},
+  "C1_Objetivos": {"e": "ok", "a": [], "ti": []},
+  "C1_MarcoTeorico": {"e": "ok", "a": [], "ti": []},
+  "C1_Hipotesis": {"e": "ok", "a": [], "ti": []},
+  "C2_Formato": {"e": "ok", "a": [], "ti": []},
+  "C2_TipoDiseño": {"e": "ok", "a": [], "ti": []},
+  "C2_Variables": {"e": "ok", "a": [], "ti": []},
+  "C2_Poblacion": {"e": "ok", "a": [], "ti": []},
+  "C2_Instrumentos": {"e": "ok", "a": [], "ti": []},
+  "C2_AnalisisEtica": {"e": "ok", "a": [], "ti": []}
+}
+`;
 
-  setTimeout(function(){
-    res.innerHTML = "";
+  try {
+    const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] })
+    });
+
+    if(!response.ok) throw new Error("Error en la API. Verifica tu clave.");
+    
+    const data = await response.json();
+    let jsonString = data.candidates[0].content.parts[0].text;
+    
+    // Limpiar posibles errores de formato markdown de la IA
+    jsonString = jsonString.replace(/```json/gi, '').replace(/```/g, '').trim();
+    const resultObj = JSON.parse(jsonString);
+
+    // Calcular puntaje
+    let okCount = 0;
+    Object.values(resultObj).forEach(v => { if(v.e === 'ok' || v.e === 'noaplica') okCount++; });
+    let pct = Math.round((okCount / 13) * 20);
+
+    // Renderizar resultados
+    document.getElementById("LOADER").style.display = "none";
+    var res = document.getElementById("RESULTS_SEC");
+    res.style.display = "flex";
     
     res.innerHTML += '<div class="ch-title">Capítulo I: Introducción</div>';
-    res.innerHTML += dH("Título Detectado", "Crit. 1", r1.a, r1.ti, null, titInput);
-    res.innerHTML += dH("Realidad Problemática", "Crit. 2-3", r2.a, r2.ti, r2.el);
-    res.innerHTML += dH("Preguntas", "Crit. 4", r3.a, r3.ti, null, pg ? pg + (pe.length>0?" (y específicas)":"") : "");
-    res.innerHTML += dH("Justificación", "Crit. 5", r4.a, r4.ti);
-    res.innerHTML += dH("Objetivos", "Crit. 6-7", r5.a, r5.ti, null, og ? og + (oe.length>0?" (y específicos)":"") : "");
-    res.innerHTML += dH("Marco Teórico", "Crit. 8-9", r6.a, r6.ti);
-    res.innerHTML += dH("Hipótesis / Supuesto", "Crit. 10", r7.a, r7.ti);
+    res.innerHTML += dH("Título de Tesis", resultObj.C1_Titulo);
+    res.innerHTML += dH("Realidad Problemática", resultObj.C1_Realidad);
+    res.innerHTML += dH("Preguntas de Investigación", resultObj.C1_Preguntas);
+    res.innerHTML += dH("Justificación", resultObj.C1_Justificacion);
+    res.innerHTML += dH("Objetivos", resultObj.C1_Objetivos);
+    res.innerHTML += dH("Marco Teórico", resultObj.C1_MarcoTeorico);
+    res.innerHTML += dH("Hipótesis / Supuesto", resultObj.C1_Hipotesis);
 
     res.innerHTML += '<div class="ch-title met">Capítulo II: Metodología</div>';
-    res.innerHTML += dH("Formato y Redacción", "Crit. 11", r11.a, r11.ti);
-    res.innerHTML += dH("Tipo, Enfoque y Alcance", "Crit. 12", r12.a, r12.ti);
-    res.innerHTML += dH("Variables / Categorías", "Crit. 13", r13.a, r13.ti);
-    res.innerHTML += dH("Población y Muestra", "Crit. 14", r14.a, r14.ti);
-    res.innerHTML += dH("Instrumentos y Validación", "Crit. 15", r15.a, r15.ti);
-    res.innerHTML += dH("Análisis de Datos y Ética", "Crit. 16", r16.a, r16.ti);
+    res.innerHTML += dH("Formato y Redacción", resultObj.C2_Formato);
+    res.innerHTML += dH("Tipo, Enfoque y Alcance", resultObj.C2_TipoDiseño);
+    res.innerHTML += dH("Variables / Categorías", resultObj.C2_Variables);
+    res.innerHTML += dH("Población y Muestra", resultObj.C2_Poblacion);
+    res.innerHTML += dH("Instrumentos y Validación", resultObj.C2_Instrumentos);
+    res.innerHTML += dH("Análisis de Datos y Ética", resultObj.C2_AnalisisEtica);
     
-    REP = {nom: nom, tit: titInput, fe: new Date().toLocaleDateString("es-PE"), ok: ok, total: vs.length, e: S.e};
-    res.innerHTML += rH(REP);
-  }, 600);
-}
+    // Tarjeta de nota final
+    var s = pct >= 14 ? {c:"sem-v",t:"Apto para revisión docente"} : pct >= 10 ? {c:"sem-a",t:"Requiere correcciones"} : {c:"sem-r",t:"Requiere reestructuración"};
+    var col = pct >= 14 ? "var(--azul)" : pct >= 10 ? "#B45309" : "var(--rojo)";
+    var hRep = `
+      <div class="rep"><div class="rep-top"></div><div class="rep-body">
+      <div class="rep-score"><span class="rep-num" style="color:${col}">${pct}</span><span class="rep-of">/ 20</span></div>
+      <div class="sem ${s.c}"><div class="sem-dot"></div>${s.t}</div>
+      <button class="btn-secondary" onclick="location.reload()">Realizar otra evaluación</button>
+      </div></div>`;
+    res.innerHTML += hRep;
 
-// --- DESCARGA EXCEL ---
-function dXL(){
-  if(!REP)return;
-  var wb=XLSX.utils.book_new();
-  var d=[["EvalúaT PRO · Reporte UCV 2026"],[""],["Estudiante",REP.nom],["Título",REP.tit],["Fecha",REP.fe],[""],["SECCIÓN / CRITERIO","RESULTADO"]];
-  Object.entries(REP.e).forEach(function(e){
-    var formatKey = e[0].replace(/_/g," ").replace("C1 ","Cap. I: ").replace("C2 ","Metodología: ");
-    d.push([formatKey, e[1]==="ok"?"✓ Cumple":e[1]==="noaplica"?"N/A":e[1]==="parcial"?"~ Parcial":"✗ Ausente"]);
-  });
-  var ws=XLSX.utils.aoa_to_sheet(d); ws["!cols"]=[{wch:35},{wch:15}];
-  XLSX.utils.book_append_sheet(wb,ws,"Reporte");
-  XLSX.writeFile(wb,"Evaluacion_Tesis_"+REP.nom.replace(/\s+/g,"_")+".xlsx");
+  } catch (error) {
+    alert("❌ Error al conectar con la Inteligencia Artificial.\n\nVerifica que tu Llave API sea correcta y que tengas conexión a internet.\n\nDetalle técnico: " + error.message);
+    document.getElementById("LOADER").style.display = "none";
+    document.getElementById("UI_CONTAINER").style.display = "flex";
+  }
 }
 </script>
 </body>
