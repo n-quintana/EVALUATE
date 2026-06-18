@@ -442,9 +442,12 @@
             let obs18 = generarFeedback(tieneMontoFinanza, "Financiamiento respaldado.", "Importante", ["Si el proyecto es Autofinanciado, ponga S/. 0.00 en la Tabla 3 e indique el uso de fondos propios."]);
 
             const cronogramaLimpio = cap3.replace(/tabla\s+4/gi, '');
-            const tieneX = /([a-záéíóúñ]+\s+)+.*?\b(x|X)\b\s+.*?\b(x|X)\b/i.test(cronogramaLimpio) || /(\b(x|X)\b\s*){3,}/.test(cronogramaLimpio);
-            const c19 = calcularCriterio(tieneX, tieneX, cap3.includes('tabla 4'));
-            let obs19 = generarFeedback(tieneX, "Cronograma Gantt planificado.", "Importante", ["Añada la Tabla 4 y marque con una letra 'X' las columnas correspondientes a las sesiones."]);
+// Busca al menos 3 letras 'X' aisladas (como marcas de check) de forma rápida y sin congelar la memoria
+const coincidenciasX = cronogramaLimpio.match(/\b[xX]\b/g);
+const tieneX = coincidenciasX !== null && coincidenciasX.length >= 3;
+const c19 = calcularCriterio(tieneX, tieneX, cap3.includes('tabla 4'));
+let obs19 = generarFeedback(tieneX, "Cronograma Gantt planificado.", "Importante", ["Añada la Tabla 4 y marque con una letra 'X' las columnas correspondientes a las sesiones."]);
+        
 
             // --- C20: REFERENCIAS ---
             const lineasRef = refTexto.split('\n').filter(l => l.trim().length > 15);
