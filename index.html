@@ -57,6 +57,16 @@
         .btn-secondary { background-color: var(--gris-claro); border: 1px solid var(--gris-borde); color: var(--gris-texto); flex: 1; }
         .btn-secondary:hover { background-color: #e2e8f0; }
 
+        /* DISCLAIMER BOX */
+        .disclaimer-box { background: #f8fafc; border: 1px solid var(--gris-borde); border-radius: 8px; padding: 20px; margin-bottom: 25px; }
+        .disclaimer-box h3 { color: var(--azul); margin-top: 0; margin-bottom: 12px; font-size: 15px; border-bottom: 1px solid var(--gris-borde); padding-bottom: 8px; }
+        .disclaimer-columns { display: flex; gap: 20px; font-size: 13px; line-height: 1.5; }
+        .disclaimer-col { flex: 1; }
+        .disclaimer-col ul { margin: 8px 0 0 0; padding-left: 20px; }
+        .disclaimer-col.yes ul { color: #2e7d32; }
+        .disclaimer-col.no ul { color: #b3002d; }
+        .disclaimer-col.yes li span, .disclaimer-col.no li span { color: var(--gris-texto); }
+
         /* TABLA DE RESULTADOS Y UX MEJORADA */
         .rubric-table { width: 100%; border-collapse: collapse; margin-top: 20px; font-size: 12px; }
         .rubric-table th, .rubric-table td { border: 1px solid var(--gris-borde); padding: 12px; text-align: left; vertical-align: top; }
@@ -94,7 +104,7 @@
             </div>
             <div>
                 <div class="brand-name">EVALUATE</div>
-                <div class="brand-full">Herramienta de autoevaluación previa para reducir observaciones en proyectos académicos</div>
+                <div class="brand-full">Asistente de verificación de cumplimiento normativo</div>
             </div>
         </div>
     </div>
@@ -109,10 +119,35 @@
             <div class="step" id="step-5-indicator"><div class="step-circle">5</div><div class="step-title">Ref.</div></div>
         </div>
 
-        <!-- PASO 1: DATOS -->
         <div class="form-section active" id="section-1">
             <h2>1. Identificación del Proyecto</h2>
             
+            <div class="disclaimer-box">
+                <h3>Alcances y limitaciones</h3>
+                <div class="disclaimer-columns">
+                    <div class="disclaimer-col yes">
+                        <strong>La herramienta evalúa:</strong>
+                        <ul>
+                            <li><span>Cumplimiento de requisitos normativos.</span></li>
+                            <li><span>Presencia de componentes obligatorios.</span></li>
+                            <li><span>Estructura documental.</span></li>
+                            <li><span>Coherencia básica entre elementos.</span></li>
+                        </ul>
+                    </div>
+                    <div class="disclaimer-col no">
+                        <strong>La herramienta no evalúa:</strong>
+                        <ul>
+                            <li><span>Calidad científica del estudio.</span></li>
+                            <li><span>Originalidad de los aportes.</span></li>
+                            <li><span>Rigor metodológico profundo.</span></li>
+                            <li><span>Pertinencia disciplinar.</span></li>
+                            <li><span>Calidad de redacción académica.</span></li>
+                            <li><span>Criterio experto del docente.</span></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
             <div class="form-group">
                 <label>Nombre del Estudiante</label>
                 <input type="text" id="nombre_estudiante" class="field-input" placeholder="Ej. Noemi Quispe">
@@ -127,7 +162,6 @@
             </div>
         </div>
 
-        <!-- PASO 2: CAPÍTULO I -->
         <div class="form-section" id="section-2">
             <h2>2. Capítulo I: Introducción</h2>
             <div class="form-group"><textarea id="capitulo_1" class="field-input" placeholder="Pegue la prosa del Capítulo I..."></textarea></div>
@@ -160,27 +194,25 @@
             <div class="form-group"><textarea id="referencias_texto" class="field-input" placeholder="Pegue el listado final de referencias bibliográficas..."></textarea></div>
             <div class="btn-container">
                 <button class="btn btn-secondary" onclick="cambiarPaso(4)">← Volver</button>
-                <button class="btn btn-primary" onclick="procesarRubricaLocal()">Generar Autoevaluación 📋</button>
+                <button class="btn btn-primary" onclick="procesarRubricaLocal()">Generar Verificación Normativa 📋</button>
             </div>
         </div>
 
-        <!-- LOADING -->
         <div class="loading-box" id="loading">
             <div class="spinner"></div>
-            <p style="font-weight: bold; color: var(--azul);">Ejecutando auditoría y priorizando tareas...</p>
-            <p style="font-size: 11px; color: var(--gris);">Generando planes de acción estructurados...</p>
+            <p style="font-weight: bold; color: var(--azul);">Ejecutando verificación y estructurando observaciones...</p>
+            <p style="font-size: 11px; color: var(--gris);">Calculando índice de cumplimiento normativo...</p>
         </div>
 
-        <!-- RESULTADOS -->
         <div class="result-container" id="resultado-container">
             <div class="info-header">
                 <table style="width:100%; border:none; font-size:12px;">
                     <tr><td>UNIVERSIDAD CÉSAR VALLEJO</td><td style="text-align:right;"><strong>Código:</strong> PP-G-02.02</td></tr>
-                    <tr><td><strong>RÚBRICA DE EVALUACIÓN</strong></td><td style="text-align:right;"><strong>Versión:</strong> 06</td></tr>
+                    <tr><td><strong>GUÍA DE ELABORACIÓN DE PROYECTO</strong></td><td style="text-align:right;"><strong>Versión:</strong> 06</td></tr>
                 </table>
                 <hr style="border:0; border-top:1px solid var(--gris-borde); margin:10px 0;">
                 <div style="font-size: 13px;" id="datos-tesista"></div>
-                <div style="margin-top:10px; font-size:18px; font-weight:bold; color:var(--rojo);" id="nota-final-container"></div>
+                <div style="margin-top:10px; font-size:18px; font-weight:bold; color:var(--azul);" id="nota-final-container"></div>
             </div>
             
             <table class="rubric-table">
@@ -188,10 +220,9 @@
                     <tr>
                         <th>Componente</th>
                         <th style="text-align:center; width:30px;">N°</th>
-                        <th style="width:30%;">Criterio UCV</th>
-                        <th style="text-align:center; width:90px;">Nivel</th>
-                        <th style="text-align:center; width:50px;">Ptos</th>
-                        <th>Auditoría y Plan de Acción</th>
+                        <th style="width:30%;">Criterio Institucional</th>
+                        <th style="text-align:center; width:90px;">Estado</th>
+                        <th>Verificación Estructural y Plan de Acción</th>
                     </tr>
                 </thead>
                 <tbody id="tabla-rubrica-cuerpo"></tbody>
@@ -243,14 +274,13 @@
     function procesarRubricaLocal() {
         const nombre = document.getElementById('nombre_estudiante').value || "Estudiante Evaluado";
         const titulo = document.getElementById('titulo_tesis').value || "";
-        
         const cap1 = document.getElementById('capitulo_1').value || "";
         const cap2 = document.getElementById('capitulo_2').value || "";
         const cap3 = document.getElementById('capitulo_3').value || "";
         const refTexto = document.getElementById('referencias_texto').value || "";
 
         if (!cap1 || !cap2 || !cap3 || !refTexto) { 
-            alert("Completa todas las pestañas antes de evaluar."); 
+            alert("Completa todas las pestañas antes de generar la verificación."); 
             return; 
         }
 
@@ -384,12 +414,13 @@
             const c20 = calcularCriterio(lineasRef.length >= 30, lineasRef.length >= 15, lineasRef.length > 0);
             let obs20 = generarFeedback(lineasRef.length >= 30, `Contabilizadas ~${lineasRef.length} referencias bibliográficas.`, "Crítico", [
                 "Agregue más fuentes a su listado.",
-                "Recuerde el requisito UCV: Mínimo 30 referencias totales.",
+                "Recuerde el requisito normativo: Mínimo 30 referencias totales.",
                 "70% de ellas deben ser de los últimos 5 años y 30% en inglés."
             ]);
 
             // --- CÁLCULO FINAL ---
             const totalPuntos = c1.puntos + c2.puntos + c3.puntos + c4.puntos + c5.puntos + c6.puntos + c7.puntos + c8.puntos + c9.puntos + c10.puntos + c11.puntos + c12.puntos + c13.puntos + c14.puntos + c15.puntos + c16.puntos + c17.puntos + c18.puntos + c19.puntos + c20.puntos;
+            const porcentajeAdec = ((totalPuntos / 20) * 100).toFixed(1);
 
             const matriz = [
                 { comp: "Título", id: 1, c: "Variables y 20 palabras", o: c1, f: obs1 },
@@ -422,13 +453,12 @@
                     <td style="text-align:center; font-weight:bold;">${r.id}</td>
                     <td>${r.c}</td>
                     <td style="text-align:center;"><span class="badge-status" style="background:${col}; color:white;">${r.o.nivel}</span></td>
-                    <td class="score-cell" style="color:${col};">${r.o.puntos.toFixed(2)}</td>
                     <td>${r.f}</td>
                 </tr>`;
             });
 
-            document.getElementById('datos-tesista').innerHTML = `<strong>Estudiante Evaluado:</strong> ${nombre}`;
-            document.getElementById('nota-final-container').innerHTML = `PUNTAJE ACUMULADO TOTAL: ${totalPuntos.toFixed(2)} / 20.00`;
+            document.getElementById('datos-tesista').innerHTML = `<strong>Estudiante:</strong> ${nombre}`;
+            document.getElementById('nota-final-container').innerHTML = `✅ Índice de Cumplimiento Normativo Estimado: ${totalPuntos.toFixed(2)} / 20.00 <span style="font-size:14px; font-weight:normal; color:var(--gris);">(${porcentajeAdec}%)</span>`;
             document.getElementById('tabla-rubrica-cuerpo').innerHTML = htmlFilas;
             
             document.getElementById('loading').style.display = 'none';
