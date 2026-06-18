@@ -70,7 +70,7 @@
         .disclaimer-col.no ul { color: #b3002d; }
         .disclaimer-col.yes li span, .disclaimer-col.no li span { color: var(--gris-texto); }
 
-        /* RESUMEN EJECUTIVO (UX MEJORADA) */
+        /* RESUMEN EJECUTIVO */
         .executive-summary { background: var(--blanco); border: 1px solid var(--gris-borde); border-radius: 12px; padding: 20px; margin-bottom: 25px; box-shadow: 0 4px 10px rgba(0,0,0,0.03); }
         .executive-summary h3 { color: var(--azul); margin-top: 0; margin-bottom: 15px; font-size: 16px; border-bottom: 1px solid var(--gris-borde); padding-bottom: 10px; }
         .summary-grid { display: grid; grid-template-columns: 1fr 1fr 1.5fr; gap: 15px; }
@@ -143,6 +143,7 @@
             <div class="step" id="step-5-indicator"><div class="step-circle">5</div><div class="step-title">Ref.</div></div>
         </div>
 
+        <!-- PASO 1: DATOS -->
         <div class="form-section active" id="section-1">
             <h2>1. Identificación del Proyecto</h2>
             
@@ -191,6 +192,7 @@
             </div>
         </div>
 
+        <!-- PASO 2: CAPÍTULO I -->
         <div class="form-section" id="section-2">
             <h2>2. Capítulo I: Introducción</h2>
             <div class="form-group"><textarea id="capitulo_1" class="field-input" placeholder="Pegue la prosa del Capítulo I..."></textarea></div>
@@ -230,14 +232,20 @@
             </div>
         </div>
 
+        <!-- LOADING -->
         <div class="loading-box" id="loading">
             <div class="spinner"></div>
             <p style="font-weight: bold; color: var(--azul);">Ejecutando verificación y estructurando observaciones...</p>
-            <p style="font-size: 11px; color: var(--gris);">Calculando índice de cumplimiento de las secciones ingresadas...</p>
+            <p style="font-size: 11px; color: var(--gris);">Calculando índice de cumplimiento normativo...</p>
         </div>
 
+        <!-- RESULTADOS -->
         <div class="result-container" id="resultado-container">
             
+            <div class="info-header" style="background: var(--blanco); border: 1px solid var(--gris-borde); border-radius: 12px; padding: 15px; margin-bottom: 20px;">
+                <div style="font-size: 14px; color: var(--gris-texto);" id="datos-tesista"></div>
+            </div>
+
             <div id="resumen-ejecutivo-container"></div>
             
             <h3 style="color: var(--azul); font-size: 15px; margin-bottom: 10px; border-bottom: 1px solid var(--gris-borde); padding-bottom: 5px;">DETALLE DEL DIAGNÓSTICO ESTRUCTURAL</h3>
@@ -335,7 +343,6 @@
         document.getElementById('loading').style.display = 'block';
         document.getElementById('resultado-container').style.display = 'none';
 
-        // Procesamiento limpio (Sin Try..Catch para evitar congelamientos si no hay errores)
         setTimeout(() => {
             
             // --- EVALUACIÓN MODULAR DE TÍTULO ---
@@ -531,6 +538,7 @@
                 ? accionesPrioritarias.map(acc => `<li>${acc}</li>`).join('')
                 : `<li><span style="color:#2e7d32; font-weight:600;">✔ ¡Excelente trabajo estructural! Las secciones analizadas cumplen la normativa.</span></li>`;
 
+            // Construir el Resumen Ejecutivo
             const htmlResumen = `
                 <div class="executive-summary">
                     <h3>Resumen Ejecutivo del Diagnóstico</h3>
@@ -572,7 +580,7 @@
                 </tr>`;
             });
 
-            document.getElementById('datos-tesista').innerHTML = `<strong>Tesista Evaluado:</strong> ${nombre} &nbsp; | &nbsp; <strong>Criterios Analizados:</strong> ${maxPuntosPosibles} de 20 disponibles.`;
+            document.getElementById('datos-tesista').innerHTML = `<strong>Tesista Evaluado:</strong> <span style="color:var(--azul); font-weight:bold;">${nombre}</span> &nbsp; | &nbsp; <strong>Criterios Analizados:</strong> ${maxPuntosPosibles} de 20 normativos.`;
             document.getElementById('tabla-rubrica-cuerpo').innerHTML = htmlFilas;
             
             document.getElementById('loading').style.display = 'none';
