@@ -3,27 +3,19 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
-<title>EvalúaT · Análisis Integral · UCV 2026</title>
+<title>EvalúaT · Escáner Integral · UCV 2026</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap');
 :root{
-  --rojo:#C8102E;
-  --rojo-light:#FDECEA;
-  --rojo-mid:#F5A3AE;
-  --rojo-dark:#A00D24;
-  --azul:#003087;
-  --azul-light:#E8EDF5;
-  --azul-mid:#7A9CC4;
-  --gris:#6B7280;
-  --gris-claro:#F5F6F7;
-  --gris-borde:#E4E6E8;
-  --gris-texto:#374151;
+  --rojo:#C8102E; --rojo-light:#FDECEA; --rojo-mid:#F5A3AE; --rojo-dark:#A00D24;
+  --azul:#003087; --azul-light:#E8EDF5; --azul-mid:#7A9CC4;
+  --gris:#6B7280; --gris-claro:#F5F6F7; --gris-borde:#E4E6E8; --gris-texto:#374151;
   --blanco:#FFFFFF;
 }
 *{box-sizing:border-box;margin:0;padding:0;}
 body{background:var(--gris-claro);font-family:'Inter',sans-serif;color:var(--gris-texto);min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:20px 16px;}
-.app{width:100%;max-width:700px;display:flex;flex-direction:column;gap:16px;}
+.app{width:100%;max-width:750px;display:flex;flex-direction:column;gap:16px;}
 
 /* HEADER */
 .header{background:var(--blanco);border:0.5px solid var(--gris-borde);border-radius:16px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,0.03);}
@@ -36,40 +28,40 @@ body{background:var(--gris-claro);font-family:'Inter',sans-serif;color:var(--gri
 .brand-full{font-size:11px;color:var(--gris);margin-top:3px;line-height:1.4;}
 .badge{margin-left:auto;background:var(--rojo-light);color:var(--rojo);font-size:10px;padding:4px 10px;border-radius:99px;font-weight:600;white-space:nowrap;border:0.5px solid var(--rojo-mid);}
 
-/* NOTICE */
+/* NOTA */
 .notice{background:var(--azul-light);border:0.5px solid var(--azul-mid);border-left:3px solid var(--azul);border-radius:12px;padding:12px 16px;font-size:13px;color:var(--gris-texto);line-height:1.5;display:flex;gap:10px;align-items:flex-start;}
 .notice svg{width:18px;height:18px;stroke:var(--azul);flex-shrink:0;margin-top:2px;}
-.notice strong{color:var(--azul);font-weight:600;}
 
-/* INPUT AREA */
-.input-section{background:var(--blanco);border:0.5px solid var(--gris-borde);border-radius:16px;padding:20px;display:flex;flex-direction:column;gap:12px;box-shadow:0 2px 8px rgba(0,0,0,0.03);}
+/* FORMULARIO */
+.input-section{background:var(--blanco);border:0.5px solid var(--gris-borde);border-radius:16px;padding:20px;display:flex;flex-direction:column;gap:14px;box-shadow:0 2px 8px rgba(0,0,0,0.03);}
 .input-label{font-size:14px;font-weight:600;color:var(--azul);display:flex;justify-content:space-between;align-items:baseline;}
 .input-label span{font-size:12px;font-weight:400;color:var(--gris);}
-.ta-wrap{display:flex;flex-direction:column;gap:8px;}
-textarea{width:100%;height:350px;border-radius:10px;border:1px solid var(--gris-borde);background:var(--gris-claro);color:var(--gris-texto);padding:14px;font-family:'Inter',sans-serif;font-size:13px;line-height:1.6;resize:vertical;outline:none;}
-textarea:focus{border-color:var(--rojo-mid);background:var(--blanco);}
+.ta-wrap{display:flex;flex-direction:column;gap:10px;}
+.field-input{width:100%;padding:14px;border-radius:10px;border:1px solid var(--gris-borde);background:var(--gris-claro);font-family:'Inter',sans-serif;font-size:13px;outline:none;color:var(--gris-texto);}
+.field-input:focus{border-color:var(--rojo-mid);background:var(--blanco);}
+textarea.field-input{height:350px;resize:vertical;line-height:1.6;}
 .btn-submit{width:100%;padding:14px;border-radius:10px;background:var(--rojo);border:none;color:#fff;font-size:14px;font-family:'Inter',sans-serif;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;transition:background 0.2s;}
 .btn-submit:hover{background:var(--rojo-dark);}
 .btn-submit svg{width:18px;height:18px;stroke:#fff;fill:none;stroke-width:2;}
 
-/* RESULTS */
+/* RESULTADOS */
 #RESULTS_SEC{display:none;flex-direction:column;gap:14px;}
 .dc{background:var(--blanco);border:0.5px solid var(--gris-borde);border-radius:14px;padding:16px 20px;box-shadow:0 2px 6px rgba(0,0,0,0.02);}
 .dlbl{font-size:11px;font-weight:600;color:var(--azul);text-transform:uppercase;letter-spacing:.7px;margin-bottom:12px;border-bottom:1px solid var(--gris-borde);padding-bottom:8px;}
-.ex-box{background:var(--gris-claro);border:1px dashed var(--gris-borde);border-radius:8px;padding:10px;font-size:12px;color:var(--gris-texto);margin-bottom:12px;font-style:italic;}
-.dg{display:grid;grid-template-columns:repeat(auto-fit, minmax(140px, 1fr));gap:8px;margin-bottom:12px;}
-.di{background:var(--gris-claro);border:0.5px solid var(--gris-borde);border-radius:8px;padding:8px 12px;display:flex;flex-direction:column;gap:4px;}
+.ex-box{background:var(--gris-claro);border:1px dashed var(--gris-borde);border-radius:8px;padding:12px;font-size:13px;color:var(--gris-texto);margin-bottom:12px;font-style:italic;line-height:1.5;}
+.dg{display:grid;grid-template-columns:repeat(auto-fit, minmax(130px, 1fr));gap:8px;margin-bottom:12px;}
+.di{background:var(--gris-claro);border:0.5px solid var(--gris-borde);border-radius:8px;padding:10px 12px;display:flex;flex-direction:column;gap:4px;}
 .dk{font-size:10px;color:var(--gris);text-transform:uppercase;letter-spacing:.4px;}
-.dv-ok{font-size:12px;font-weight:600;color:var(--azul);}
-.dv-warn{font-size:12px;font-weight:600;color:#B45309;}
-.dv-err{font-size:12px;font-weight:600;color:var(--rojo);}
-.dv-na{font-size:12px;font-weight:600;color:var(--gris);}
+.dv-ok{font-size:13px;font-weight:600;color:var(--azul);}
+.dv-warn{font-size:13px;font-weight:600;color:#B45309;}
+.dv-err{font-size:13px;font-weight:600;color:var(--rojo);}
+.dv-na{font-size:13px;font-weight:600;color:var(--gris);}
 .alr{display:flex;gap:10px;align-items:flex-start;font-size:13px;color:var(--rojo-dark);margin-bottom:8px;line-height:1.5;background:var(--rojo-light);border:0.5px solid var(--rojo-mid);border-radius:8px;padding:10px 12px;}
 .alr svg{width:16px;height:16px;stroke:var(--rojo);flex-shrink:0;margin-top:2px;fill:none;stroke-width:2;}
 .tip{display:flex;gap:10px;align-items:flex-start;font-size:13px;color:var(--gris-texto);margin-bottom:6px;line-height:1.5;padding:6px 0;}
 .tip svg{width:16px;height:16px;stroke:var(--azul);flex-shrink:0;margin-top:2px;fill:none;stroke-width:2;}
 
-/* REPORTE FINAL */
+/* REPORTE */
 .rep{background:var(--blanco);border:0.5px solid var(--gris-borde);border-radius:16px;overflow:hidden;box-shadow:0 4px 12px rgba(0,0,0,0.05);}
 .rep-top{height:5px;background:var(--rojo);}
 .rep-body{padding:24px;display:flex;flex-direction:column;gap:16px;}
@@ -81,11 +73,7 @@ textarea:focus{border-color:var(--rojo-mid);background:var(--blanco);}
 .sem-a{background:#FFF8E1;color:#B45309;border:0.5px solid #FDE68A;}
 .sem-r{background:var(--rojo-light);color:var(--rojo);border:0.5px solid var(--rojo-mid);}
 .sem-dot{width:12px;height:12px;border-radius:50%;background:currentColor;flex-shrink:0;}
-.nota{background:var(--azul-light);border:0.5px solid var(--azul-mid);border-radius:10px;padding:12px 16px;font-size:13px;color:var(--gris-texto);line-height:1.5;}
-.btn-xl{width:100%;padding:14px;border-radius:10px;background:var(--rojo);border:none;color:#fff;font-size:14px;font-family:'Inter',sans-serif;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;transition:background 0.2s;}
-.btn-xl:hover{background:var(--rojo-dark);}
-.btn-xl svg{width:18px;height:18px;stroke:#fff;fill:none;stroke-width:2;}
-.btn-sec{width:100%;padding:12px;border-radius:10px;background:var(--gris-claro);border:0.5px solid var(--gris-borde);color:var(--gris-texto);font-size:14px;font-family:'Inter',sans-serif;font-weight:500;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;}
+.btn-sec{width:100%;padding:12px;border-radius:10px;background:var(--gris-claro);border:0.5px solid var(--gris-borde);color:var(--gris-texto);font-size:14px;font-family:'Inter',sans-serif;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;}
 .btn-sec svg{width:16px;height:16px;stroke:var(--gris);fill:none;stroke-width:2;}
 .ft{font-size:11px;color:var(--gris);text-align:center;margin-top:10px;}
 </style>
@@ -100,28 +88,26 @@ textarea:focus{border-color:var(--rojo-mid);background:var(--blanco);}
       </div>
       <div>
         <div class="brand-name">Evalú<span>aT</span> Integral</div>
-        <div class="brand-full">Escáner automático del Capítulo I de Proyecto de tesis<br>Basada en la guía UCV 2026 · Universidad César Vallejo</div>
+        <div class="brand-full">Escáner automático del Capítulo I de Proyecto de tesis<br>Basada en la guía UCV 2026</div>
       </div>
-      <div class="badge">9 criterios</div>
+      <div class="badge">Escáner 1 paso</div>
     </div>
   </div>
 
   <div class="notice">
     <svg viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
-    <span><strong>Evaluación en 1 clic:</strong> Pega aquí todo el texto de tu Capítulo I. El sistema extraerá automáticamente tu título, preguntas, objetivos y evaluará la realidad problemática, marco teórico e hipótesis.</span>
+    <span><strong>Instrucciones:</strong> Pega aquí todo el texto de tu Capítulo I (desde el título hasta la hipótesis). El sistema extraerá y evaluará todo automáticamente en un solo clic.</span>
   </div>
 
   <div class="input-section" id="INPUT_SEC">
-    <div class="input-label">
-      Contenido de tu Capítulo I <span>(Sin carátula ni índices)</span>
-    </div>
+    <div class="input-label">Documento Completo <span>(Sin carátula ni índices)</span></div>
     <div class="ta-wrap">
-      <input type="text" id="INP_NOM" placeholder="Nombre del estudiante..." style="padding:12px;border-radius:10px;border:1px solid var(--gris-borde);background:var(--gris-claro);font-family:Inter;font-size:13px;outline:none;" />
-      <textarea id="DOC_TEXT" placeholder="Pega todo tu texto aquí (Ctrl+V)... Asegúrate de incluir desde el título hasta la hipótesis/supuesto."></textarea>
+      <input type="text" id="INP_NOM" class="field-input" placeholder="Ingresa tu nombre completo aquí..." />
+      <textarea id="DOC_TEXT" class="field-input" placeholder="Pega todo tu Capítulo I aquí (Ctrl+V)..."></textarea>
     </div>
-    <button class="btn-submit" onclick="evaluarCompleto()">
+    <button class="btn-submit" onclick="window.evaluarCompleto()">
       <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/><line x1="11" y1="8" x2="11" y2="14"/><line x1="8" y1="11" x2="14" y2="11"/></svg>
-      Analizar Documento Completo
+      Escanear Documento Completo
     </button>
   </div>
 
@@ -131,29 +117,173 @@ textarea:focus{border-color:var(--rojo-mid);background:var(--blanco);}
 </div>
 
 <script>
-// VARIABLES GLOBALES Y ESTADO
+// --- LOGICA DEL ESCÁNER ---
 var S = { e: {}, q: false };
 var REP = null;
 
-// UTILIDADES (Las originales de tu código)
-function seg(t){return t.split(/\n{2,}|\n(?=[A-ZÁÉÍÓÚ])/).map(p=>p.trim()).filter(p=>p.length>30);}
-function tok(p){var sw=new Set("el la los las un una de del al en con por para que se es son esta este y o pero sin más como cuando donde si no lo le su sus hay fue han ha también así esto entre sobre ante bajo hasta desde ya muy todo todos toda cada otro otra mismo misma".split(" "));return p.toLowerCase().replace(/[.,;:!?¡¿()]/g," ").split(/\s+/).filter(w=>w.length>4&&!sw.has(w));}
-function sim(a,b){if(!a.length||!b.length)return 0;var sa=new Set(a);var c=b.filter(x=>sa.has(x)||[...sa].some(y=>y.length>5&&(x.includes(y.slice(0,5))||y.includes(x.slice(0,5)))));return c.length/Math.min(a.length,b.length);}
-function xe(t){return(t||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/\n/g,"<br>");}
-function nc(t){return["porque","debido a","ya que","puesto que","dado que","por ello","por tanto","en consecuencia","por lo tanto","sin embargo","no obstante","aunque","además","asimismo","también","igualmente","por otro lado","en primer lugar","finalmente","por ejemplo","es decir"].filter(x=>t.toLowerCase().includes(x)).length;}
-function ods(t){var L=t.toLowerCase();return /\bods\b/.test(L)||/objetivo[s]?\s+de\s+desarrollo\s+sostenible/.test(L)||/agenda\s+2030/.test(L)||/ods\s*\d/.test(L)||/objetivo\s+\d/.test(L)||/desarrollo\s+sostenible/.test(L)||["educación de calidad","trabajo decente","industria innovación"].some(v=>L.includes(v));}
+// Funciones de utilidad
+function xe(t){return (t||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/\n/g,"<br>");}
+function ods(t){var L=t.toLowerCase();return /\bods\b/.test(L)||/objetivo[s]?\s+de\s+desarrollo\s+sostenible/.test(L)||/agenda\s+2030/.test(L)||/ods\s*\d/.test(L)||/desarrollo\s+sostenible/.test(L);}
+function nc(t){return ["porque","debido a","ya que","puesto que","dado que","por ello","por tanto","en consecuencia","sin embargo","no obstante","además","asimismo","también","por otro lado"].filter(x=>t.toLowerCase().includes(x)).length;}
 
-// DICCIONARIOS DE UNIDADES DE ANÁLISIS
-var UA_P=["estudiantes","jóvenes","jovenes","usuarios","trabajadores","docentes","consumidores","pobladores","comunidad","empresa","institución","personas","adultos","adolescentes","niños","padres","maestros","profesores","funcionarios","periodistas","influencers","seguidores","fans","público","espectadores","lectores","oyentes","ciudadanos","egresados","empleados","clientes","pacientes","directivos"];
-var UA_C=["película","pelicula","películas","filme","film","saga","serie","series","episodio","temporada","novela","relato","cuento","obra","libro","libros","texto","textos","discurso","spot","anuncio","publicidad","campaña","publicación","post","tweet","imagen","fotografía","video","meme","sticker","noticia","reportaje","editorial","artículo","crónica","webcomic","manga","anime","podcast","programa","contenido","mensaje","narrativa","corpus","colección","archivo","caso","escena","fragmento","capítulo","perfil","cuenta","página","portal","plataforma"];
-var UA_I=["institución","organización","marca","partido","gobierno","municipio","ministerio","organismo","asociación","fundación","ong","cooperativa","universidad","escuela","colegio","hospital","agencia","medio","diario","canal","radio","compañía"];
-function ua(t){var L=t.toLowerCase();if(UA_P.some(v=>L.includes(v)))return"personas";if(UA_C.some(v=>L.includes(v)))return"objeto cultural/textual";if(UA_I.some(v=>L.includes(v)))return"institución u organización";return null;}
+var UA_P=["estudiantes","jóvenes","usuarios","trabajadores","docentes","comunidad","personas","público","ciudadanos","clientes"];
+var UA_C=["película","serie","libro","texto","discurso","spot","campaña","post","tweet","imagen","video","meme","noticia","artículo","podcast","mensaje","narrativa"];
+var UA_I=["institución","organización","marca","gobierno","ministerio","organismo","universidad","empresa"];
+function ua(t){var L=t.toLowerCase();if(UA_P.some(v=>L.includes(v)))return "personas";if(UA_C.some(v=>L.includes(v)))return "objeto cultural";if(UA_I.some(v=>L.includes(v)))return "institución";return null;}
 function hasUA(t){return ua(t)!==null;}
 
-// FUNCIONES DE VALIDACIÓN ADAPTADAS
+// Funciones de Evaluación (Simplificadas y adaptadas para extracción)
 function vTit(t){
   if(!t) return {a:["No se detectó un título válido."], ti:[], e:"ausente"};
-  var w=t.trim().split(/\s+/).length,a=[],ti=[];
-  if(w>20)a.push("El título extraído tiene "+w+" palabras. El máximo recomendado es 20 (Criterio 1).");else ti.push("Extensión de título correcta: "+w+" palabras.");
-  var L=t.toLowerCase();
-  var hasV=["relación","influencia
+  var w=t.trim().split(/\s+/).length, a=[], ti=[];
+  if(w>20) a.push("El título extraído tiene "+w+" palabras. El máximo es 20 (Criterio 1)."); else ti.push("Extensión correcta: "+w+" palabras.");
+  if(!["relación","influencia","efecto","impacto","percepción","análisis","comunicación","identidad","representación","narrativa","semiótic","significado"].some(v=>t.toLowerCase().includes(v))) a.push("El título no muestra claramente la variable central."); else ti.push("Variables detectadas en el título.");
+  var u=ua(t); if(!u) a.push("No queda clara la unidad de análisis (quién o qué se estudia)."); else ti.push("Unidad de análisis: "+u+".");
+  if(["semiótic","narrativ","identidad","representación","cualitativo"].some(v=>t.toLowerCase().includes(v))) S.q=true;
+  return {a,ti,e:a.length===0?"ok":a.length===1?"parcial":"ausente"};
+}
+
+function vReal(t){
+  var a=[], ti=[], L=t.toLowerCase();
+  var hM=["mundial","global","internacional","latinoamérica"].some(w=>L.includes(w));
+  var hN=["perú","nacional","lima","país"].some(w=>L.includes(w));
+  if(!hM) a.push("Falta contexto internacional explícito."); else ti.push("Contexto internacional presente.");
+  if(!hN) a.push("Falta contexto nacional explícito."); else ti.push("Contexto nacional presente.");
+  if(!ods(t)) a.push("Falta vincular el problema con un ODS."); else ti.push("ODS identificado.");
+  var hE=/\d%/.test(t)||["según","informe","estadística","estudio","datos","cifra"].some(v=>L.includes(v));
+  if(!hE) a.push("Faltan datos o cifras concretas."); else ti.push("Evidencia o fuentes detectadas.");
+  var el={ctx_internacional:hM?"ok":"ausente", ctx_nacional:hN?"ok":"ausente", ODS:ods(t)?"ok":"ausente", evidencia:hE?"ok":"ausente"};
+  return {a,ti,el, e:a.length<=1?"ok":"parcial"};
+}
+
+function vPreguntas(pg, pe){
+  var a=[], ti=[];
+  if(!pg) { a.push("No se detectó una pregunta general con signos '¿?'."); return {a,ti,e:"ausente"}; }
+  ti.push("Pregunta general extraída correctamente.");
+  if(pe.length<3) a.push("Se encontraron solo "+pe.length+" preguntas específicas. Se recomiendan 3."); else ti.push("Preguntas específicas encontradas ("+pe.length+").");
+  return {a,ti,e:a.length===0?"ok":"parcial"};
+}
+
+function vJust(t){
+  var L=t.toLowerCase(), a=[], ti=[];
+  var pr=["teórica","práctica","social","conocimiento","solución","comunidad"].filter(x=>L.includes(x));
+  if(pr.length===0) { a.push("No se detectan palabras clave de justificación (teórica, práctica, social)."); return {a,ti,e:"ausente"}; }
+  ti.push("Indicios de justificación detectados.");
+  return {a,ti,e:"ok"};
+}
+
+function vObjetivos(og, oe){
+  var a=[], ti=[];
+  if(!og) { a.push("No se detectó un objetivo general iniciando con verbo en infinitivo."); return {a,ti,e:"ausente"}; }
+  ti.push("Objetivo general extraído.");
+  if(oe.length<3) a.push("Se extrajeron "+oe.length+" objetivos específicos. Se recomiendan 3 a 5."); else ti.push("Objetivos específicos encontrados ("+oe.length+").");
+  return {a,ti,e:a.length===0?"ok":"parcial"};
+}
+
+function vMarco(t){
+  var L=t.toLowerCase(), a=[], ti=[];
+  if(!["se define","se entiende","según","concepto"].some(v=>L.includes(v))) a.push("No se detectan definiciones conceptuales claras."); else ti.push("Definiciones conceptuales halladas.");
+  if(!["teoría","modelo","enfoque"].some(v=>L.includes(v))) a.push("No se identifican términos de fundamentación teórica."); else ti.push("Teorías/enfoques identificados.");
+  var r=(t.match(/(20[1-2][0-9])/g)||[]).filter(y=>parseInt(y)>=2019&&parseInt(y)<=2026);
+  if(r.length===0) a.push("Sin citas recientes (2019-2026)."); else ti.push(r.length+" citas recientes extraídas.");
+  return {a,ti,e:a.length===0?"ok":"parcial"};
+}
+
+function vHip(t){
+  var L=t.toLowerCase(), a=[], ti=[];
+  var sinH=["no aplica","cualitativo","supuesto"].some(v=>L.includes(v));
+  if(sinH && S.q) { ti.push("Ausencia de hipótesis justificada (estudio cualitativo)."); return {a,ti,e:"noaplica"}; }
+  if(!["hipótesis","hipotesis","supuesto"].some(v=>L.includes(v))) { a.push("Falta mencionar la hipótesis o supuesto."); return {a,ti,e:"ausente"}; }
+  ti.push("Hipótesis o supuesto detectado.");
+  return {a,ti,e:"ok"};
+}
+
+// Render UI
+function dH(lb, al, ti, el, ext){
+  var h='<div class="dc"><div class="dlbl">'+lb+'</div>';
+  if(ext) h+='<div class="ex-box">"'+xe(ext)+'"</div>';
+  if(el){h+='<div class="dg">';Object.entries(el).forEach(function(e){var cls=e[1]==="ok"?"dv-ok":e[1]==="noaplica"?"dv-na":e[1]==="parcial"?"dv-warn":"dv-err";var ic=e[1]==="ok"?"✓":e[1]==="noaplica"?"n/a":e[1]==="parcial"?"~":"✗";h+='<div class="di"><div class="dk">'+e[0].replace(/_/g," ")+'</div><div class="'+cls+'">'+ic+'</div></div>';});h+='</div>';}
+  al.forEach(function(x){h+='<div class="alr"><svg viewBox="0 0 24 24"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>'+xe(x)+'</div>';});
+  ti.forEach(function(x){h+='<div class="tip"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>'+xe(x)+'</div>';});
+  h+='</div>';return h;
+}
+
+function rH(r){
+  var s=r.pt>=7?{c:"sem-v",t:"Apto para revisión docente"}:r.pt>=5?{c:"sem-a",t:"Revisar observaciones marcadas"}:{c:"sem-r",t:"Requiere trabajo estructural"};
+  var col=r.pt>=7?"var(--azul)":r.pt>=5?"#B45309":"var(--rojo)";
+  var h='<div class="rep"><div class="rep-top"></div><div class="rep-body">';
+  h+='<div class="rep-score"><span class="rep-num" style="color:'+col+'">'+r.pt+'</span><span class="rep-of">/ 10 puntos</span></div>';
+  h+='<div class="sem '+s.c+'"><div class="sem-dot"></div>'+s.t+'</div>';
+  h+='<button class="btn-submit" id="BX" onclick="window.dXL()"><svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg> Descargar Reporte (.xlsx)</button>';
+  h+='<button class="btn-sec" onclick="location.reload()">Nuevo escaneo</button>';
+  h+='</div></div>';return h;
+}
+
+// Función expuesta globalmente al botón
+window.evaluarCompleto = function() {
+  var nom = document.getElementById("INP_NOM").value.trim() || "Estudiante";
+  var t = document.getElementById("DOC_TEXT").value.trim();
+  if(t.length < 200){ alert("El texto es muy corto. Pega tu Capítulo I completo."); return; }
+
+  document.getElementById("INPUT_SEC").style.display = "none";
+  var res = document.getElementById("RESULTS_SEC");
+  res.style.display = "flex";
+  res.innerHTML = "<div style='text-align:center; padding: 40px; color:var(--azul); font-weight:600;'>Analizando estructura completa...</div>";
+
+  // Extracciones
+  var lines = t.split('\n').map(x=>x.trim()).filter(x=>x.length>5);
+  var tit = lines.find(l => !l.toLowerCase().includes("capitulo") && !l.toLowerCase().includes("introducción")) || lines[0];
+  
+  var pregsMatches = t.match(/¿[^?]+\?/g) || [];
+  var pg = pregsMatches[0] || "";
+  var pe = pregsMatches.slice(1);
+
+  var objVerbs = ["analizar","describir","identificar","determinar","establecer","evaluar","comparar","examinar"];
+  var objRegex = new RegExp(`^[-•*\\d.]*\\s*(${objVerbs.join('|')})\\b`, 'i');
+  var objs = lines.filter(l => objRegex.test(l));
+  var og = objs[0] || "";
+  var oe = objs.slice(1);
+
+  // Evaluaciones
+  var r1 = vTit(tit);
+  var r2 = vReal(t);
+  var r3 = vPreguntas(pg, pe);
+  var r4 = vJust(t);
+  var r5 = vObjetivos(og, oe);
+  var r6 = vMarco(t);
+  var r7 = vHip(t);
+
+  S.e = { "Título": r1.e, "Realidad_Problemática": r2.e, "Preguntas": r3.e, "Justificación": r4.e, "Objetivos": r5.e, "Marco_Teórico": r6.e, "Hipótesis": r7.e };
+
+  var vs = Object.values(S.e);
+  var ok = vs.filter(v => v === "ok" || v === "noaplica").length;
+  var pt = Math.round((ok / vs.length) * 10);
+
+  setTimeout(function(){
+    res.innerHTML = "";
+    res.innerHTML += dH("1. Título Detectado", r1.a, r1.ti, null, tit);
+    res.innerHTML += dH("2. Realidad Problemática", r2.a, r2.ti, r2.el);
+    res.innerHTML += dH("3. Preguntas de Investigación", r3.a, r3.ti, null, pg ? pg + (pe.length>0?" (y específicas)":"") : "");
+    res.innerHTML += dH("4. Justificación", r4.a, r4.ti);
+    res.innerHTML += dH("5. Objetivos de Investigación", r5.a, r5.ti, null, og ? og + (oe.length>0?" (y específicos)":"") : "");
+    res.innerHTML += dH("6. Marco Teórico", r6.a, r6.ti);
+    res.innerHTML += dH("7. Hipótesis / Supuesto", r7.a, r7.ti);
+    
+    REP = {nom: nom, tit: tit, fe: new Date().toLocaleDateString("es-PE"), pt: pt, e: S.e};
+    res.innerHTML += rH(REP);
+  }, 600);
+};
+
+// Descarga Excel
+window.dXL = function(){
+  if(!REP)return;
+  var wb=XLSX.utils.book_new();
+  var d=[["Reporte de Escaneo EvalúaT"],[""],["Estudiante",REP.nom],["Puntaje",REP.pt+"/10"],[""],["CRITERIO","RESULTADO"]];
+  Object.entries(REP.e).forEach(function(e){d.push([e[0].replace(/_/g," "), e[1]]);});
+  var ws=XLSX.utils.aoa_to_sheet(d); ws["!cols"]=[{wch:30},{wch:20}];
+  XLSX.utils.book_append_sheet(wb,ws,"Reporte");
+  XLSX.writeFile(wb,"Reporte_"+REP.nom.replace(/\s+/g,"_")+".xlsx");
+};
+</script>
+</body>
+</html>
