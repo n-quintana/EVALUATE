@@ -129,7 +129,7 @@ textarea.field-input{height:250px;resize:vertical;line-height:1.6;}
       <textarea id="DOC_TEXT_C2" class="field-input" placeholder="Pega todo el texto de tu Metodología aquí..."></textarea>
     </div>
 
-    <button class="btn-submit" onclick="window.evaluarCompleto()">
+    <button class="btn-submit" onclick="ejecutarAnalisis()">
       <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/><line x1="11" y1="8" x2="11" y2="14"/><line x1="8" y1="11" x2="14" y2="11"/></svg>
       Ejecutar Escáner Completo
     </button>
@@ -144,7 +144,6 @@ textarea.field-input{height:250px;resize:vertical;line-height:1.6;}
 var S = { e: {}, q: false };
 var REP = null;
 
-// UTILIDADES GENERALES
 function xe(t){return (t||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/\n/g,"<br>");}
 function ods(t){var L=t.toLowerCase();return /\bods\b/.test(L)||/objetivo[s]?\s+de\s+desarrollo\s+sostenible/.test(L)||/agenda\s+2030/.test(L)||/ods\s*\d/.test(L)||/desarrollo\s+sostenible/.test(L);}
 var UA_P=["estudiantes","jóvenes","usuarios","trabajadores","docentes","comunidad","personas","público","ciudadanos","clientes"];
@@ -152,9 +151,7 @@ var UA_C=["película","serie","libro","texto","discurso","spot","campaña","post
 var UA_I=["institución","organización","marca","gobierno","ministerio","organismo","universidad","empresa"];
 function ua(t){var L=t.toLowerCase();if(UA_P.some(v=>L.includes(v)))return "personas";if(UA_C.some(v=>L.includes(v)))return "objeto cultural";if(UA_I.some(v=>L.includes(v)))return "institución";return null;}
 
-// ------------------------------------------------------------------
-// VALIDADORES CAPITULO 1 (Criterios 1 al 10)
-// ------------------------------------------------------------------
+// --- VALIDADORES CAP 1 ---
 function vTit(t){
   if(!t) return {a:["Falta título."], ti:[], e:"ausente"};
   var w=t.trim().split(/\s+/).length, a=[], ti=[];
@@ -163,7 +160,6 @@ function vTit(t){
   if(["semiótic","narrativ","identidad","representación","cualitativo"].some(v=>t.toLowerCase().includes(v))) S.q=true;
   return {a,ti,e:a.length===0?"ok":a.length===1?"parcial":"ausente"};
 }
-
 function vReal(t){
   var a=[], ti=[], L=t.toLowerCase();
   var hM=["mundial","global","internacional","latinoamérica"].some(w=>L.includes(w));
@@ -176,7 +172,6 @@ function vReal(t){
   var el={ctx_internac:hM?"ok":"ausente", ctx_nacional:hN?"ok":"ausente", ODS:ods(t)?"ok":"ausente", evidencia:hE?"ok":"ausente"};
   return {a,ti,el, e:a.length<=1?"ok":"parcial"};
 }
-
 function vPreguntas(pg, pe){
   var a=[], ti=[];
   if(!pg) { a.push("Sin pregunta general."); return {a,ti,e:"ausente"}; }
@@ -184,7 +179,6 @@ function vPreguntas(pg, pe){
   if(pe.length<3) a.push("Solo "+pe.length+" preguntas específicas (Mínimo 3)."); else ti.push(pe.length+" preguntas específicas.");
   return {a,ti,e:a.length===0?"ok":"parcial"};
 }
-
 function vJust(t){
   var L=t.toLowerCase(), a=[], ti=[];
   var pr=["teórica","práctica","social","conocimiento","solución","comunidad"].filter(x=>L.includes(x));
@@ -192,7 +186,6 @@ function vJust(t){
   ti.push("Indicios de justificación.");
   return {a,ti,e:"ok"};
 }
-
 function vObjetivos(og, oe){
   var a=[], ti=[];
   if(!og) { a.push("Sin objetivo general (verbo en infinitivo)."); return {a,ti,e:"ausente"}; }
@@ -200,14 +193,12 @@ function vObjetivos(og, oe){
   if(oe.length<3) a.push("Solo "+oe.length+" objetivos específicos (Mín. 3)."); else ti.push(oe.length+" objetivos específicos.");
   return {a,ti,e:a.length===0?"ok":"parcial"};
 }
-
 function vMarco(t){
   var L=t.toLowerCase(), a=[], ti=[];
   if(!["se define","se entiende","concepto"].some(v=>L.includes(v))) a.push("Faltan definiciones conceptuales claras."); else ti.push("Conceptos hallados.");
   if(!["teoría","modelo","enfoque"].some(v=>L.includes(v))) a.push("Falta fundamentación teórica (teorías/modelos)."); else ti.push("Teorías detectadas.");
   return {a,ti,e:a.length===0?"ok":"parcial"};
 }
-
 function vHip(t){
   var L=t.toLowerCase(), a=[], ti=[];
   if(["cualitativo","supuesto"].some(v=>L.includes(v)) || S.q) return {a,ti:["Ausencia justificada (cualitativo)."],e:"noaplica"};
@@ -216,35 +207,28 @@ function vHip(t){
   return {a,ti,e:"ok"};
 }
 
-// ------------------------------------------------------------------
-// VALIDADORES METODOLOGIA (Criterios 11 al 16)
-// ------------------------------------------------------------------
+// --- VALIDADORES CAP 2 ---
 function vMetFormato(t){
   var a=[], ti=[], L=t.toLowerCase();
   var sub = t.split("\n").filter(l=>l.trim().length>3&&l.trim().length<40&&/^[A-Z][a-záéíóú\s]+:?$/.test(l.trim()));
   if(sub.length>0) a.push("Elimina subtítulos, debe ser prosa continua (Crit. 11)."); else ti.push("Prosa continua.");
   if(/(^|\s)(yo |mi |mis |me |nosotros)/i.test(t)) a.push("Redacción en 1ra persona. Usa 3ra persona."); else ti.push("Redacción en 3ra persona.");
   var fut = (t.match(/\b[a-záéíóúñ]+(ará|erá|irá|arán|erán|irán)\b/gi)||[]).length;
-  if(fut<3 && !["se realizará","se aplicará","se procederá"].some(v=>L.includes(v))) a.push("Usa tiempo futuro ('se realizará', 'analizará')."); else ti.push("Uso de tiempo futuro.");
-  var w = t.trim().split(/\s+/).length;
-  if(w<700) a.push("Texto corto ("+w+" palabras). UCV pide ~3 páginas (aprox. 800 palabras)."); else ti.push("Extensión adecuada.");
+  if(fut<2 && !["se realizará","se aplicará","se procederá"].some(v=>L.includes(v))) a.push("Usa tiempo futuro ('se realizará', 'analizará')."); else ti.push("Uso de tiempo futuro.");
   return {a,ti, e:a.length<=1?"ok":"parcial"};
 }
-
 function vMetTipo(t){
   var a=[], ti=[], L=t.toLowerCase();
   var tk=["básica","aplicada","cuantitativ","cualitativ","mixt","experimental","fenomenológico","exploratorio","descriptivo","correlacional","explicativo"].filter(x=>L.includes(x));
-  if(tk.length<3) a.push("Falta especificar claramente: Tipo, Enfoque, Diseño o Alcance (Crit. 12)."); else ti.push("Tipo, diseño y alcance detallados.");
-  return {a,ti,e:tk.length>=3?"ok":"parcial"};
+  if(tk.length<2) a.push("Falta especificar claramente: Tipo, Enfoque, Diseño o Alcance (Crit. 12)."); else ti.push("Tipo, diseño y alcance detallados.");
+  return {a,ti,e:tk.length>=2?"ok":"parcial"};
 }
-
 function vMetVar(t){
   var a=[], ti=[], L=t.toLowerCase();
   if(!["variable","categoría"].some(v=>L.includes(v))) a.push("Falta definir variables (cuanti) o categorías (cuali) (Crit. 13)."); else ti.push("Variables/Categorías presentes.");
   if(!["dimensión","subcategoría","operacionaliz","categoriz"].some(v=>L.includes(v))) a.push("Menciona dimensiones/subcategorías o la matriz."); else ti.push("Desglose dimensional detectado.");
   return {a,ti,e:a.length===0?"ok":"parcial"};
 }
-
 function vMetPob(t){
   var a=[], ti=[], L=t.toLowerCase();
   if(!["unidad de análisis","población"].some(v=>L.includes(v))) a.push("Define la unidad de análisis y población (Crit. 14)."); else ti.push("Población definida.");
@@ -252,7 +236,6 @@ function vMetPob(t){
   if(!["muestra","muestreo"].some(v=>L.includes(v))) a.push("Menciona la muestra y el tipo de muestreo."); else ti.push("Muestra detallada.");
   return {a,ti,e:a.length<=1?"ok":"parcial"};
 }
-
 function vMetInst(t){
   var a=[], ti=[], L=t.toLowerCase();
   if(!["técnica","instrumento","cuestionario","entrevista","guía"].some(v=>L.includes(v))) a.push("Faltan técnicas e instrumentos (Crit. 15)."); else ti.push("Instrumentos mencionados.");
@@ -260,7 +243,6 @@ function vMetInst(t){
   if(!["consistencia","confiabilidad","alfa","cronbach","kr-20"].some(v=>L.includes(v)) && !S.q) a.push("Falta análisis de confiabilidad/consistencia interna."); else ti.push("Confiabilidad abordada.");
   return {a,ti,e:a.length<=1?"ok":"parcial"};
 }
-
 function vMetAnalisisEtica(t){
   var a=[], ti=[], L=t.toLowerCase();
   if(!["análisis","estadístic","spss","excel","atlas.ti","descriptiv","inferencial"].some(v=>L.includes(v))) a.push("Describe los métodos o software de análisis de datos (Crit. 16)."); else ti.push("Métodos de análisis presentes.");
@@ -268,9 +250,7 @@ function vMetAnalisisEtica(t){
   return {a,ti,e:a.length===0?"ok":"parcial"};
 }
 
-// ------------------------------------------------------------------
-// RENDERIZADO
-// ------------------------------------------------------------------
+// --- RENDERS UI ---
 function dH(lb, cr, al, ti, el, ext){
   var h='<div class="dc"><div class="dlbl">'+lb+' <span class="crit">'+cr+'</span></div>';
   if(ext) h+='<div class="ex-box">"'+xe(ext)+'"</div>';
@@ -281,30 +261,32 @@ function dH(lb, cr, al, ti, el, ext){
 }
 
 function rH(r){
-  var pct = Math.round((r.ok / 13) * 20); // Escala vigesimal (sobre 20)
-  var s=pct>=14?{c:"sem-v",t:"Apto para revisión (Buen avance)"}:pct>=10?{c:"sem-a",t:"Requiere correcciones moderadas"}:{c:"sem-r",t:"Requiere reestructuración profunda"};
+  var pct = Math.round((r.ok / 13) * 20); 
+  var s=pct>=14?{c:"sem-v",t:"Apto para revisión docente"}:pct>=10?{c:"sem-a",t:"Requiere correcciones"}:{c:"sem-r",t:"Requiere reestructuración"};
   var col=pct>=14?"var(--azul)":pct>=10?"#B45309":"var(--rojo)";
   
   var h='<div class="rep"><div class="rep-top"></div><div class="rep-body">';
   h+='<div class="rep-score"><span class="rep-num" style="color:'+col+'">'+pct+'</span><span class="rep-of">/ 20</span></div>';
   h+='<div class="sem '+s.c+'"><div class="sem-dot"></div>'+s.t+'</div>';
-  h+='<button class="btn-submit" onclick="window.dXL()"><svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg> Descargar Reporte Consolidado (.xlsx)</button>';
-  h+='<button class="btn-sec" onclick="location.reload()">Realizar otra evaluación</button>';
+  h+='<button class="btn-submit" onclick="dXL()"><svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg> Descargar Reporte (.xlsx)</button>';
+  h+='<button class="btn-sec" onclick="location.reload()">Otra evaluación</button>';
   h+='</div></div>';return h;
 }
 
-window.evaluarCompleto = function() {
+// --- EJECUCIÓN PRINCIPAL ---
+function ejecutarAnalisis() {
   var nom = document.getElementById("INP_NOM").value.trim() || "Estudiante";
   var titInput = document.getElementById("INP_TIT").value.trim();
   var tC1 = document.getElementById("DOC_TEXT_C1").value.trim();
   var tC2 = document.getElementById("DOC_TEXT_C2").value.trim();
   
-  if(!titInput || tC1.length < 100 || tC2.length < 100){ alert("Asegúrate de llenar el Título y pegar texto suficiente en ambos capítulos."); return; }
+  if(!titInput){ alert("⚠️ Por favor, ingresa el título de tu tesis."); return; }
+  if(!tC1 && !tC2){ alert("⚠️ Debes pegar texto en al menos uno de los recuadros grandes (Capítulo I o Metodología)."); return; }
 
   document.getElementById("INPUT_SEC").style.display = "none";
   var res = document.getElementById("RESULTS_SEC");
   res.style.display = "flex";
-  res.innerHTML = "<div style='text-align:center; padding: 40px; color:var(--azul); font-weight:600; font-size:18px;'>Procesando Cap. I y Metodología...</div>";
+  res.innerHTML = "<div style='text-align:center; padding: 40px; color:var(--azul); font-weight:600; font-size:18px;'>Procesando documentos...</div>";
 
   // Extracciones C1
   var linesC1 = tC1.split('\n').map(x=>x.trim()).filter(x=>x.length>5);
@@ -366,9 +348,9 @@ window.evaluarCompleto = function() {
     REP = {nom: nom, tit: titInput, fe: new Date().toLocaleDateString("es-PE"), ok: ok, total: vs.length, e: S.e};
     res.innerHTML += rH(REP);
   }, 800);
-};
+}
 
-window.dXL = function(){
+function dXL(){
   if(!REP)return;
   var wb=XLSX.utils.book_new();
   var d=[["EvalúaT PRO · Reporte UCV 2026"],[""],["Estudiante",REP.nom],["Título",REP.tit],["Fecha",REP.fe],[""],["SECCIÓN / CRITERIO","RESULTADO"]];
@@ -379,7 +361,7 @@ window.dXL = function(){
   var ws=XLSX.utils.aoa_to_sheet(d); ws["!cols"]=[{wch:35},{wch:15}];
   XLSX.utils.book_append_sheet(wb,ws,"Reporte");
   XLSX.writeFile(wb,"Evaluacion_Tesis_"+REP.nom.replace(/\s+/g,"_")+".xlsx");
-};
+}
 </script>
 </body>
 </html>
