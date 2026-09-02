@@ -4,127 +4,153 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>VALIDA-UCV · Verificación Normativa</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
-        
         :root {
-            --rojo: #C8102E; --rojo-dark: #A00D24;
-            --azul: #003087; --azul-light: #E8EDF5;
-            --verde-excel: #107c41; --verde-excel-dark: #0c5e31;
-            --gris: #6B7280; --gris-claro: #F5F6F7; --gris-borde: #E4E6E8; --gris-texto: #374151;
-            --blanco: #FFFFFF; 
-            --ia-grad: linear-gradient(135deg, #003087 0%, #C8102E 100%);
+            --rojo:#C8102E; --rojo-dark:#A00D24;
+            --azul:#003087; --azul-light:#E8EDF5;
+            --verde:#107c41; --verde-dark:#0c5e31;
+            --gris:#6B7280; --gris-claro:#F5F6F7; --gris-borde:#E4E6E8; --gris-texto:#374151;
+            --blanco:#FFFFFF;
+            --ia-grad:linear-gradient(135deg,#003087 0%,#C8102E 100%);
         }
+        *{box-sizing:border-box;margin:0;padding:0;}
+        body{background:var(--gris-claro);font-family:'Inter',sans-serif;color:var(--gris-texto);padding:20px 16px;min-height:100vh;display:flex;flex-direction:column;align-items:center;}
+        .container{width:100%;max-width:1100px;margin:0 auto;display:flex;flex-direction:column;gap:16px;}
 
-        * { box-sizing: border-box; margin: 0; padding: 0; }
-        body { background-color: var(--gris-claro); font-family: 'Inter', sans-serif; color: var(--gris-texto); padding: 20px 16px; min-height: 100vh; display: flex; flex-direction: column; align-items: center; }
-        .container { width: 100%; max-width: 1100px; margin: 0 auto; display: flex; flex-direction: column; gap: 16px; }
-        
         /* HEADER */
-        .header { background: var(--blanco); border: 0.5px solid var(--gris-borde); border-radius: 16px; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.04); }
-        .header-top { height: 5px; background: var(--ia-grad); }
-        .header-body { padding: 20px 24px; display: flex; align-items: center; gap: 16px; }
-        .logo { width: 48px; height: 48px; border-radius: 14px; background: var(--ia-grad); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
-        .logo svg { width: 26px; height: 26px; fill: none; stroke: #fff; stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; }
-        .brand-name { font-size: 26px; font-weight: 800; color: var(--azul); letter-spacing: -0.5px; line-height: 1; }
-        .brand-name span { color: var(--rojo); }
-        .brand-full { font-size: 13.5px; color: var(--gris-texto); margin-top: 5px; line-height: 1.4; font-weight: 500; }
+        .header{background:var(--blanco);border:0.5px solid var(--gris-borde);border-radius:16px;overflow:hidden;box-shadow:0 4px 12px rgba(0,0,0,0.04);}
+        .header-top{height:5px;background:var(--ia-grad);}
+        .header-body{padding:20px 24px;display:flex;align-items:center;gap:16px;}
+        .logo{width:48px;height:48px;border-radius:14px;background:var(--ia-grad);display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+        .logo svg{width:26px;height:26px;fill:none;stroke:#fff;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round;}
+        .brand-name{font-size:26px;font-weight:800;color:var(--azul);letter-spacing:-0.5px;line-height:1;}
+        .brand-name span{color:var(--rojo);}
+        .brand-full{font-size:13.5px;color:var(--gris-texto);margin-top:5px;line-height:1.4;font-weight:500;}
 
-        .card-body { background: var(--blanco); border: 0.5px solid var(--gris-borde); border-radius: 16px; padding: 24px; box-shadow: 0 2px 8px rgba(0,0,0,0.03); }
+        .card-body{background:var(--blanco);border:0.5px solid var(--gris-borde);border-radius:16px;padding:24px;box-shadow:0 2px 8px rgba(0,0,0,0.03);}
 
-        /* WIZARD */
-        .wizard-steps { display: flex; justify-content: space-between; align-items: center; margin-bottom: 35px; position: relative; padding: 0 30px; }
-        .wizard-steps::before { content: ""; position: absolute; top: 20px; left: 5%; right: 5%; height: 2px; background: var(--gris-borde); z-index: 1; }
-        .step { text-align: center; position: relative; z-index: 2; flex: 1; transition: opacity 0.3s; }
-        .step-circle { width: 40px; height: 40px; background: var(--gris-claro); border: 2px solid var(--gris-borde); color: var(--gris); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 8px auto; font-weight: bold; box-shadow: 0 0 0 4px var(--blanco); }
-        .step.active .step-circle { background: var(--rojo); border-color: var(--rojo); color: white; }
-        .step-title { font-size: 10px; font-weight: bold; text-transform: uppercase; color: var(--gris); }
-        .step.active .step-title { color: var(--rojo); }
+        /* ===== PANTALLA DE SELECCIÓN DE MODO ===== */
+        .mode-screen{display:flex;flex-direction:column;align-items:center;gap:20px;padding:10px 0 20px;}
+        .mode-title{font-size:17px;font-weight:700;color:var(--azul);text-align:center;margin-bottom:4px;}
+        .mode-subtitle{font-size:13px;color:var(--gris);text-align:center;margin-bottom:10px;}
+        .mode-cards{display:flex;gap:16px;width:100%;}
+        .mode-card{flex:1;border:2px solid var(--gris-borde);border-radius:14px;padding:28px 20px;text-align:center;cursor:pointer;transition:all 0.2s;background:var(--blanco);}
+        .mode-card:hover{border-color:var(--azul);background:var(--azul-light);transform:translateY(-2px);box-shadow:0 6px 16px rgba(0,48,135,0.1);}
+        .mode-card.modo-completo:hover{border-color:var(--rojo);background:#fff0f2;}
+        .mode-card .mc-icon{font-size:40px;margin-bottom:12px;}
+        .mode-card .mc-title{font-size:16px;font-weight:800;color:var(--azul);margin-bottom:8px;}
+        .mode-card.modo-completo .mc-title{color:var(--rojo);}
+        .mode-card .mc-desc{font-size:12.5px;color:var(--gris);line-height:1.5;}
+        .mode-card .mc-badge{display:inline-block;margin-top:12px;padding:4px 12px;border-radius:20px;font-size:11px;font-weight:700;}
+        .modo-completo .mc-badge{background:#ffebee;color:var(--rojo);}
+        .modo-capitulo .mc-badge{background:var(--azul-light);color:var(--azul);}
 
-        .form-section { display: none; animation: fadeIn 0.3s; }
-        .form-section.active { display: block; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
-        h2 { color: var(--azul); font-size: 18px; margin-top: 0; margin-bottom: 25px; border-bottom: 1px solid var(--gris-borde); padding-bottom: 10px; }
-        
-        .form-group { margin-bottom: 20px; }
-        .form-group label { display: block; font-weight: 600; margin-bottom: 8px; color: var(--gris-texto); font-size: 14px; }
-        .field-input { width: 100%; padding: 12px; border: 1px solid var(--gris-borde); border-radius: 6px; background-color: var(--gris-claro); font-size: 14px; color: var(--gris-texto); transition: all 0.2s; }
-        .field-input:focus { outline: none; border-color: var(--rojo); background-color: var(--blanco); }
-        textarea.field-input { resize: vertical; min-height: 200px; font-family: monospace; font-size: 13px; }
+        /* ===== MODO COMPLETO ===== */
+        .upload-zone{border:2px dashed var(--rojo);border-radius:12px;padding:36px 20px;text-align:center;background:#fff7f8;cursor:pointer;transition:all 0.2s;position:relative;}
+        .upload-zone:hover,.upload-zone.drag-over{background:#ffecee;transform:scale(1.01);box-shadow:0 4px 14px rgba(200,16,46,0.12);}
+        .upload-zone input[type="file"]{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%;}
+        .upload-icon{font-size:40px;margin-bottom:10px;}
+        .upload-title{font-size:16px;font-weight:700;color:var(--rojo);margin-bottom:6px;}
+        .upload-subtitle{font-size:13px;color:var(--gris);}
+        .upload-badge{display:inline-block;background:var(--rojo);color:white;font-size:11px;font-weight:700;padding:4px 12px;border-radius:20px;margin-top:12px;}
 
-        .btn-container { display: flex; justify-content: space-between; margin-top: 30px; gap: 15px; }
-        .btn { padding: 13px 25px; font-size: 15px; font-weight: bold; border: none; border-radius: 6px; cursor: pointer; font-family: inherit; transition: background 0.2s; display: inline-flex; align-items: center; justify-content: center; gap: 8px;}
-        .btn-primary { background-color: var(--rojo); color: white; flex: 1.5; }
-        .btn-primary:hover { background-color: var(--rojo-dark); }
-        .btn-action { background-color: var(--azul); color: white; flex: 1.5; }
-        .btn-action:hover { background-color: #002266; }
-        .btn-secondary { background-color: var(--gris-claro); border: 1px solid var(--gris-borde); color: var(--gris-texto); flex: 1; }
-        .btn-secondary:hover { background-color: #e2e8f0; }
-        .btn-excel { background-color: var(--verde-excel); color: white; padding: 10px 20px; font-size: 14px; }
-        .btn-excel:hover { background-color: var(--verde-excel-dark); }
+        .pdf-progress-bar{display:none;margin:16px 0;}
+        .pdf-progress-bar .bar-label{font-size:13px;font-weight:600;color:var(--azul);margin-bottom:6px;}
+        .pdf-progress-bar .bar-track{height:8px;background:var(--gris-borde);border-radius:10px;overflow:hidden;}
+        .pdf-progress-bar .bar-fill{height:100%;width:0%;background:var(--ia-grad);border-radius:10px;transition:width 0.3s;}
+        .pdf-success{display:none;background:#e8f5e9;border:1px solid #a5d6a7;border-radius:8px;padding:12px 16px;font-size:13px;color:#2e7d32;font-weight:600;margin-top:14px;}
 
-        /* DISCLAIMER BOX */
-        .disclaimer-box { background: #f8fafc; border: 1px solid var(--gris-borde); border-radius: 8px; padding: 20px; margin-bottom: 25px; }
-        .disclaimer-box h3 { color: var(--azul); margin-top: 0; margin-bottom: 12px; font-size: 15px; border-bottom: 1px solid var(--gris-borde); padding-bottom: 8px; }
-        .disclaimer-columns { display: flex; gap: 20px; font-size: 13px; line-height: 1.5; }
-        .disclaimer-col { flex: 1; }
-        .disclaimer-col ul { margin: 8px 0 0 0; padding-left: 20px; }
-        .disclaimer-col.yes ul { color: #2e7d32; }
-        .disclaimer-col.no ul { color: #b3002d; }
-        .disclaimer-col.yes li span, .disclaimer-col.no li span { color: var(--gris-texto); }
+        .btn-back-mode{background:none;border:none;color:var(--gris);font-size:13px;cursor:pointer;display:flex;align-items:center;gap:5px;margin-bottom:18px;font-family:inherit;font-weight:600;}
+        .btn-back-mode:hover{color:var(--azul);}
 
-        /* RESUMEN EJECUTIVO */
-        .executive-summary { background: var(--blanco); border: 1px solid var(--gris-borde); border-radius: 12px; padding: 20px; margin-bottom: 25px; box-shadow: 0 4px 10px rgba(0,0,0,0.03); }
-        .executive-summary h3 { color: var(--azul); margin-top: 0; margin-bottom: 15px; font-size: 16px; border-bottom: 1px solid var(--gris-borde); padding-bottom: 10px; }
-        .summary-grid { display: grid; grid-template-columns: 1fr 1fr 1.5fr; gap: 15px; }
-        .summary-card { background: var(--gris-claro); padding: 15px; border-radius: 8px; border: 1px solid var(--gris-borde); }
-        .summary-card.main-score { text-align: center; display: flex; flex-direction: column; justify-content: center; align-items: center; }
-        .semaforo-icon { font-size: 32px; margin-bottom: 5px; line-height: 1; }
-        .semaforo-pct { font-size: 28px; font-weight: 800; color: var(--gris-texto); line-height: 1; }
-        .semaforo-text { font-size: 12.5px; font-weight: 700; margin-top: 8px; text-transform: uppercase; letter-spacing: 0.5px; }
-        .summary-card h4 { margin-top: 0; font-size: 13px; color: var(--gris-texto); margin-bottom: 10px; font-weight: 700; }
-        .summary-card ul.obs-list { list-style: none; padding: 0; margin: 0; font-size: 13px; }
-        .summary-card ul.obs-list li { margin-bottom: 8px; font-weight: 500; }
-        .priority-list ul { list-style: none; padding: 0; margin: 0; font-size: 12.5px; }
-        .priority-list li { position: relative; padding-left: 18px; margin-bottom: 6px; color: var(--gris-texto); }
-        .priority-list li::before { content: "→"; position: absolute; left: 0; color: var(--rojo); font-weight: bold; }
+        /* ===== WIZARD (modo capítulo) ===== */
+        .wizard-steps{display:flex;justify-content:space-between;align-items:center;margin-bottom:35px;position:relative;padding:0 30px;}
+        .wizard-steps::before{content:"";position:absolute;top:20px;left:5%;right:5%;height:2px;background:var(--gris-borde);z-index:1;}
+        .step{text-align:center;position:relative;z-index:2;flex:1;}
+        .step-circle{width:40px;height:40px;background:var(--gris-claro);border:2px solid var(--gris-borde);color:var(--gris);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 8px;font-weight:bold;box-shadow:0 0 0 4px var(--blanco);}
+        .step.active .step-circle{background:var(--azul);border-color:var(--azul);color:white;}
+        .step-title{font-size:10px;font-weight:bold;text-transform:uppercase;color:var(--gris);}
+        .step.active .step-title{color:var(--azul);}
 
-        /* TABLA DE DETALLES */
-        .rubric-table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 12.5px; }
-        .rubric-table th, .rubric-table td { border: 1px solid var(--gris-borde); padding: 12px; text-align: left; vertical-align: top; }
-        .rubric-table th { background-color: var(--azul); color: white; text-transform: uppercase; font-size: 11px; letter-spacing: 0.5px; }
-        .badge-status { padding: 4px 6px; border-radius: 4px; font-weight: bold; font-size: 10px; text-transform: uppercase; display: inline-block; white-space: nowrap; }
-        
-        /* PRIORIDADES TAGS */
-        .prio-critico { display: inline-block; font-size: 11px; font-weight: bold; color: #b3002d; background: #ffebee; padding: 2px 6px; border-radius: 4px; border: 1px solid #ffcdd2; margin-bottom: 6px; }
-        .prio-importante { display: inline-block; font-size: 11px; font-weight: bold; color: #e65100; background: #fff3e0; padding: 2px 6px; border-radius: 4px; border: 1px solid #ffe0b2; margin-bottom: 6px; }
-        .prio-mejora { display: inline-block; font-size: 11px; font-weight: bold; color: #2e7d32; background: #e8f5e9; padding: 2px 6px; border-radius: 4px; border: 1px solid #c8e6c9; margin-bottom: 6px; }
+        .form-section{display:none;animation:fadeIn 0.3s;}
+        .form-section.active{display:block;}
+        @keyframes fadeIn{from{opacity:0;transform:translateY(5px);}to{opacity:1;transform:translateY(0);}}
 
-        /* QUÉ HACER (ACCIONABLES) */
-        .action-box { background: #ffffff; border-left: 3px solid var(--azul); padding: 12px; margin-top: 8px; border-radius: 0 6px 6px 0; font-size: 11.5px; color: #334155; border-top: 1px solid var(--gris-borde); border-right: 1px solid var(--gris-borde); border-bottom: 1px solid var(--gris-borde); }
-        .action-box strong { color: var(--azul); display: block; margin-bottom: 6px; font-size: 11px; text-transform: uppercase; }
-        .action-box ul { margin: 0; padding-left: 16px; }
-        .action-box li { margin-bottom: 4px; }
+        h2{color:var(--azul);font-size:18px;margin:0 0 25px;border-bottom:1px solid var(--gris-borde);padding-bottom:10px;}
+        .form-group{margin-bottom:20px;}
+        .form-group label{display:block;font-weight:600;margin-bottom:8px;font-size:14px;}
+        .field-input{width:100%;padding:12px;border:1px solid var(--gris-borde);border-radius:6px;background:var(--gris-claro);font-size:14px;color:var(--gris-texto);transition:all 0.2s;}
+        .field-input:focus{outline:none;border-color:var(--azul);background:var(--blanco);}
+        textarea.field-input{resize:vertical;min-height:200px;font-family:monospace;font-size:13px;}
 
-        .loading-box { display: none; text-align: center; padding: 40px; }
-        .spinner { border: 4px solid var(--azul-light); width: 45px; height: 45px; border-radius: 50%; border-left-color: var(--rojo); animation: spin 0.6s linear infinite; margin: 0 auto 15px auto; }
-        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-        .result-container { display: none; margin-top: 30px; }
+        .btn-container{display:flex;justify-content:space-between;margin-top:30px;gap:15px;}
+        .btn{padding:13px 25px;font-size:15px;font-weight:bold;border:none;border-radius:6px;cursor:pointer;font-family:inherit;transition:background 0.2s;display:inline-flex;align-items:center;justify-content:center;gap:8px;}
+        .btn-primary{background:var(--azul);color:white;flex:1.5;}
+        .btn-primary:hover{background:#002266;}
+        .btn-action{background:var(--rojo);color:white;flex:1.5;}
+        .btn-action:hover{background:var(--rojo-dark);}
+        .btn-secondary{background:var(--gris-claro);border:1px solid var(--gris-borde);color:var(--gris-texto);flex:1;}
+        .btn-secondary:hover{background:#e2e8f0;}
+        .btn-excel{background:var(--verde);color:white;padding:10px 20px;font-size:14px;}
+        .btn-excel:hover{background:var(--verde-dark);}
 
-        .export-bar { display: flex; justify-content: flex-end; margin-bottom: 15px; }
+        /* Disclaimer */
+        .disclaimer-box{background:#f8fafc;border:1px solid var(--gris-borde);border-radius:8px;padding:20px;margin-bottom:25px;}
+        .disclaimer-box h3{color:var(--azul);margin:0 0 12px;font-size:15px;border-bottom:1px solid var(--gris-borde);padding-bottom:8px;}
+        .disclaimer-columns{display:flex;gap:20px;font-size:13px;line-height:1.5;}
+        .disclaimer-col{flex:1;}
+        .disclaimer-col ul{margin:8px 0 0;padding-left:20px;}
+        .disclaimer-col.yes ul{color:#2e7d32;}
+        .disclaimer-col.no ul{color:#b3002d;}
+        .disclaimer-col li span{color:var(--gris-texto);}
 
-        @media (max-width: 768px) {
-            .summary-grid { grid-template-columns: 1fr; }
-            .disclaimer-columns { flex-direction: column; }
-            .btn-container { flex-direction: column; }
-            .btn { width: 100%; margin-bottom: 10px; }
+        /* Resultados */
+        .executive-summary{background:var(--blanco);border:1px solid var(--gris-borde);border-radius:12px;padding:20px;margin-bottom:25px;box-shadow:0 4px 10px rgba(0,0,0,0.03);}
+        .executive-summary h3{color:var(--azul);margin:0 0 15px;font-size:16px;border-bottom:1px solid var(--gris-borde);padding-bottom:10px;}
+        .summary-grid{display:grid;grid-template-columns:1fr 1fr 1.5fr;gap:15px;}
+        .summary-card{background:var(--gris-claro);padding:15px;border-radius:8px;border:1px solid var(--gris-borde);}
+        .summary-card.main-score{text-align:center;display:flex;flex-direction:column;justify-content:center;align-items:center;}
+        .semaforo-icon{font-size:32px;margin-bottom:5px;line-height:1;}
+        .semaforo-pct{font-size:28px;font-weight:800;color:var(--gris-texto);line-height:1;}
+        .semaforo-text{font-size:12.5px;font-weight:700;margin-top:8px;text-transform:uppercase;letter-spacing:0.5px;}
+        .summary-card h4{margin:0 0 10px;font-size:13px;font-weight:700;}
+        .summary-card ul.obs-list{list-style:none;padding:0;margin:0;font-size:13px;}
+        .summary-card ul.obs-list li{margin-bottom:8px;font-weight:500;}
+        .priority-list ul{list-style:none;padding:0;margin:0;font-size:12.5px;}
+        .priority-list li{position:relative;padding-left:18px;margin-bottom:6px;}
+        .priority-list li::before{content:"→";position:absolute;left:0;color:var(--rojo);font-weight:bold;}
+        .rubric-table{width:100%;border-collapse:collapse;margin-top:10px;font-size:12.5px;}
+        .rubric-table th,.rubric-table td{border:1px solid var(--gris-borde);padding:12px;text-align:left;vertical-align:top;}
+        .rubric-table th{background:var(--azul);color:white;text-transform:uppercase;font-size:11px;letter-spacing:0.5px;}
+        .badge-status{padding:4px 6px;border-radius:4px;font-weight:bold;font-size:10px;text-transform:uppercase;display:inline-block;white-space:nowrap;}
+        .prio-critico{display:inline-block;font-size:11px;font-weight:bold;color:#b3002d;background:#ffebee;padding:2px 6px;border-radius:4px;border:1px solid #ffcdd2;margin-bottom:6px;}
+        .prio-importante{display:inline-block;font-size:11px;font-weight:bold;color:#e65100;background:#fff3e0;padding:2px 6px;border-radius:4px;border:1px solid #ffe0b2;margin-bottom:6px;}
+        .prio-mejora{display:inline-block;font-size:11px;font-weight:bold;color:#2e7d32;background:#e8f5e9;padding:2px 6px;border-radius:4px;border:1px solid #c8e6c9;margin-bottom:6px;}
+        .action-box{background:#fff;border-left:3px solid var(--azul);padding:12px;margin-top:8px;border-radius:0 6px 6px 0;font-size:11.5px;color:#334155;border-top:1px solid var(--gris-borde);border-right:1px solid var(--gris-borde);border-bottom:1px solid var(--gris-borde);}
+        .action-box strong{color:var(--azul);display:block;margin-bottom:6px;font-size:11px;text-transform:uppercase;}
+        .action-box ul{margin:0;padding-left:16px;}
+        .action-box li{margin-bottom:4px;}
+        .loading-box{display:none;text-align:center;padding:40px;}
+        .spinner{border:4px solid var(--azul-light);width:45px;height:45px;border-radius:50%;border-left-color:var(--rojo);animation:spin 0.6s linear infinite;margin:0 auto 15px;}
+        @keyframes spin{0%{transform:rotate(0deg);}100%{transform:rotate(360deg);}}
+        .result-container{display:none;margin-top:30px;}
+        .export-bar{display:flex;justify-content:flex-end;margin-bottom:15px;}
+
+        @media(max-width:768px){
+            .mode-cards{flex-direction:column;}
+            .summary-grid{grid-template-columns:1fr;}
+            .disclaimer-columns{flex-direction:column;}
+            .btn-container{flex-direction:column;}
+            .btn{width:100%;margin-bottom:10px;}
         }
     </style>
 </head>
 <body>
-
 <div class="container">
-    
+
+    <!-- HEADER -->
     <div class="header">
         <div class="header-top"></div>
         <div class="header-body">
@@ -139,535 +165,596 @@
     </div>
 
     <div class="card-body">
-        
-        <div class="wizard-steps" id="wizard-container">
-            <div class="step active" id="step-1-indicator"><div class="step-circle">1</div><div class="step-title">Datos</div></div>
-            <div class="step" id="step-2-indicator"><div class="step-circle">2</div><div class="step-title">Cap. I</div></div>
-            <div class="step" id="step-3-indicator"><div class="step-circle">3</div><div class="step-title">Cap. II</div></div>
-            <div class="step" id="step-4-indicator"><div class="step-circle">4</div><div class="step-title">Cap. III</div></div>
-            <div class="step" id="step-5-indicator"><div class="step-circle">5</div><div class="step-title">Ref.</div></div>
+
+        <!-- ===== PANTALLA SELECCIÓN DE MODO ===== -->
+        <div id="pantalla-modo">
+            <div class="mode-screen">
+                <div class="mode-title">¿Cómo quieres evaluar tu proyecto?</div>
+                <div class="mode-subtitle">Elige la opción que mejor se adapte a tu avance actual.</div>
+                <div class="mode-cards">
+
+                    <!-- MODO COMPLETO -->
+                    <div class="mode-card modo-completo" onclick="activarModo('completo')">
+                        <div class="mc-icon">📄</div>
+                        <div class="mc-title">Subir proyecto completo</div>
+                        <div class="mc-desc">Sube tu proyecto en PDF y el sistema lo lee, lo organiza y lo evalúa automáticamente. No necesitas copiar ni pegar nada.</div>
+                        <div class="mc-badge">PDF · Evaluación automática</div>
+                    </div>
+
+                    <!-- MODO CAPÍTULO -->
+                    <div class="mode-card modo-capitulo" onclick="activarModo('capitulo')">
+                        <div class="mc-icon">✏️</div>
+                        <div class="mc-title">Evaluar por capítulo</div>
+                        <div class="mc-desc">Ingresa el texto de cada sección manualmente, paso a paso. Ideal si quieres revisar un capítulo específico o tienes avance parcial.</div>
+                        <div class="mc-badge">Texto · Sección por sección</div>
+                    </div>
+
+                </div>
+            </div>
         </div>
 
-        <!-- PASO 1: DATOS -->
-        <div class="form-section active" id="section-1">
-            <h2>1. Identificación del Proyecto</h2>
-            
+        <!-- ===== MODO COMPLETO ===== -->
+        <div id="pantalla-completo" style="display:none;">
+            <button class="btn-back-mode" onclick="volverModo()">← Volver a elegir modo</button>
+            <h2>Subir proyecto completo en PDF</h2>
+
             <div class="disclaimer-box">
-                <h3>Alcances y limitaciones</h3>
+                <h3>¿Cómo funciona?</h3>
                 <div class="disclaimer-columns">
                     <div class="disclaimer-col yes">
-                        <strong>La herramienta evalúa:</strong>
+                        <strong>El sistema hará:</strong>
                         <ul>
-                            <li><span>Cumplimiento de requisitos normativos.</span></li>
-                            <li><span>Presencia de componentes obligatorios.</span></li>
-                            <li><span>Estructura documental.</span></li>
-                            <li><span>Coherencia básica entre elementos.</span></li>
+                            <li><span>Leer todas las páginas del PDF.</span></li>
+                            <li><span>Detectar y separar cada capítulo.</span></li>
+                            <li><span>Evaluar automáticamente con la rúbrica UCV.</span></li>
+                            <li><span>Generar el reporte descargable en Excel.</span></li>
                         </ul>
                     </div>
                     <div class="disclaimer-col no">
-                        <strong>La herramienta NO evalúa:</strong>
+                        <strong>Recuerda que NO evalúa:</strong>
                         <ul>
                             <li><span>Calidad científica del estudio.</span></li>
                             <li><span>Originalidad de los aportes.</span></li>
                             <li><span>Rigor metodológico profundo.</span></li>
-                            <li><span>Pertinencia disciplinar.</span></li>
-                            <li><span>Calidad de redacción académica.</span></li>
                             <li><span>Criterio experto del docente.</span></li>
                         </ul>
                     </div>
                 </div>
             </div>
 
-            <div class="form-group" style="background:#eef2f5; padding:15px; border-radius:6px; font-size:13px; margin-bottom: 25px;">
-                <strong>💡 Tip de uso:</strong> La verificación es modular. Solo pega el texto en las secciones que desees revisar hoy y presiona <strong>"Evaluar Avance"</strong>. No es obligatorio llenar todo el documento.
-            </div>
-
             <div class="form-group">
                 <label>Nombre del Estudiante</label>
-                <input type="text" id="nombre_estudiante" class="field-input" placeholder="Ej. Noemi Quispe">
+                <input type="text" id="nombre_completo" class="field-input" placeholder="Ej. Juan Pérez García">
             </div>
-            <div class="form-group">
-                <label>Título del Proyecto de Investigación</label>
-                <input type="text" id="titulo_tesis" class="field-input" placeholder="Pegue el título completo para auditar su extensión">
+
+            <div class="upload-zone" id="upload-zone"
+                 ondragover="event.preventDefault();this.classList.add('drag-over')"
+                 ondragleave="this.classList.remove('drag-over')"
+                 ondrop="manejarDrop(event)">
+                <input type="file" accept=".pdf" onchange="leerPDF(this.files[0])">
+                <div class="upload-icon">📂</div>
+                <div class="upload-title">Arrastra tu PDF aquí o haz clic para buscarlo</div>
+                <div class="upload-subtitle">El archivo se procesa en tu navegador. No se sube a ningún servidor.</div>
+                <div class="upload-badge">Solo archivos PDF · Sin contraseña</div>
             </div>
-            <div class="btn-container">
-                <div></div>
-                <button class="btn btn-action" onclick="procesarRubricaLocal()">Evaluar Avance 📋</button>
-                <button class="btn btn-primary" onclick="cambiarPaso(2)">Siguiente →</button>
+
+            <div class="pdf-progress-bar" id="pdf-progress">
+                <div class="bar-label" id="pdf-progress-label">Leyendo PDF...</div>
+                <div class="bar-track"><div class="bar-fill" id="pdf-bar-fill"></div></div>
             </div>
+            <div class="pdf-success" id="pdf-success"></div>
         </div>
 
-        <!-- PASO 2: CAPÍTULO I -->
-        <div class="form-section" id="section-2">
-            <h2>2. Capítulo I: Introducción</h2>
-            <div class="form-group"><textarea id="capitulo_1" class="field-input" placeholder="Pegue la prosa del Capítulo I..."></textarea></div>
-            <div class="btn-container">
-                <button class="btn btn-secondary" onclick="cambiarPaso(1)">← Volver</button>
-                <button class="btn btn-action" onclick="procesarRubricaLocal()">Evaluar Avance 📋</button>
-                <button class="btn btn-primary" onclick="cambiarPaso(3)">Siguiente →</button>
-            </div>
-        </div>
+        <!-- ===== MODO CAPÍTULO ===== -->
+        <div id="pantalla-capitulo" style="display:none;">
+            <button class="btn-back-mode" onclick="volverModo()">← Volver a elegir modo</button>
 
-        <div class="form-section" id="section-3">
-            <h2>3. Capítulo II: Metodología</h2>
-            <div class="form-group"><textarea id="capitulo_2" class="field-input" placeholder="Pegue la prosa del Capítulo II..."></textarea></div>
-            <div class="btn-container">
-                <button class="btn btn-secondary" onclick="cambiarPaso(2)">← Volver</button>
-                <button class="btn btn-action" onclick="procesarRubricaLocal()">Evaluar Avance 📋</button>
-                <button class="btn btn-primary" onclick="cambiarPaso(4)">Siguiente →</button>
+            <div class="wizard-steps">
+                <div class="step active" id="step-1-indicator"><div class="step-circle">1</div><div class="step-title">Datos</div></div>
+                <div class="step" id="step-2-indicator"><div class="step-circle">2</div><div class="step-title">Cap. I</div></div>
+                <div class="step" id="step-3-indicator"><div class="step-circle">3</div><div class="step-title">Cap. II</div></div>
+                <div class="step" id="step-4-indicator"><div class="step-circle">4</div><div class="step-title">Cap. III</div></div>
+                <div class="step" id="step-5-indicator"><div class="step-circle">5</div><div class="step-title">Ref.</div></div>
             </div>
-        </div>
 
-        <div class="form-section" id="section-4">
-            <h2>4. Capítulo III: Aspectos Administrativos</h2>
-            <div class="form-group"><textarea id="capitulo_3" class="field-input" placeholder="Pegue el Capítulo III (Presupuesto y Cronograma)..."></textarea></div>
-            <div class="btn-container">
-                <button class="btn btn-secondary" onclick="cambiarPaso(3)">← Volver</button>
-                <button class="btn btn-action" onclick="procesarRubricaLocal()">Evaluar Avance 📋</button>
-                <button class="btn btn-primary" onclick="cambiarPaso(5)">Siguiente →</button>
+            <div class="form-section active" id="section-1">
+                <h2>1. Identificación del Proyecto</h2>
+                <div class="disclaimer-box">
+                    <h3>Alcances y limitaciones</h3>
+                    <div class="disclaimer-columns">
+                        <div class="disclaimer-col yes">
+                            <strong>La herramienta evalúa:</strong>
+                            <ul>
+                                <li><span>Cumplimiento de requisitos normativos.</span></li>
+                                <li><span>Presencia de componentes obligatorios.</span></li>
+                                <li><span>Estructura documental.</span></li>
+                                <li><span>Coherencia básica entre elementos.</span></li>
+                            </ul>
+                        </div>
+                        <div class="disclaimer-col no">
+                            <strong>La herramienta NO evalúa:</strong>
+                            <ul>
+                                <li><span>Calidad científica del estudio.</span></li>
+                                <li><span>Originalidad de los aportes.</span></li>
+                                <li><span>Rigor metodológico profundo.</span></li>
+                                <li><span>Calidad de redacción académica.</span></li>
+                                <li><span>Criterio experto del docente.</span></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group" style="background:#eef2f5;padding:15px;border-radius:6px;font-size:13px;margin-bottom:25px;">
+                    <strong>💡 Tip:</strong> La verificación es modular. Solo pega el texto en las secciones que quieras revisar hoy y presiona <strong>"Evaluar Avance"</strong>.
+                </div>
+                <div class="form-group">
+                    <label>Nombre del Estudiante</label>
+                    <input type="text" id="nombre_estudiante" class="field-input" placeholder="Ej. Juan Pérez García">
+                </div>
+                <div class="form-group">
+                    <label>Título del Proyecto de Investigación</label>
+                    <input type="text" id="titulo_tesis" class="field-input" placeholder="Pegue el título completo">
+                </div>
+                <div class="btn-container">
+                    <div></div>
+                    <button class="btn btn-action" onclick="procesarRubricaLocal()">Evaluar Avance 📋</button>
+                    <button class="btn btn-primary" onclick="cambiarPaso(2)">Siguiente →</button>
+                </div>
             </div>
-        </div>
 
-        <div class="form-section" id="section-5">
-            <h2>5. Referencias Bibliográficas</h2>
-            <div class="form-group"><textarea id="referencias_texto" class="field-input" placeholder="Pegue el listado final de referencias bibliográficas..."></textarea></div>
-            <div class="btn-container">
-                <button class="btn btn-secondary" onclick="cambiarPaso(4)">← Volver</button>
-                <button class="btn btn-action" onclick="procesarRubricaLocal()" style="flex:2;">Generar Verificación Normativa 📋</button>
+            <div class="form-section" id="section-2">
+                <h2>2. Capítulo I: Introducción</h2>
+                <div class="form-group"><textarea id="capitulo_1" class="field-input" placeholder="Pegue la prosa del Capítulo I..."></textarea></div>
+                <div class="btn-container">
+                    <button class="btn btn-secondary" onclick="cambiarPaso(1)">← Volver</button>
+                    <button class="btn btn-action" onclick="procesarRubricaLocal()">Evaluar Avance 📋</button>
+                    <button class="btn btn-primary" onclick="cambiarPaso(3)">Siguiente →</button>
+                </div>
+            </div>
+
+            <div class="form-section" id="section-3">
+                <h2>3. Capítulo II: Metodología</h2>
+                <div class="form-group"><textarea id="capitulo_2" class="field-input" placeholder="Pegue la prosa del Capítulo II..."></textarea></div>
+                <div class="btn-container">
+                    <button class="btn btn-secondary" onclick="cambiarPaso(2)">← Volver</button>
+                    <button class="btn btn-action" onclick="procesarRubricaLocal()">Evaluar Avance 📋</button>
+                    <button class="btn btn-primary" onclick="cambiarPaso(4)">Siguiente →</button>
+                </div>
+            </div>
+
+            <div class="form-section" id="section-4">
+                <h2>4. Capítulo III: Aspectos Administrativos</h2>
+                <div class="form-group"><textarea id="capitulo_3" class="field-input" placeholder="Pegue el Capítulo III (Presupuesto y Cronograma)..."></textarea></div>
+                <div class="btn-container">
+                    <button class="btn btn-secondary" onclick="cambiarPaso(3)">← Volver</button>
+                    <button class="btn btn-action" onclick="procesarRubricaLocal()">Evaluar Avance 📋</button>
+                    <button class="btn btn-primary" onclick="cambiarPaso(5)">Siguiente →</button>
+                </div>
+            </div>
+
+            <div class="form-section" id="section-5">
+                <h2>5. Referencias Bibliográficas</h2>
+                <div class="form-group"><textarea id="referencias_texto" class="field-input" placeholder="Pegue el listado de referencias bibliográficas..."></textarea></div>
+                <div class="btn-container">
+                    <button class="btn btn-secondary" onclick="cambiarPaso(4)">← Volver</button>
+                    <button class="btn btn-action" onclick="procesarRubricaLocal()" style="flex:2;">Generar Verificación Normativa 📋</button>
+                </div>
             </div>
         </div>
 
         <!-- LOADING -->
         <div class="loading-box" id="loading">
             <div class="spinner"></div>
-            <p style="font-weight: bold; color: var(--azul);">Ejecutando verificación y estructurando observaciones...</p>
-            <p style="font-size: 11px; color: var(--gris);">Calculando índice de cumplimiento normativo...</p>
+            <p style="font-weight:bold;color:var(--azul);">Ejecutando verificación y estructurando observaciones...</p>
+            <p style="font-size:11px;color:var(--gris);">Calculando índice de cumplimiento normativo...</p>
         </div>
 
         <!-- RESULTADOS -->
         <div class="result-container" id="resultado-container">
-            
-            <div class="info-header" style="background: var(--blanco); border: 1px solid var(--gris-borde); border-radius: 12px; padding: 15px; margin-bottom: 20px;">
-                <div style="font-size: 14px; color: var(--gris-texto);" id="datos-tesista"></div>
+            <div style="background:var(--blanco);border:1px solid var(--gris-borde);border-radius:12px;padding:15px;margin-bottom:20px;">
+                <div style="font-size:14px;" id="datos-tesista"></div>
             </div>
-
             <div id="resumen-ejecutivo-container"></div>
-            
             <div class="export-bar">
                 <button class="btn btn-excel" onclick="exportarExcel()">
                     <svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
                     Exportar Reporte a Excel
                 </button>
             </div>
-
-            <h3 style="color: var(--azul); font-size: 15px; margin-bottom: 10px; border-bottom: 1px solid var(--gris-borde); padding-bottom: 5px;">DETALLE DEL DIAGNÓSTICO ESTRUCTURAL</h3>
+            <h3 style="color:var(--azul);font-size:15px;margin-bottom:10px;border-bottom:1px solid var(--gris-borde);padding-bottom:5px;">DETALLE DEL DIAGNÓSTICO ESTRUCTURAL</h3>
             <table class="rubric-table" id="tabla-exportar">
                 <thead>
                     <tr>
                         <th>Componente</th>
-                        <th style="text-align:center; width:30px;">N°</th>
+                        <th style="text-align:center;width:30px;">N°</th>
                         <th style="width:35%;">Criterio Institucional</th>
-                        <th style="text-align:center; width:90px;">Estado</th>
+                        <th style="text-align:center;width:90px;">Estado</th>
                         <th>Verificación y Plan de Acción</th>
                     </tr>
                 </thead>
                 <tbody id="tabla-rubrica-cuerpo"></tbody>
             </table>
+            <div style="margin-top:20px;text-align:center;">
+                <button class="btn btn-secondary" onclick="volverModo()" style="display:inline-flex;">← Nueva evaluación</button>
+            </div>
         </div>
+
     </div>
 </div>
 
 <script>
-    function cambiarPaso(paso) {
-        document.querySelectorAll('.form-section').forEach(sec => sec.classList.remove('active'));
-        document.querySelectorAll('.step').forEach(st => st.classList.remove('active'));
-        
-        document.getElementById('section-' + paso).classList.add('active');
-        
-        for(let i=1; i<=paso; i++) {
-            if(document.getElementById('step-'+i+'-indicator')) {
-                document.getElementById('step-'+i+'-indicator').classList.add('active');
-            }
+pdfjsLib.GlobalWorkerOptions.workerSrc='https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+
+// ===== NAVEGACIÓN DE MODOS =====
+function activarModo(modo){
+    document.getElementById('pantalla-modo').style.display='none';
+    document.getElementById('resultado-container').style.display='none';
+    if(modo==='completo'){
+        document.getElementById('pantalla-completo').style.display='block';
+    } else {
+        document.getElementById('pantalla-capitulo').style.display='block';
+        cambiarPaso(1);
+    }
+    window.scrollTo({top:0,behavior:'smooth'});
+}
+
+function volverModo(){
+    document.getElementById('pantalla-modo').style.display='block';
+    document.getElementById('pantalla-completo').style.display='none';
+    document.getElementById('pantalla-capitulo').style.display='none';
+    document.getElementById('resultado-container').style.display='none';
+    document.getElementById('loading').style.display='none';
+    // Limpiar campos
+    ['nombre_completo','nombre_estudiante','titulo_tesis','capitulo_1','capitulo_2','capitulo_3','referencias_texto'].forEach(id=>{
+        const el=document.getElementById(id); if(el) el.value='';
+    });
+    document.getElementById('pdf-success').style.display='none';
+    document.getElementById('pdf-progress').style.display='none';
+    window.scrollTo({top:0,behavior:'smooth'});
+}
+
+// ===== PDF: DRAG & DROP =====
+function manejarDrop(event){
+    event.preventDefault();
+    document.getElementById('upload-zone').classList.remove('drag-over');
+    const file=event.dataTransfer.files[0];
+    if(file&&file.type==='application/pdf') leerPDF(file);
+    else alert('Por favor, sube un archivo PDF válido.');
+}
+
+// ===== LEER PDF =====
+async function leerPDF(file){
+    if(!file) return;
+    if(file.type!=='application/pdf'){alert('Solo se aceptan archivos PDF.');return;}
+    const prog=document.getElementById('pdf-progress');
+    const fill=document.getElementById('pdf-bar-fill');
+    const label=document.getElementById('pdf-progress-label');
+    const succ=document.getElementById('pdf-success');
+    succ.style.display='none';
+    prog.style.display='block';
+    label.textContent=`Leyendo "${file.name}"...`;
+    fill.style.width='10%';
+    try{
+        const buf=await file.arrayBuffer();
+        const pdf=await pdfjsLib.getDocument({data:buf}).promise;
+        const total=pdf.numPages;
+        let texto='';
+        for(let i=1;i<=total;i++){
+            const page=await pdf.getPage(i);
+            const content=await page.getTextContent();
+            texto+=content.items.map(it=>it.str).join(' ')+'\n';
+            fill.style.width=(Math.round((i/total)*80)+10)+'%';
+            label.textContent=`Procesando página ${i} de ${total}...`;
         }
-        window.scrollTo({top: 0, behavior: 'smooth'});
+        fill.style.width='95%';
+        label.textContent='Distribuyendo contenido...';
+        distribuirTexto(texto);
+        // Copiar nombre si se ingresó
+        const nombreComp=document.getElementById('nombre_completo').value;
+        if(nombreComp&&!document.getElementById('nombre_estudiante').value)
+            document.getElementById('nombre_estudiante').value=nombreComp;
+        fill.style.width='100%';
+        setTimeout(()=>{
+            prog.style.display='none';
+            succ.style.display='block';
+            succ.innerHTML=`✅ "${file.name}" cargado correctamente (${total} páginas). Generando evaluación...`;
+            setTimeout(()=>procesarRubricaLocal(),400);
+        },400);
+    }catch(err){
+        prog.style.display='none';
+        alert('Error al leer el PDF. Verifica que no tenga contraseña.\n\n'+err.message);
+    }
+}
+
+// ===== DISTRIBUIR TEXTO =====
+function distribuirTexto(texto){
+    texto=texto.replace(/\r\n/g,'\n').replace(/\r/g,'\n');
+    const lineas=texto.split('\n').map(l=>l.trim()).filter(l=>l.length>0);
+
+    // Título
+    const stop=/^(universidad|facultad|escuela|programa|tesis|trabajo|proyecto|autor|asesor|lima|perú|año|ciclo|fecha)/i;
+    for(let i=0;i<Math.min(30,lineas.length);i++){
+        const l=lineas[i];
+        if(l.length>15&&l.length<300&&!stop.test(l)&&!/^\d+$/.test(l)){
+            document.getElementById('titulo_tesis').value=l; break;
+        }
+    }
+    // Autor
+    const autorM=texto.match(/(?:Autor[a]?[:\s]+|Presentado por[:\s]+|Bachiller[:\s]+)([A-ZÁÉÍÓÚÑ][a-záéíóúñ]+(?: [A-ZÁÉÍÓÚÑ][a-záéíóúñ]+){1,4})/i);
+    if(autorM) document.getElementById('nombre_estudiante').value=autorM[1].trim();
+
+    // Segmentar
+    const rI  =/(?:cap[íi]tulo\s*I[:\s]|I[.]\s*INTRODUCCI[ÓO]N|INTRODUCCI[ÓO]N\b)/i;
+    const rII =/(?:cap[íi]tulo\s*II[:\s]|II[.]\s*M[EÉ]TODO|METODOLOG[ÍI]A\b)/i;
+    const rIII=/(?:cap[íi]tulo\s*III[:\s]|III[.]\s*ASPECTOS|ASPECTOS ADMINISTRATIVOS)/i;
+    const rRef=/(?:REFERENCIAS\b|BIBLIOGRAF[ÍI]A\b)/i;
+
+    const pI  =texto.search(rI);
+    const pII =texto.search(rII);
+    const pIII=texto.search(rIII);
+    const pRef=texto.search(rRef);
+
+    function seg(desde,hasta){
+        if(desde<0) return '';
+        return hasta<0?texto.substring(desde):texto.substring(desde,hasta);
     }
 
-    function calcularCriterio(cumpleCompletamente, cumpleParcial, cumpleMinimo) {
-        if (cumpleCompletamente) return { nivel: "Destacado", puntos: 1.00 };
-        if (cumpleParcial) return { nivel: "Logrado", puntos: 0.75 };
-        if (cumpleMinimo) return { nivel: "En proceso", puntos: 0.50 };
-        return { nivel: "En inicio", puntos: 0.25 };
+    const c1=seg(pI,pII), c2=seg(pII,pIII), c3=seg(pIII,pRef), ref=pRef>-1?texto.substring(pRef):'';
+
+    if(!c1&&!c2&&!c3){
+        document.getElementById('capitulo_1').value=texto.substring(0,Math.floor(texto.length*0.6));
+        document.getElementById('capitulo_2').value=texto.substring(Math.floor(texto.length*0.6),Math.floor(texto.length*0.85));
+        document.getElementById('referencias_texto').value=texto.substring(Math.floor(texto.length*0.85));
+    } else {
+        if(c1) document.getElementById('capitulo_1').value=c1.trim();
+        if(c2) document.getElementById('capitulo_2').value=c2.trim();
+        if(c3) document.getElementById('capitulo_3').value=c3.trim();
+        if(ref) document.getElementById('referencias_texto').value=ref.trim();
     }
+}
 
-    let obsCriticas = 0;
-    let obsImportantes = 0;
-    let obsMejoras = 0;
-    let accionesPrioritarias = [];
-
-    function generarFeedback(cumple, textoAprobado, prioStatus, queHacerArray) {
-        if (cumple) return `<span style="color:#2e7d32; font-weight:600;">✔ ${textoAprobado}</span>`;
-        
-        const arrFinal = (queHacerArray && queHacerArray.length > 0) ? queHacerArray : ["Corregir alineación normativa."];
-        const accionPrincipal = arrFinal[0];
-
-        let prioClase = prioStatus === "Crítico" ? "prio-critico" : prioStatus === "Importante" ? "prio-importante" : "prio-mejora";
-        let prioIcon = prioStatus === "Crítico" ? "🔴" : prioStatus === "Importante" ? "🟠" : "🟢";
-        
-        if (prioStatus === "Crítico") {
-            obsCriticas++;
-            if (accionesPrioritarias.length < 5) accionesPrioritarias.push(accionPrincipal);
-        } else if (prioStatus === "Importante") {
-            obsImportantes++;
-            if (accionesPrioritarias.length < 5 && obsCriticas < 3) accionesPrioritarias.push(accionPrincipal);
-        } else {
-            obsMejoras++;
-        }
-        
-        let listaHTML = arrFinal.map(item => `<li>${item}</li>`).join('');
-        
-        return `
-            <div class="${prioClase}">${prioIcon} Riesgo ${prioStatus}</div>
-            <div class="action-box">
-                <strong>Sugerencia de corrección:</strong>
-                <ul>${listaHTML}</ul>
-            </div>
-        `;
+// ===== WIZARD =====
+function cambiarPaso(paso){
+    document.querySelectorAll('.form-section').forEach(s=>s.classList.remove('active'));
+    document.querySelectorAll('.step').forEach(s=>s.classList.remove('active'));
+    document.getElementById('section-'+paso).classList.add('active');
+    for(let i=1;i<=paso;i++){
+        const el=document.getElementById('step-'+i+'-indicator');
+        if(el) el.classList.add('active');
     }
+    window.scrollTo({top:0,behavior:'smooth'});
+}
 
-    function procesarRubricaLocal() {
-        const nombre = document.getElementById('nombre_estudiante').value || "Estudiante Evaluado";
-        const titulo = document.getElementById('titulo_tesis').value || "";
-        const cap1 = document.getElementById('capitulo_1').value || "";
-        const cap2 = document.getElementById('capitulo_2').value || "";
-        const cap3 = document.getElementById('capitulo_3').value || "";
-        const refTexto = document.getElementById('referencias_texto').value || "";
+// ===== EVALUACIÓN =====
+function calcularCriterio(a,b,c){
+    if(a) return{nivel:"Destacado",puntos:1.00};
+    if(b) return{nivel:"Logrado",puntos:0.75};
+    if(c) return{nivel:"En proceso",puntos:0.50};
+    return{nivel:"En inicio",puntos:0.25};
+}
 
-        if (titulo.trim() === "" && cap1.trim() === "" && cap2.trim() === "" && cap3.trim() === "" && refTexto.trim() === "") { 
-            alert("Por favor, ingresa información en al menos uno de los campos para generar la verificación."); 
-            return; 
+let obsCriticas=0,obsImportantes=0,obsMejoras=0,accionesPrioritarias=[];
+
+function generarFeedback(cumple,textoOk,prio,acciones){
+    if(cumple) return`<span style="color:#2e7d32;font-weight:600;">✔ ${textoOk}</span>`;
+    const arr=acciones&&acciones.length>0?acciones:["Corregir alineación normativa."];
+    let cls=prio==="Crítico"?"prio-critico":prio==="Importante"?"prio-importante":"prio-mejora";
+    let ico=prio==="Crítico"?"🔴":prio==="Importante"?"🟠":"🟢";
+    if(prio==="Crítico"){obsCriticas++;if(accionesPrioritarias.length<5)accionesPrioritarias.push(arr[0]);}
+    else if(prio==="Importante"){obsImportantes++;if(accionesPrioritarias.length<5&&obsCriticas<3)accionesPrioritarias.push(arr[0]);}
+    else obsMejoras++;
+    return`<div class="${cls}">${ico} Riesgo ${prio}</div><div class="action-box"><strong>Sugerencia de corrección:</strong><ul>${arr.map(a=>`<li>${a}</li>`).join('')}</ul></div>`;
+}
+
+function procesarRubricaLocal(){
+    const nombre=document.getElementById('nombre_estudiante').value||document.getElementById('nombre_completo').value||"Estudiante Evaluado";
+    const titulo=document.getElementById('titulo_tesis').value||"";
+    const cap1=document.getElementById('capitulo_1').value||"";
+    const cap2=document.getElementById('capitulo_2').value||"";
+    const cap3=document.getElementById('capitulo_3').value||"";
+    const ref=document.getElementById('referencias_texto').value||"";
+
+    if(!titulo.trim()&&!cap1.trim()&&!cap2.trim()&&!cap3.trim()&&!ref.trim()){
+        alert("Por favor, sube un PDF o ingresa texto en al menos un campo.");return;
+    }
+    obsCriticas=0;obsImportantes=0;obsMejoras=0;accionesPrioritarias=[];
+    let matriz=[],totalPts=0,maxPts=0;
+
+    document.getElementById('loading').style.display='block';
+    document.getElementById('resultado-container').style.display='none';
+
+    setTimeout(()=>{
+        // TÍTULO
+        if(titulo.trim()){
+            const nw=titulo.trim().split(/\s+/).filter(p=>p).length;
+            const c=calcularCriterio(nw<=20&&nw>0,nw>20&&nw<=25,nw>25);
+            const f=generarFeedback(nw<=20&&nw>0,`Cumple con el límite (${nw} palabras).`,"Importante",["El título excede las 20 palabras máximas.","Elimine artículos redundantes o conectores innecesarios."]);
+            maxPts+=1;totalPts+=c.puntos;
+            matriz.push({comp:"Título",id:1,c:"1. El título presenta las variables/categorías y la unidad de análisis en máximo 20 palabras.",o:c,f});
+        }
+        // CAP 1
+        if(cap1.trim()){
+            const lin=cap1.split('\n').map(l=>l.trim()).filter(l=>l);
+            const subT=lin.some(l=>/^(Planteamiento del problema|Revisión de literatura|Hipótesis|Introducción)$/i.test(l)||/^[IVX0-9]+\.?\s+[A-Za-zÁÉÍÓÚ]{3,}$/i.test(l));
+            const vin=lin.some(l=>/^[\*\-\u2022]/.test(l)||/^\d+\./.test(l));
+            const pas=/\b(analizó|describió|abordó|formuló|realizó|determinó|evaluó)\b/i.test(cap1);
+            const c2=calcularCriterio(!subT&&!vin&&pas,!subT&&!vin,pas);
+            const fa2=[];
+            if(subT) fa2.push("Elimine subtítulos. Redacte en prosa continua.");
+            if(vin) fa2.push("Elimine viñetas o listas numeradas.");
+            if(!pas) fa2.push("Redacte en tiempo pasado del modo indicativo.");
+            const f2=generarFeedback(!subT&&!vin&&pas,"Prosa continua y tiempo verbal validado.","Mejora",fa2);
+            const ods=/ODS|Desarrollo Sostenible/i.test(cap1);
+            const intl=/internacional|mundial|global/i.test(cap1);
+            const c3=calcularCriterio(ods&&intl,intl,ods);
+            const f3=generarFeedback(ods,"ODS identificado.","Importante",["Mencione 'ODS' explícitamente.","Indique a qué meta contribuye la investigación."]);
+            const preg=/\?/.test(cap1);
+            const c4=calcularCriterio(preg,preg,cap1.includes("problema"));
+            const f4=generarFeedback(preg,"Formulación interrogativa estructurada.","Crítico",["Falta el problema como pregunta explícita.","Use signos ¿ y ? para formularlo."]);
+            const just=/justificación|justifica|importancia|relevancia/i.test(cap1);
+            const c5=calcularCriterio(just,just,just);
+            const f5=generarFeedback(just,"Justificación declarada.","Importante",["Declare la relevancia teórica, práctica y/o metodológica."]);
+            const objG=/objetivo general/i.test(cap1);
+            const objE=/objetivos específicos/i.test(cap1);
+            const c6=calcularCriterio(objG&&objE,objG,objE);
+            const f6=generarFeedback(objG&&objE,"Objetivos general y específicos presentes.","Crítico",["Redacte 1 Objetivo General y al menos 3 Específicos con verbos en infinitivo."]);
+            const ant=(cap1.match(/artículo|investigación|autor|estudio|(\(20\d\d\))/g)||[]).length;
+            const c7=calcularCriterio(ant>=6,ant>=4,ant>=2);
+            const f7=generarFeedback(ant>=6,"Densidad de citas validada.","Importante",["Incorpore al menos 6 antecedentes internacionales de revistas indexadas."]);
+            const dim=/dimensión|dimensiones|categorías/i.test(cap1);
+            const c8=calcularCriterio(dim,dim,dim);
+            const f8=generarFeedback(dim,"Desglose dimensional validado.","Mejora",["Defina variables y sus dimensiones operacionales."]);
+            const teo=/teoría|enfoque teórico|fundamento/i.test(cap1);
+            const c9=calcularCriterio(teo,teo,teo);
+            const f9=generarFeedback(teo,"Teorías base mencionadas.","Mejora",["Incorpore modelos teóricos vinculados a las variables."]);
+            const hip=/hipótesis|supuesto/i.test(cap1);
+            const c10=calcularCriterio(hip,hip,true);
+            const f10=generarFeedback(hip,"Hipótesis detectadas.","Mejora",["Formule hipótesis solo si el diseño lo amerita."]);
+            maxPts+=9;totalPts+=(c2.puntos+c3.puntos+c4.puntos+c5.puntos+c6.puntos+c7.puntos+c8.puntos+c9.puntos+c10.puntos);
+            matriz.push(
+                {comp:"Introducción",id:2,c:"2. Redactada en prosa, sin subtítulos, en tercera persona y en pasado.",o:c2,f:f2},
+                {comp:"Introducción",id:3,c:"3. Realidad problemática contempla el ODS relacionado.",o:c3,f:f3},
+                {comp:"Introducción",id:4,c:"4. Problema planteado de manera interrogativa.",o:c4,f:f4},
+                {comp:"Introducción",id:5,c:"5. Justificación expresa la importancia del estudio.",o:c5,f:f5},
+                {comp:"Introducción",id:6,c:"6. Objetivos general y específicos formulados.",o:c6,f:f6},
+                {comp:"Introducción",id:7,c:"7. Antecedentes relacionados a los objetivos.",o:c7,f:f7},
+                {comp:"Introducción",id:8,c:"8. Aportes conceptuales de variables/categorías.",o:c8,f:f8},
+                {comp:"Introducción",id:9,c:"9. Teorías relacionadas con el objeto de estudio.",o:c9,f:f9},
+                {comp:"Introducción",id:10,c:"10. Hipótesis en base a teorías (si aplica).",o:c10,f:f10}
+            );
+        }
+        // CAP 2
+        if(cap2.trim()){
+            const lin2=cap2.split('\n').map(l=>l.trim()).filter(l=>l);
+            const subT2=lin2.some(l=>/^(Tipo y enfoque|Variables|Unidad de análisis|Técnicas|Aspectos éticos)$/i.test(l));
+            const fut=/\b(describirá|analizará|emplearán|considerará|aplicarán|desarrollarán)\b/i.test(cap2);
+            const c11=calcularCriterio(!subT2&&fut,!subT2,fut);
+            const fa11=[];
+            if(!fut) fa11.push("Reescriba en tiempo FUTURO (ej. 'se aplicará').");
+            if(subT2) fa11.push("Elimine subtítulos internos.");
+            const f11=generarFeedback(!subT2&&fut,"Prosa en tiempo futuro.","Importante",fa11);
+            const oslo=/Oslo|OCDE/i.test(cap2);
+            const c12=calcularCriterio(oslo,oslo,cap2.includes('enfoque'));
+            const f12=generarFeedback(oslo,"Alineación a Manual de Oslo.","Importante",["Cite el 'Manual de Oslo (2018)' para el tipo de investigación."]);
+            const defv=/operacionalización|tabla|definición conceptual/i.test(cap2);
+            const c13=calcularCriterio(defv,defv,defv);
+            const f13=generarFeedback(defv,"Variables definidas.","Importante",["Detalle cómo medirá las variables (matriz de operacionalización)."]);
+            const pob=/población|muestra/i.test(cap2);
+            const crit=/inclusión|exclusión/i.test(cap2);
+            const c14=calcularCriterio(pob&&crit,pob,crit);
+            const f14=generarFeedback(pob&&crit,"Población y criterios establecidos.","Importante",["Defina muestra y escriba criterios de inclusión/exclusión."]);
+            const juec=/jueces|expertos|validación/i.test(cap2);
+            const c15=calcularCriterio(juec,juec,cap2.includes('instrumento'));
+            const f15=generarFeedback(juec,"Validación por expertos programada.","Importante",["Declare validación por 3 jueces expertos."]);
+            const etic=/código de ética|ética|consentimiento/i.test(cap2);
+            const c16=calcularCriterio(etic,etic,cap2.includes('análisis'));
+            const f16=generarFeedback(etic,"Aspectos éticos cubiertos.","Crítico",["Mencione consentimiento informado y Código de Ética UCV."]);
+            maxPts+=6;totalPts+=(c11.puntos+c12.puntos+c13.puntos+c14.puntos+c15.puntos+c16.puntos);
+            matriz.push(
+                {comp:"Metodología",id:11,c:"11. Prosa en tercera persona y tiempo futuro.",o:c11,f:f11},
+                {comp:"Metodología",id:12,c:"12. Tipo, enfoque, diseño y alcance detallados.",o:c12,f:f12},
+                {comp:"Metodología",id:13,c:"13. Variables/categorías y dimensiones definidas.",o:c13,f:f13},
+                {comp:"Metodología",id:14,c:"14. Población, criterios inclusión/exclusión, muestra.",o:c14,f:f14},
+                {comp:"Metodología",id:15,c:"15. Técnicas, instrumentos y validación por expertos.",o:c15,f:f15},
+                {comp:"Metodología",id:16,c:"16. Análisis de datos y aspectos éticos UCV.",o:c16,f:f16}
+            );
+        }
+        // CAP 3
+        if(cap3.trim()){
+            const monR=/(s\/\.?\s*[1-9]\d*)|(\b[1-9]\d{1,}(\.\d{2})?\b)|\b(meses|tiempo|horas)\b/i.test(cap3);
+            const c17=calcularCriterio(monR,monR,cap3.includes('recursos'));
+            const f17=generarFeedback(monR,"Presupuesto de recursos detallado.","Importante",["Inserte Tablas 1 y 2 con estimaciones reales de costos."]);
+            const monF=/(s\/\.?\s*[1-9]\d*)|(\b[1-9]\d{2,}\b)/i.test(cap3.replace(/tabla\s+3/gi,''))||/\b(autofinanciado|propio)\b/i.test(cap3);
+            const c18=calcularCriterio(monF,monF,cap3.includes('tabla 3'));
+            const f18=generarFeedback(monF,"Financiamiento declarado.","Importante",["Si es autofinanciado, coloque S/. 0.00 en Tabla 3."]);
+            const hasX=(cap3.replace(/tabla\s+4/gi,'').match(/\b[xX]\b/g)||[]).length>=3;
+            const c19=calcularCriterio(hasX,hasX,cap3.includes('tabla 4'));
+            const f19=generarFeedback(hasX,"Cronograma Gantt planificado.","Importante",["Añada Tabla 4 con marcas 'X' por sesión."]);
+            maxPts+=3;totalPts+=(c17.puntos+c18.puntos+c19.puntos);
+            matriz.push(
+                {comp:"Aspectos administrativos",id:17,c:"17. Recursos no monetarios y monetarios detallados.",o:c17,f:f17},
+                {comp:"Aspectos administrativos",id:18,c:"18. Fuentes de financiamiento detalladas.",o:c18,f:f18},
+                {comp:"Aspectos administrativos",id:19,c:"19. Cronograma de ejecución detallado.",o:c19,f:f19}
+            );
+        }
+        // REFERENCIAS
+        if(ref.trim()){
+            const linR=ref.split('\n').filter(l=>l.trim().length>15);
+            const tot=linR.length;
+            let ing=0,antig=0;
+            linR.forEach(l=>{
+                if(/\b(and|the|journal|of|research|vol|pp|science|international|university)\b/i.test(l)) ing++;
+                if(/\b(2022|2023|2024|2025|2026)\b/.test(l)) antig++;
+            });
+            const pI=tot>0?(ing/tot)*100:0;
+            const pA=tot>0?(antig/tot)*100:0;
+            const ok30=tot>=30,okLang=pI>=30,okVig=pA>=70;
+            const c20=calcularCriterio(ok30&&okLang&&okVig,ok30&&okVig,ok30);
+            const fa20=[];
+            if(!ok30) fa20.push(`Tienes ${tot} referencias. Se exigen mínimo 30.`);
+            if(!okVig) fa20.push(`Solo ~${pA.toFixed(0)}% son recientes (≤5 años). Se exige 70%.`);
+            if(!okLang) fa20.push(`Solo ~${pI.toFixed(0)}% en inglés. Se exige mínimo 30%.`);
+            fa20.push("El 70% debe provenir de Scopus, WoS o SciELO.");
+            const f20=generarFeedback(ok30&&okLang&&okVig,`Cumple: ${tot} refs, ~${pA.toFixed(0)}% recientes, ~${pI.toFixed(0)}% en inglés.`,"Crítico",fa20);
+            maxPts+=1;totalPts+=c20.puntos;
+            matriz.push({comp:"Referencias",id:20,c:"20. Referencias completas según normas. Cantidad mínima y gestor bibliográfico.",o:c20,f:f20});
         }
 
-        obsCriticas = 0; obsImportantes = 0; obsMejoras = 0; accionesPrioritarias = [];
-        let matrizCriteriosEvaluados = [];
-        let totalPuntos = 0;
-        let maxPuntosPosibles = 0;
+        // SEMÁFORO
+        const pct=maxPts===0?0:parseFloat(((totalPts/maxPts)*100).toFixed(1));
+        let color,texto,icon;
+        if(pct>=90){color="#2e7d32";texto="Alto cumplimiento normativo";icon="🟢";}
+        else if(pct>=75){color="#e65100";texto="Cumplimiento parcial";icon="🟡";}
+        else{color="#b3002d";texto="Riesgo elevado de observaciones";icon="🔴";}
 
-        document.getElementById('loading').style.display = 'block';
-        document.getElementById('resultado-container').style.display = 'none';
+        const accs=accionesPrioritarias.length>0
+            ?accionesPrioritarias.map(a=>`<li>${a}</li>`).join('')
+            :`<li><span style="color:#2e7d32;font-weight:600;">✔ ¡Excelente trabajo estructural!</span></li>`;
 
-        setTimeout(() => {
-            
-            // --- EVALUACIÓN MODULAR DE TÍTULO ---
-            if (titulo.trim().length > 0) {
-                const numPalabrasTitulo = titulo.trim().split(/\s+/).filter(p => p.length > 0).length;
-                const c1 = calcularCriterio((numPalabrasTitulo <= 20 && numPalabrasTitulo > 0), (numPalabrasTitulo > 20 && numPalabrasTitulo <= 25), (numPalabrasTitulo > 25));
-                let obs1 = generarFeedback(numPalabrasTitulo <= 20 && numPalabrasTitulo > 0, `Cumple con el límite (${numPalabrasTitulo} palabras).`, "Importante", ["El título excede las 20 palabras máximas exigidas.", "Elimine artículos redundantes o conectores innecesarios."]);
-                
-                maxPuntosPosibles += 1; totalPuntos += c1.puntos;
-                matrizCriteriosEvaluados.push({ comp: "Título", id: 1, c: "1. El título presenta la(s) variable(s) o categorías de estudio y la unidad de análisis abordada en un máximo de 20 palabras.", o: c1, f: obs1 });
-            }
-
-            // --- EVALUACIÓN MODULAR CAP 1 ---
-            if (cap1.trim().length > 0) {
-                const lineasCap1 = cap1.split('\n').map(l => l.trim()).filter(l => l.length > 0);
-                const tieneSubtitulosC1 = lineasCap1.some(l => /^(Planteamiento del problema|Revisión de literatura|Hipótesis|Introducción)$/i.test(l) || /^[IVX0-9]+\.?\s+[A-Za-zÁÉÍÓÚáéíóúñ]{3,}$/i.test(l));
-                const tieneVinetasC1 = lineasCap1.some(l => /^[\*\-\u2022]/.test(l) || /^\d+\./.test(l));
-                const tienePasadoC1 = /\b(analizó|describió|abordó|formuló|expuso|realizó|determinó|evaluó)\b/i.test(cap1);
-                
-                const c2 = calcularCriterio((!tieneSubtitulosC1 && !tieneVinetasC1 && tienePasadoC1), (!tieneSubtitulosC1 && !tieneVinetasC1), (tienePasadoC1));
-                
-                let arrayFallosC2 = [];
-                if (tieneSubtitulosC1) arrayFallosC2.push("Elimine subtítulos huérfanos. Redacte de corrido.");
-                if (tieneVinetasC1) arrayFallosC2.push("Borre viñetas o listas. Use conectores discursivos.");
-                if (!tienePasadoC1) arrayFallosC2.push("Asegúrese de redactar todo el capítulo en tiempo pasado del modo indicativo.");
-                let obs2 = generarFeedback((!tieneSubtitulosC1 && !tieneVinetasC1 && tienePasadoC1), "Prosa continua y tiempo verbal validado.", "Mejora", arrayFallosC2);
-
-                const tieneODS = /ODS|Desarrollo Sostenible/i.test(cap1);
-                const tieneInternacional = /internacional|mundial|global/i.test(cap1);
-                const c3 = calcularCriterio(tieneODS && tieneInternacional, tieneInternacional, tieneODS);
-                let obs3 = generarFeedback(tieneODS, "Vínculo explícito con ODS identificado.", "Importante", [
-                    "Mencione textualmente la sigla 'ODS' o 'Objetivo de Desarrollo Sostenible'.",
-                    "Indique específicamente a qué meta contribuye su investigación."
-                ]);
-
-                const tienePregunta = /\?/g.test(cap1);
-                const c4 = calcularCriterio(tienePregunta, tienePregunta, cap1.includes("problema"));
-                let obs4 = generarFeedback(tienePregunta, "Formulación interrogativa estructurada.", "Crítico", [
-                    "Falta el problema formulado como pregunta explícita.",
-                    "Enciérrelo directamente entre signos de interrogación (¿?)."
-                ]);
-
-                const tieneJustificacion = /justificación|justifica|importancia|relevancia/i.test(cap1);
-                const c5 = calcularCriterio(tieneJustificacion, tieneJustificacion, tieneJustificacion);
-                let obs5 = generarFeedback(tieneJustificacion, "Sección de justificación declarada.", "Importante", [
-                    "Declare la relevancia teórica, práctica y/o metodológica del estudio."
-                ]);
-
-                const tieneObjetivoG = /objetivo general/i.test(cap1);
-                const tieneObjetivosE = /objetivos específicos/i.test(cap1);
-                const c6 = calcularCriterio(tieneObjetivoG && tieneObjetivosE, tieneObjetivoG, tieneObjetivosE);
-                let obs6 = generarFeedback(tieneObjetivoG && tieneObjetivosE, "Objetivos general y específicos delineados.", "Crítico", [
-                    "Redacte un (1) Objetivo General y al menos tres (3) Específicos usando verbos en infinitivo."
-                ]);
-
-                const antecedenciasMatch = cap1.match(/artículo|investigación|autor|estudio|(\(20\d\d\))/g);
-                const cuentaAntecedentes = antecedenciasMatch ? antecedenciasMatch.length : 0;
-                const c7 = calcularCriterio(cuentaAntecedentes >= 6, cuentaAntecedentes >= 4, cuentaAntecedentes >= 2);
-                let obs7 = generarFeedback(cuentaAntecedentes >= 6, "Densidad de citas internacionales validada.", "Importante", [
-                    "Incorpore al menos seis (6) antecedentes internacionales explícitos de revistas indexadas."
-                ]);
-
-                const tieneDimensiones = /dimensión|dimensiones|categorías/i.test(cap1);
-                const c8 = calcularCriterio(tieneDimensiones, tieneDimensiones, tieneDimensiones);
-                let obs8 = generarFeedback(tieneDimensiones, "Desglose dimensional validado.", "Mejora", ["Defina conceptualmente las variables y sus dimensiones operacionales."]);
-
-                const tieneTeorias = /teoría|enfoque teórico|fundamento/i.test(cap1);
-                const c9 = calcularCriterio(tieneTeorias, tieneTeorias, tieneTeorias);
-                let obs9 = generarFeedback(tieneTeorias, "Teorías base mencionadas.", "Mejora", ["Incorpore modelos teóricos fundacionales vinculados a la variable."]);
-
-                const tieneHipotesis = /hipótesis|supuesto/i.test(cap1);
-                const c10 = calcularCriterio(tieneHipotesis, tieneHipotesis, true);
-                let obs10 = generarFeedback(tieneHipotesis, "Hipótesis detectadas.", "Mejora", ["Criterio condicional: Formule hipótesis solo si el diseño lo amerita."]);
-
-                maxPuntosPosibles += 9;
-                totalPuntos += (c2.puntos + c3.puntos + c4.puntos + c5.puntos + c6.puntos + c7.puntos + c8.puntos + c9.puntos + c10.puntos);
-                
-                matrizCriteriosEvaluados.push(
-                    { comp: "Introducción", id: 2, c: "2. Está redactada en prosa, sin subtítulos, en tercera persona y en pasado del modo indicativo.", o: c2, f: obs2 },
-                    { comp: "Introducción", id: 3, c: "3. Se describe la realidad problemática contemplando la importancia de abordar el problema y el ODS relacionado.", o: c3, f: obs3 },
-                    { comp: "Introducción", id: 4, c: "4. Plantea el problema de investigación de manera interrogativa, detallando las variables o categorías y el objeto de estudio.", o: c4, f: obs4 },
-                    { comp: "Introducción", id: 5, c: "5. La justificación de la investigación expresa la importancia de su ejecución.", o: c5, f: obs5 },
-                    { comp: "Introducción", id: 6, c: "6. Se formulan los objetivos vinculados a las preguntas de investigación.", o: c6, f: obs6 },
-                    { comp: "Introducción", id: 7, c: "7. Se detallan los antecedentes relacionados al(los) objetivo(s) de investigación.", o: c7, f: obs7 },
-                    { comp: "Introducción", id: 8, c: "8. Se detallan los aportes conceptuales relacionados con las variables o categorías de interés (definiciones y dimensiones).", o: c8, f: obs8 },
-                    { comp: "Introducción", id: 9, c: "9. Se detallan las teorías relacionadas con el objeto de estudio.", o: c9, f: obs9 },
-                    { comp: "Introducción", id: 10, c: "10. Se describen las hipótesis en base a las teorías o antecedentes (de ser pertinente).", o: c10, f: obs10 }
-                );
-            }
-
-            // --- EVALUACIÓN MODULAR CAP 2 ---
-            if (cap2.trim().length > 0) {
-                const lineasCap2 = cap2.split('\n').map(l => l.trim()).filter(l => l.length > 0);
-                const tieneSubtitulosC2 = lineasCap2.some(l => /^(Tipo y enfoque|Variables|Unidad de análisis|Técnicas|Aspectos éticos)$/i.test(l));
-                const tieneFuturoC2 = /\b(describirá|analizará|emplearán|considerará|detallará|aplicarán|desarrollarán)\b/i.test(cap2);
-                
-                const c11 = calcularCriterio(!tieneSubtitulosC2 && tieneFuturoC2, !tieneSubtitulosC2, tieneFuturoC2);
-                
-                let arrayFallosC11 = [];
-                if (!tieneFuturoC2) arrayFallosC11.push("Reescriba todo el capítulo metodológico en tiempo FUTURO (ej. 'se aplicará').");
-                if (tieneSubtitulosC2) arrayFallosC11.push("Elimine subtítulos internos. El texto metodológico debe fluir en prosa.");
-                let obs11 = generarFeedback(!tieneSubtitulosC2 && tieneFuturoC2, "Prosa continua en tiempo futuro.", "Importante", arrayFallosC11);
-
-                const tieneOslo = /Oslo|OCDE/i.test(cap2);
-                const c12 = calcularCriterio(tieneOslo, tieneOslo, cap2.includes('enfoque'));
-                let obs12 = generarFeedback(tieneOslo, "Alineación a Manual de Oslo detectada.", "Importante", ["Defina si es Básica o Aplicada citando el 'Manual de Oslo (2018)'."]);
-
-                const tieneDefVar = /operacionalización|tabla|definición conceptual/i.test(cap2);
-                const c13 = calcularCriterio(tieneDefVar, tieneDefVar, tieneDefVar);
-                let obs13 = generarFeedback(tieneDefVar, "Variables metodológicas tratadas.", "Importante", ["Indique detalladamente cómo medirá las variables (matriz)."]);
-
-                const tienePoblacion = /población|muestra/i.test(cap2);
-                const tieneCriterios = /inclusión|exclusión/i.test(cap2);
-                const c14 = calcularCriterio(tienePoblacion && tieneCriterios, tienePoblacion, tieneCriterios);
-                let obs14 = generarFeedback(tienePoblacion && tieneCriterios, "Población y filtros establecidos.", "Importante", ["Defina su muestra y escriba explícitamente los criterios de inclusión/exclusión."]);
-
-                const tieneJueces = /jueces|expertos|validación/i.test(cap2);
-                const c15 = calcularCriterio(tieneJueces, tieneJueces, cap2.includes('instrumento'));
-                let obs15 = generarFeedback(tieneJueces, "Validación por expertos programada.", "Importante", ["Declare que el instrumento pasará por validación de tres (3) jueces expertos."]);
-
-                const tieneEtica = /código de ética|ética|consentimiento/i.test(cap2);
-                const c16 = calcularCriterio(tieneEtica, tieneEtica, cap2.includes('análisis'));
-                let obs16 = generarFeedback(tieneEtica, "Principios de integridad cubiertos.", "Crítico", ["Mencione el consentimiento informado y el 'Código de Ética de la UCV'."]);
-
-                maxPuntosPosibles += 6;
-                totalPuntos += (c11.puntos + c12.puntos + c13.puntos + c14.puntos + c15.puntos + c16.puntos);
-                
-                matrizCriteriosEvaluados.push(
-                    { comp: "Metodología", id: 11, c: "11. Se redacta en prosa, sin subtítulos, en tercera persona y en tiempo futuro del modo indicativo.", o: c11, f: obs11 },
-                    { comp: "Metodología", id: 12, c: "12. Se detalla el tipo, enfoque, diseño y alcance de la investigación.", o: c12, f: obs12 },
-                    { comp: "Metodología", id: 13, c: "13. Se define(n) la(s) variable(s) o categoría(s) de estudio, así como sus dimensiones o subcategorías.", o: c13, f: obs13 },
-                    { comp: "Metodología", id: 14, c: "14. Se describe la unidad de análisis, población, los criterios de inclusión y exclusión, la muestra y el muestreo aplicado (de ser pertinente).", o: c14, f: obs14 },
-                    { comp: "Metodología", id: 15, c: "15. Se describen las técnicas e instrumentos de recolección de datos, la validación por juicio de expertos y la consistencia interna (de ser pertinente).", o: c15, f: obs15 },
-                    { comp: "Metodología", id: 16, c: "16. Se describen las técnicas de análisis de datos y aspectos éticos de acuerdo al Código de Ética en Investigación de la UCV.", o: c16, f: obs16 }
-                );
-            }
-
-            // --- EVALUACIÓN MODULAR CAP 3 ---
-            if (cap3.trim().length > 0) {
-                const tieneMontoRecursos = /(s\/\.?\s*[1-9]\d*)|(\b[1-9]\d{1,}(\.\d{2})?\b)|\b(meses|tiempo|horas)\b/i.test(cap3);
-                const c17 = calcularCriterio(tieneMontoRecursos, tieneMontoRecursos, cap3.includes('recursos'));
-                let obs17 = generarFeedback(tieneMontoRecursos, "Tablas 1 y 2 presupuestadas.", "Importante", ["Inserte las Tablas 1 y 2 con estimaciones reales de costos. No las envíe vacías."]);
-
-                const cap3Limpio = cap3.replace(/tabla\s+3/gi, '');
-                const tieneMontoFinanza = /(s\/\.?\s*[1-9]\d*)|(\b[1-9]\d{2,}\b)/i.test(cap3Limpio) || (/\b(autofinanciado|propio)\b/i.test(cap3Limpio) && /\b0(\.00)?\b/.test(cap3Limpio));
-                const c18 = calcularCriterio(tieneMontoFinanza, tieneMontoFinanza, cap3.includes('tabla 3'));
-                let obs18 = generarFeedback(tieneMontoFinanza, "Financiamiento respaldado.", "Importante", ["Si es Autofinanciado, coloque S/. 0.00 en la Tabla 3 indicando fondos propios."]);
-
-                const cronogramaLimpio = cap3.replace(/tabla\s+4/gi, '');
-                const coincidenciasX = cronogramaLimpio.match(/\b[xX]\b/g);
-                const tieneX = coincidenciasX !== null && coincidenciasX.length >= 3;
-                const c19 = calcularCriterio(tieneX, tieneX, cap3.includes('tabla 4'));
-                let obs19 = generarFeedback(tieneX, "Cronograma Gantt planificado.", "Importante", ["Añada la Tabla 4 y marque con una letra 'X' las columnas correspondientes a las sesiones."]);
-
-                maxPuntosPosibles += 3;
-                totalPuntos += (c17.puntos + c18.puntos + c19.puntos);
-
-                matrizCriteriosEvaluados.push(
-                    { comp: "Aspectos administrativos", id: 17, c: "17. Se detallan los recursos no monetarios y monetarios necesarios para el desarrollo del proyecto de investigación.", o: c17, f: obs17 },
-                    { comp: "Aspectos administrativos", id: 18, c: "18. Se detallan las fuentes de financiamiento para el desarrollo del proyecto de investigación.", o: c18, f: obs18 },
-                    { comp: "Aspectos administrativos", id: 19, c: "19. Se detalla el cronograma de ejecución del proyecto de investigación.", o: c19, f: obs19 }
-                );
-            }
-
-            // --- EVALUACIÓN MODULAR REFERENCIAS ---
-            if (refTexto.trim().length > 0) {
-                const lineasRef = refTexto.split('\n').filter(l => l.trim().length > 15);
-                const totalReferencias = lineasRef.length;
-                
-                let conteoIngles = 0;
-                let conteoAntiguedad = 0;
-                lineasRef.forEach(linea => {
-                    if (/\b(and|the|journal|of|research|vol|pp|issue|science|international|university|study)\b/i.test(linea)) conteoIngles++;
-                    if (/\b(2022|2023|2024|2025|2026)\b/.test(linea)) conteoAntiguedad++;
-                });
-
-                const pctIngles = totalReferencias > 0 ? (conteoIngles / totalReferencias) * 100 : 0;
-                const pctAntiguedad = totalReferencias > 0 ? (conteoAntiguedad / totalReferencias) * 100 : 0;
-
-                const cumpleCantidad = totalReferencias >= 30;
-                const cumpleIdiomas = pctIngles >= 30;
-                const cumpleVigencia = pctAntiguedad >= 70;
-
-                const c20 = calcularCriterio((cumpleCantidad && cumpleIdiomas && cumpleVigencia), (cumpleCantidad && cumpleVigencia), cumpleCantidad);
-                
-                let arrayFaltasRef = [];
-                if (!cumpleCantidad) arrayFaltasRef.push(`Falta cantidad mínima: Tienes ${totalReferencias} referencias, se exigen al menos 30.`);
-                if (!cumpleVigencia) arrayFaltasRef.push(`Falta vigencia (5 años): Solo ~${pctAntiguedad.toFixed(0)}% son recientes. Se exige mínimo 70%.`);
-                if (!cumpleIdiomas) arrayFaltasRef.push(`Falta idioma extranjero: Solo ~${pctIngles.toFixed(0)}% están en inglés/extranjero. Se exige mínimo 30%.`);
-                arrayFaltasRef.push("Asegúrese de que el 70% provenga de Scopus, WoS o SciELO (SJR).");
-
-                let obs20 = generarFeedback(
-                    (cumpleCantidad && cumpleIdiomas && cumpleVigencia), 
-                    `Cumple métricas: ${totalReferencias} refs, ~${pctAntiguedad.toFixed(0)}% recientes, ~${pctIngles.toFixed(0)}% en inglés.`, 
-                    "Crítico", 
-                    arrayFaltasRef
-                );
-                
-                maxPuntosPosibles += 1;
-                totalPuntos += c20.puntos;
-
-                matrizCriteriosEvaluados.push({ comp: "Referencias", id: 20, c: "20. Se referencian todas las citas descritas en los capítulos de la investigación utilizando las normas de redacción según especialidad. Se tiene en cuenta la cantidad mínima de referencias sugeridas y uso de un gestor bibliográfico.", o: c20, f: obs20 });
-            }
-
-            // --- CÁLCULOS DEL SEMÁFORO Y PORCENTAJES ---
-            const porcentajeAdec = maxPuntosPosibles === 0 ? 0 : parseFloat(((totalPuntos / maxPuntosPosibles) * 100).toFixed(1));
-
-            let semaforoColor, semaforoTexto, semaforoIcon;
-            if (porcentajeAdec >= 90) {
-                semaforoColor = "#2e7d32"; semaforoTexto = "Alto cumplimiento normativo"; semaforoIcon = "🟢";
-            } else if (porcentajeAdec >= 75) {
-                semaforoColor = "#e65100"; semaforoTexto = "Cumplimiento parcial"; semaforoIcon = "🟡";
-            } else {
-                semaforoColor = "#b3002d"; semaforoTexto = "Riesgo elevado de observaciones"; semaforoIcon = "🔴";
-            }
-
-            const listaAcciones = accionesPrioritarias.length > 0 
-                ? accionesPrioritarias.map(acc => `<li>${acc}</li>`).join('')
-                : `<li><span style="color:#2e7d32; font-weight:600;">✔ ¡Excelente trabajo estructural! Las secciones analizadas cumplen la normativa.</span></li>`;
-
-            const htmlResumen = `
-                <div class="executive-summary">
-                    <h3>Resumen Ejecutivo del Diagnóstico</h3>
-                    <div class="summary-grid">
-                        <div class="summary-card main-score">
-                            <div class="semaforo-icon">${semaforoIcon}</div>
-                            <div class="semaforo-pct">${porcentajeAdec}%</div>
-                            <div class="semaforo-text" style="color:${semaforoColor}">${semaforoTexto}</div>
-                        </div>
-                        <div class="summary-card">
-                            <h4>Hallazgos Estructurales</h4>
-                            <ul class="obs-list">
-                                <li>🔴 Riesgo Crítico: <strong>${obsCriticas}</strong></li>
-                                <li>🟠 Riesgo Importante: <strong>${obsImportantes}</strong></li>
-                                <li>🟢 Riesgo de Mejora: <strong>${obsMejoras}</strong></li>
-                            </ul>
-                        </div>
-                        <div class="summary-card priority-list">
-                            <h4>Acciones Prioritarias</h4>
-                            <ul>
-                                ${listaAcciones}
-                            </ul>
-                        </div>
+        document.getElementById('resumen-ejecutivo-container').innerHTML=`
+            <div class="executive-summary">
+                <h3>Resumen Ejecutivo del Diagnóstico</h3>
+                <div class="summary-grid">
+                    <div class="summary-card main-score">
+                        <div class="semaforo-icon">${icon}</div>
+                        <div class="semaforo-pct">${pct}%</div>
+                        <div class="semaforo-text" style="color:${color}">${texto}</div>
+                    </div>
+                    <div class="summary-card">
+                        <h4>Hallazgos Estructurales</h4>
+                        <ul class="obs-list">
+                            <li>🔴 Riesgo Crítico: <strong>${obsCriticas}</strong></li>
+                            <li>🟠 Riesgo Importante: <strong>${obsImportantes}</strong></li>
+                            <li>🟢 Riesgo de Mejora: <strong>${obsMejoras}</strong></li>
+                        </ul>
+                    </div>
+                    <div class="summary-card priority-list">
+                        <h4>Acciones Prioritarias</h4>
+                        <ul>${accs}</ul>
                     </div>
                 </div>
-            `;
+            </div>`;
 
-            document.getElementById('resumen-ejecutivo-container').innerHTML = htmlResumen;
+        document.getElementById('tabla-rubrica-cuerpo').innerHTML=matriz.map(r=>{
+            const col=r.o.nivel==="Destacado"?"#2e7d32":r.o.nivel==="Logrado"?"#004b8d":r.o.nivel==="En proceso"?"#f57c00":"#b3002d";
+            return`<tr><td><strong>${r.comp}</strong></td><td style="text-align:center;font-weight:bold;">${r.id}</td><td>${r.c}</td><td style="text-align:center;"><span class="badge-status" style="background:${col};color:white;">${r.o.nivel}</span></td><td>${r.f}</td></tr>`;
+        }).join('');
 
-            let htmlFilas = "";
-            matrizCriteriosEvaluados.forEach(r => {
-                let col = r.o.nivel === "Destacado" ? "#2e7d32" : r.o.nivel === "Logrado" ? "#004b8d" : r.o.nivel === "En proceso" ? "#f57c00" : "#b3002d";
-                htmlFilas += `<tr>
-                    <td><strong>${r.comp}</strong></td>
-                    <td style="text-align:center; font-weight:bold;">${r.id}</td>
-                    <td>${r.c}</td>
-                    <td style="text-align:center;"><span class="badge-status" style="background:${col}; color:white;">${r.o.nivel}</span></td>
-                    <td>${r.f}</td>
-                </tr>`;
-            });
+        document.getElementById('datos-tesista').innerHTML=`<strong>Estudiante:</strong> <span style="color:var(--azul);font-weight:bold;">${nombre}</span> &nbsp;|&nbsp; <strong>Criterios analizados:</strong> ${maxPts} &nbsp;|&nbsp; <strong>Índice de cumplimiento:</strong> ${totalPts.toFixed(2)} / ${maxPts}`;
+        document.getElementById('loading').style.display='none';
+        document.getElementById('resultado-container').style.display='block';
+        document.getElementById('resultado-container').scrollIntoView({behavior:'smooth'});
+    },500);
+}
 
-            document.getElementById('datos-tesista').innerHTML = `<strong>Estudiante:</strong> <span style="color:var(--azul); font-weight:bold;">${nombre}</span> &nbsp; | &nbsp; <strong>Criterios Analizados:</strong> ${maxPuntosPosibles} normativos. &nbsp; | &nbsp; <strong>Índice de Cumplimiento:</strong> ${totalPuntos.toFixed(2)} / ${maxPuntosPosibles}`;
-            document.getElementById('tabla-rubrica-cuerpo').innerHTML = htmlFilas;
-            
-            document.getElementById('loading').style.display = 'none';
-            document.getElementById('resultado-container').style.display = 'block';
-            document.getElementById('resultado-container').scrollIntoView({ behavior: 'smooth' });
-
-        }, 500);
-    }
-
-    // --- FUNCIÓN EXPORTAR A EXCEL NATIVA ---
-    function exportarExcel() {
-        const nombre = document.getElementById('nombre_estudiante').value || "Estudiante";
-        const tablaHTML = document.getElementById("tabla-exportar").outerHTML;
-        
-        let html = `
-        <html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel" xmlns="http://www.w3.org/TR/REC-html40">
-        <head>
-            <meta charset="UTF-8">
-            <!--[if gte mso 9]>
-            <xml>
-                <x:ExcelWorkbook>
-                    <x:ExcelWorksheets>
-                        <x:ExcelWorksheet>
-                            <x:Name>Reporte de Verificación</x:Name>
-                            <x:WorksheetOptions>
-                                <x:DisplayGridlines/>
-                            </x:WorksheetOptions>
-                        </x:ExcelWorksheet>
-                    </x:ExcelWorksheets>
-                </x:ExcelWorkbook>
-            </xml>
-            <![endif]-->
-        </head>
-        <body>
-            <h2>Reporte de Verificación Normativa - VALIDA UCV</h2>
-            <p><strong>Estudiante Evaluado:</strong> ${nombre}</p>
-            <br>
-            ${tablaHTML}
-        </body>
-        </html>`;
-
-        const blob = new Blob(['\ufeff', html], { type: 'application/vnd.ms-excel' });
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = `Reporte_VALIDA_UCV_${nombre.replace(/\s+/g, '_')}.xls`;
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
-        URL.revokeObjectURL(url);
-    }
+function exportarExcel(){
+    const nombre=document.getElementById('nombre_estudiante').value||document.getElementById('nombre_completo').value||"Estudiante";
+    const html=`<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel"><head><meta charset="UTF-8"></head><body><h2>Reporte VALIDA-UCV</h2><p><strong>Estudiante:</strong> ${nombre}</p><br>${document.getElementById("tabla-exportar").outerHTML}</body></html>`;
+    const blob=new Blob(['\ufeff',html],{type:'application/vnd.ms-excel'});
+    const url=URL.createObjectURL(blob);
+    const a=document.createElement('a');
+    a.href=url;a.download=`Reporte_VALIDA_UCV_${nombre.replace(/\s+/g,'_')}.xls`;
+    document.body.appendChild(a);a.click();document.body.removeChild(a);URL.revokeObjectURL(url);
+}
 </script>
 </body>
 </html>
